@@ -18,3 +18,9 @@ type BankKeeper interface {
 	SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error
 	SendCoinsFromAccountToModule(ctx sdk.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error
 }
+
+// NFTKeeper defines the expected nft keeper used for simulations (noalias)
+type NFTKeeper interface {
+	Transfer(ctx sdk.Context, classId string, nftId string, receiver sdk.AccAddress) error
+	// Methods imported from nft should be defined here
+}

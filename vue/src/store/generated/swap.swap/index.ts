@@ -159,6 +159,19 @@ export default {
 		},
 		
 		
+		async sendMsgSend({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.SwapSwap.tx.sendMsgSend({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSend:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgSend:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgReceive({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -185,20 +198,20 @@ export default {
 				}
 			}
 		},
-		async sendMsgSend({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		async MsgSend({ rootGetters }, { value }) {
 			try {
-				const client=await initClient(rootGetters)
-				const result = await client.SwapSwap.tx.sendMsgSend({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
+				const client=initClient(rootGetters)
+				const msg = await client.SwapSwap.tx.msgSend({value})
+				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgSend:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgSend:Send Could not broadcast Tx: '+ e.message)
+				} else{
+					throw new Error('TxClient:MsgSend:Create Could not create message: ' + e.message)
 				}
 			}
 		},
-		
 		async MsgReceive({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -222,19 +235,6 @@ export default {
 					throw new Error('TxClient:MsgCancel:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgCancel:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgSend({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.SwapSwap.tx.msgSend({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSend:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgSend:Create Could not create message: ' + e.message)
 				}
 			}
 		},
