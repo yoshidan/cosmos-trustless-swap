@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "swap/swap/params.proto";
+import "swap/swap/swap.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "swap/x/swap/types";
@@ -33,14 +34,11 @@ message QueryParamsResponse {
 }
 
 message QueryShowRequest {
-  string id = 1;
+  uint64 id = 1;
 }
 
 message QueryShowResponse {
-  string sender = 1;
-  string receiver = 2;
-  string amountToSend = 3;
-  string amountToReceive = 4;
+  Swap swap = 1;
 }
 
 // this line is used by starport scaffolding # 3

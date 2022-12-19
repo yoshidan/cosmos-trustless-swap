@@ -77,8 +77,9 @@ func (suite *IntegrationTestSuite) TestSendSuccess() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(1), response.Id)
 	suite.Require().Equal(response.Id, app.SwapKeeper.GetMaxSwapID(ctx))
-	swap, found := app.SwapKeeper.GetSwap(ctx, response.Id)
-	suite.Require().True(found)
+	queryResponse, err := app.SwapKeeper.Show(ctx, &types.QueryShowRequest{Id: response.Id})
+	swap := queryResponse.Swap
+	suite.Require().NoError(err)
 	suite.Require().Equal(types.SwapStatus_Active, swap.Status)
 	suite.Require().Equal(sender.String(), swap.Sender)
 	suite.Require().Equal(receiver.String(), swap.Receiver)
