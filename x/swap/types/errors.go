@@ -3,10 +3,12 @@ package types
 // DONTCOVER
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrors "cosmossdk.io/errors"
 )
 
 // x/swap module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrSwapNotFound           = sdkerrors.Register(ModuleName, 1100, "swap not found")
+	ErrInvalidSwapStatus      = sdkerrors.Register(ModuleName, 1101, "swap status not active")
+	ErrInsufficientPermission = sdkerrors.Register(ModuleName, 1102, "insufficient permission")
 )

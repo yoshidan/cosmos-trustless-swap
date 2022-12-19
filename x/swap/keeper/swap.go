@@ -2,9 +2,10 @@ package keeper
 
 import (
 	"encoding/binary"
+	"swap/x/swap/types"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"swap/x/swap/types"
 )
 
 func (k Keeper) GetSwapCount(ctx sdk.Context) uint64 {
@@ -29,13 +30,17 @@ func (k Keeper) SetSwapCount(ctx sdk.Context, count uint64) {
 func (k Keeper) AppendSwap(ctx sdk.Context, swap types.Swap) uint64 {
 	count := k.GetSwapCount(ctx)
 	swap.Id = count
+	k.SetSwap(ctx, swap)
+	k.SetSwapCount(ctx, count+1)
+	return swap.Id
+}
+
+func (k Keeper) SetSwap(ctx sdk.Context, swap types.Swap) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.SwapKey))
 	byteKey := make([]byte, 8)
 	binary.BigEndian.PutUint64(byteKey, swap.Id)
-	appendedValue := k.cdc.MustMarshal(&swap)
-	store.Set(byteKey, appendedValue)
-	k.SetSwapCount(ctx, count+1)
-	return swap.Id
+	updatedValue := k.cdc.MustMarshal(&swap)
+	store.Set(byteKey, updatedValue)
 }
 
 func (k Keeper) GetSwap(ctx sdk.Context, id uint64) (val types.Swap, found bool) {
