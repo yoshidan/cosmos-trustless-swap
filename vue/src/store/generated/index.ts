@@ -1,8 +1,10 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
 
+import SwapSwap from './swap.swap'
 
 
 export default { 
+  SwapSwap: load(SwapSwap, 'swap.swap'),
   
 }
 
