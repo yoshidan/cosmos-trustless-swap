@@ -8,9 +8,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func (k Keeper) GetSwapCount(ctx sdk.Context) uint64 {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte(types.SwapCountKey))
-	byteKey := []byte(types.SwapCountKey)
+func (k Keeper) GetMaxSwapID(ctx sdk.Context) uint64 {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte(types.MaxSwapIDKey))
+	byteKey := []byte(types.MaxSwapIDKey)
 	bz := store.Get(byteKey)
 
 	if bz == nil {
@@ -19,19 +19,19 @@ func (k Keeper) GetSwapCount(ctx sdk.Context) uint64 {
 	return binary.BigEndian.Uint64(bz)
 }
 
-func (k Keeper) SetSwapCount(ctx sdk.Context, count uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.SwapCountKey))
-	byteKey := []byte(types.SwapCountKey)
+func (k Keeper) SetMaxSwapID(ctx sdk.Context, value uint64) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MaxSwapIDKey))
+	byteKey := []byte(types.MaxSwapIDKey)
 	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, count)
+	binary.BigEndian.PutUint64(bz, value)
 	store.Set(byteKey, bz)
 }
 
 func (k Keeper) AppendSwap(ctx sdk.Context, swap types.Swap) uint64 {
-	count := k.GetSwapCount(ctx)
-	swap.Id = count + 1
+	maxID := k.GetMaxSwapID(ctx)
+	swap.Id = maxID + 1
 	k.SetSwap(ctx, swap)
-	k.SetSwapCount(ctx, count+1)
+	k.SetMaxSwapID(ctx, swap.Id)
 	return swap.Id
 }
 

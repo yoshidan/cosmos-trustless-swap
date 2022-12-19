@@ -14,7 +14,7 @@ const (
 	MemStoreKey = "mem_swap"
 
 	SwapKey      = "Swap/value/"
-	SwapCountKey = "Swap/count/"
+	MaxSwapIDKey = "Swap/max/"
 )
 
 func KeyPrefix(p string) []byte {

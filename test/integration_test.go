@@ -67,15 +67,31 @@ func (suite *IntegrationTestSuite) TestSendSuccess() {
 	app.AccountKeeper.SetAccount(ctx, receiverAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, receiver, receiverBalance))
 
+	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	response, err := server.Send(ctx, &types.MsgSend{
+	sendParam := &types.MsgSend{
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		Amount:          newFooCoin(10).String(),
 		AmountToReceive: newBarCoin(5).String(),
-	})
+	}
+	response, err := server.Send(ctx, sendParam)
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(1), response.Id)
+	suite.Require().Equal(response.Id, app.SwapKeeper.GetMaxSwapID(ctx))
+	swap, found := app.SwapKeeper.GetSwap(ctx, response.Id)
+	suite.Require().True(found)
+	suite.Require().Equal(swap.Sender, sender.String())
+	suite.Require().Equal(swap.Receiver, receiver.String())
+	suite.Require().Equal(swap.Amount, sendParam.Amount)
+	suite.Require().Equal(swap.AmountToReceive, sendParam.AmountToReceive)
+	balance, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
+		Address: app.AccountKeeper.GetModuleAccount(ctx, types.ModuleName).GetAddress().String(),
+		Denom:   fooDenom,
+	})
+	suite.Require().NoError(err)
+	suite.Require().Equal(balance.Balance.Amount.Uint64(), uint64(10))
+
 }
 
 func newFooCoin(amt int64) sdk.Coin {
