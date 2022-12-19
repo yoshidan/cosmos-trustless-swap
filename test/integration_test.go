@@ -1,11 +1,12 @@
 package test
 
 import (
-	"fmt"
 	app2 "swap/app"
 	"swap/x/swap/keeper"
 	"testing"
 	"time"
+
+	"github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 
@@ -111,6 +112,8 @@ func (suite *IntegrationTestSuite) TestCancelSuccess() {
 		AmountToReceive: newBarCoin(5).String(),
 	}
 	response, err := server.Send(ctx, sendParam)
+
+	// Cancel
 	cancelParam := &types.MsgCancel{
 		Creator: sender.String(),
 		Id:      response.Id,
@@ -138,14 +141,13 @@ func (suite *IntegrationTestSuite) TestCancelSuccess() {
 
 	// Already cancelled
 	_, err = server.Cancel(ctx, cancelParam)
-	suite.Require().Equal(fmt.Sprintf("actual = 2, expected = 0: %s", types.ErrInvalidSwapStatus), err.Error())
+	suite.Require().ErrorIs(types.ErrInvalidSwapStatus, err)
 
 	_, err = server.Receive(ctx, &types.MsgReceive{
 		Creator: receiver.String(),
 		Id:      response.Id,
 	})
-	suite.Require().Equal(fmt.Sprintf("actual = 2, expected = 0: %s", types.ErrInvalidSwapStatus), err.Error())
-
+	suite.Require().ErrorIs(types.ErrInvalidSwapStatus, err)
 }
 
 func (suite *IntegrationTestSuite) TestReceiveSuccess() {
@@ -172,6 +174,8 @@ func (suite *IntegrationTestSuite) TestReceiveSuccess() {
 		AmountToReceive: newBarCoin(5).String(),
 	}
 	response, err := server.Send(ctx, sendParam)
+
+	// Receive
 	receiveParam := &types.MsgReceive{
 		Creator: receiver.String(),
 		Id:      response.Id,
@@ -206,13 +210,84 @@ func (suite *IntegrationTestSuite) TestReceiveSuccess() {
 
 	// Already received
 	_, err = server.Receive(ctx, receiveParam)
-	suite.Require().Equal(fmt.Sprintf("actual = 1, expected = 0: %s", types.ErrInvalidSwapStatus), err.Error())
+	suite.Require().ErrorIs(types.ErrInvalidSwapStatus, err)
 
 	_, err = server.Cancel(ctx, &types.MsgCancel{
 		Creator: sender.String(),
 		Id:      response.Id,
 	})
-	suite.Require().Equal(fmt.Sprintf("actual = 1, expected = 0: %s", types.ErrInvalidSwapStatus), err.Error())
+	suite.Require().ErrorIs(types.ErrInvalidSwapStatus, err)
+}
+
+func (suite *IntegrationTestSuite) TestCancelError() {
+	app, ctx := suite.app, suite.ctx
+
+	sender := sdk.AccAddress("send4_______________")
+	senderBalance := sdk.NewCoins(newFooCoin(100))
+	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
+	app.AccountKeeper.SetAccount(ctx, senderAccount)
+	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
+
+	receiver := sdk.AccAddress("recv4_______________")
+	receiverBalance := sdk.NewCoins(newBarCoin(1))
+	receiverAccount := app.AccountKeeper.NewAccountWithAddress(ctx, receiver)
+	app.AccountKeeper.SetAccount(ctx, receiverAccount)
+	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, receiver, receiverBalance))
+
+	// Send
+	server := keeper.NewMsgServerImpl(app.SwapKeeper)
+	sendParam := &types.MsgSend{
+		Creator:         sender.String(),
+		Receiver:        receiver.String(),
+		Amount:          newFooCoin(10).String(),
+		AmountToReceive: newBarCoin(5).String(),
+	}
+	response, err := server.Send(ctx, sendParam)
+
+	// Cancel
+	cancelParam := &types.MsgCancel{
+		Creator: receiver.String(),
+		Id:      response.Id,
+	}
+	_, err = server.Cancel(ctx, cancelParam)
+	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
+}
+
+func (suite *IntegrationTestSuite) TestReceiveError() {
+	app, ctx := suite.app, suite.ctx
+
+	sender := sdk.AccAddress("send6_______________")
+	senderBalance := sdk.NewCoins(newFooCoin(100))
+	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
+	app.AccountKeeper.SetAccount(ctx, senderAccount)
+	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
+
+	receiver := sdk.AccAddress("recv6_______________")
+
+	// Send
+	server := keeper.NewMsgServerImpl(app.SwapKeeper)
+	sendParam := &types.MsgSend{
+		Creator:         sender.String(),
+		Receiver:        receiver.String(),
+		Amount:          newFooCoin(10).String(),
+		AmountToReceive: newBarCoin(5).String(),
+	}
+	response, err := server.Send(ctx, sendParam)
+
+	// Receive
+	receiveParam := &types.MsgReceive{
+		Creator: sender.String(),
+		Id:      response.Id,
+	}
+	_, err = server.Receive(ctx, receiveParam)
+	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
+
+	receiveParam2 := &types.MsgReceive{
+		Creator: receiver.String(),
+		Id:      response.Id,
+	}
+	_, err = server.Receive(ctx, receiveParam2)
+	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)
 }
 
 func newFooCoin(amt int64) sdk.Coin {
