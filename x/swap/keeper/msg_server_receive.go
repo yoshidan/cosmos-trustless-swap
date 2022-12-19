@@ -30,7 +30,7 @@ func (k msgServer) Receive(goCtx context.Context, msg *types.MsgReceive) (*types
 		return nil, err
 	}
 
-	receiver, err := sdk.AccAddressFromBech32(swap.Sender)
+	receiver, err := sdk.AccAddressFromBech32(swap.Receiver)
 	if err != nil {
 		return nil, err
 	}
