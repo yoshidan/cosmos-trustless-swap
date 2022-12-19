@@ -2,9 +2,10 @@ import { Client, registry, MissingWalletError } from 'swap-client-ts'
 
 import { Params } from "swap-client-ts/swap.swap/types"
 import { Swap } from "swap-client-ts/swap.swap/types"
+import { SwapNFT } from "swap-client-ts/swap.swap/types"
 
 
-export { Params, Swap };
+export { Params, Swap, SwapNFT };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -37,10 +38,12 @@ const getDefaultState = () => {
 	return {
 				Params: {},
 				Show: {},
+				ShowNFT: {},
 				
 				_Structure: {
 						Params: getStructure(Params.fromPartial({})),
 						Swap: getStructure(Swap.fromPartial({})),
+						SwapNFT: getStructure(SwapNFT.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -80,6 +83,12 @@ export default {
 						(<any> params).query=null
 					}
 			return state.Show[JSON.stringify(params)] ?? {}
+		},
+				getShowNFT: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.ShowNFT[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -159,6 +168,28 @@ export default {
 		},
 		
 		
+		
+		
+		 		
+		
+		
+		async QueryShowNFT({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.SwapSwap.query.queryShowNFT( key.id)).data
+				
+					
+				commit('QUERY', { query: 'ShowNFT', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryShowNFT', payload: { options: { all }, params: {...key},query }})
+				return getters['getShowNFT']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryShowNFT API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
 		async sendMsgSend({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -169,6 +200,19 @@ export default {
 					throw new Error('TxClient:MsgSend:Init Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new Error('TxClient:MsgSend:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCancel({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.SwapSwap.tx.sendMsgCancel({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCancel:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCancel:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -185,16 +229,42 @@ export default {
 				}
 			}
 		},
-		async sendMsgCancel({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgReceiveNFT({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.SwapSwap.tx.sendMsgCancel({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.SwapSwap.tx.sendMsgReceiveNFT({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCancel:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgReceiveNFT:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCancel:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgReceiveNFT:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCancelNFT({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.SwapSwap.tx.sendMsgCancelNFT({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCancelNFT:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCancelNFT:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgSendNFT({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.SwapSwap.tx.sendMsgSendNFT({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSendNFT:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgSendNFT:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -212,6 +282,19 @@ export default {
 				}
 			}
 		},
+		async MsgCancel({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.SwapSwap.tx.msgCancel({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCancel:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCancel:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgReceive({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -225,16 +308,42 @@ export default {
 				}
 			}
 		},
-		async MsgCancel({ rootGetters }, { value }) {
+		async MsgReceiveNFT({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.SwapSwap.tx.msgCancel({value})
+				const msg = await client.SwapSwap.tx.msgReceiveNFT({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCancel:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgReceiveNFT:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCancel:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgReceiveNFT:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCancelNFT({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.SwapSwap.tx.msgCancelNFT({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCancelNFT:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCancelNFT:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgSendNFT({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.SwapSwap.tx.msgSendNFT({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSendNFT:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgSendNFT:Create Could not create message: ' + e.message)
 				}
 			}
 		},

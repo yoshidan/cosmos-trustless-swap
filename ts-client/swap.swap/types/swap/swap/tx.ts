@@ -31,6 +31,34 @@ export interface MsgCancel {
 export interface MsgCancelResponse {
 }
 
+export interface MsgSendNFT {
+  creator: string;
+  receiver: string;
+  classId: string;
+  nftId: string;
+  amountToReceive: string;
+}
+
+export interface MsgSendNFTResponse {
+  id: number;
+}
+
+export interface MsgCancelNFT {
+  creator: string;
+  id: number;
+}
+
+export interface MsgCancelNFTResponse {
+}
+
+export interface MsgReceiveNFT {
+  creator: string;
+  id: number;
+}
+
+export interface MsgReceiveNFTResponse {
+}
+
 function createBaseMsgSend(): MsgSend {
   return { creator: "", receiver: "", amount: "", amountToReceive: "" };
 }
@@ -348,12 +376,341 @@ export const MsgCancelResponse = {
   },
 };
 
+function createBaseMsgSendNFT(): MsgSendNFT {
+  return { creator: "", receiver: "", classId: "", nftId: "", amountToReceive: "" };
+}
+
+export const MsgSendNFT = {
+  encode(message: MsgSendNFT, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.receiver !== "") {
+      writer.uint32(18).string(message.receiver);
+    }
+    if (message.classId !== "") {
+      writer.uint32(26).string(message.classId);
+    }
+    if (message.nftId !== "") {
+      writer.uint32(34).string(message.nftId);
+    }
+    if (message.amountToReceive !== "") {
+      writer.uint32(42).string(message.amountToReceive);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgSendNFT {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgSendNFT();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.receiver = reader.string();
+          break;
+        case 3:
+          message.classId = reader.string();
+          break;
+        case 4:
+          message.nftId = reader.string();
+          break;
+        case 5:
+          message.amountToReceive = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgSendNFT {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      receiver: isSet(object.receiver) ? String(object.receiver) : "",
+      classId: isSet(object.classId) ? String(object.classId) : "",
+      nftId: isSet(object.nftId) ? String(object.nftId) : "",
+      amountToReceive: isSet(object.amountToReceive) ? String(object.amountToReceive) : "",
+    };
+  },
+
+  toJSON(message: MsgSendNFT): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.receiver !== undefined && (obj.receiver = message.receiver);
+    message.classId !== undefined && (obj.classId = message.classId);
+    message.nftId !== undefined && (obj.nftId = message.nftId);
+    message.amountToReceive !== undefined && (obj.amountToReceive = message.amountToReceive);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgSendNFT>, I>>(object: I): MsgSendNFT {
+    const message = createBaseMsgSendNFT();
+    message.creator = object.creator ?? "";
+    message.receiver = object.receiver ?? "";
+    message.classId = object.classId ?? "";
+    message.nftId = object.nftId ?? "";
+    message.amountToReceive = object.amountToReceive ?? "";
+    return message;
+  },
+};
+
+function createBaseMsgSendNFTResponse(): MsgSendNFTResponse {
+  return { id: 0 };
+}
+
+export const MsgSendNFTResponse = {
+  encode(message: MsgSendNFTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).uint64(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgSendNFTResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgSendNFTResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgSendNFTResponse {
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
+  },
+
+  toJSON(message: MsgSendNFTResponse): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = Math.round(message.id));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgSendNFTResponse>, I>>(object: I): MsgSendNFTResponse {
+    const message = createBaseMsgSendNFTResponse();
+    message.id = object.id ?? 0;
+    return message;
+  },
+};
+
+function createBaseMsgCancelNFT(): MsgCancelNFT {
+  return { creator: "", id: 0 };
+}
+
+export const MsgCancelNFT = {
+  encode(message: MsgCancelNFT, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgCancelNFT {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgCancelNFT();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.id = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCancelNFT {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      id: isSet(object.id) ? Number(object.id) : 0,
+    };
+  },
+
+  toJSON(message: MsgCancelNFT): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = Math.round(message.id));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgCancelNFT>, I>>(object: I): MsgCancelNFT {
+    const message = createBaseMsgCancelNFT();
+    message.creator = object.creator ?? "";
+    message.id = object.id ?? 0;
+    return message;
+  },
+};
+
+function createBaseMsgCancelNFTResponse(): MsgCancelNFTResponse {
+  return {};
+}
+
+export const MsgCancelNFTResponse = {
+  encode(_: MsgCancelNFTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgCancelNFTResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgCancelNFTResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgCancelNFTResponse {
+    return {};
+  },
+
+  toJSON(_: MsgCancelNFTResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgCancelNFTResponse>, I>>(_: I): MsgCancelNFTResponse {
+    const message = createBaseMsgCancelNFTResponse();
+    return message;
+  },
+};
+
+function createBaseMsgReceiveNFT(): MsgReceiveNFT {
+  return { creator: "", id: 0 };
+}
+
+export const MsgReceiveNFT = {
+  encode(message: MsgReceiveNFT, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgReceiveNFT {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgReceiveNFT();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.id = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgReceiveNFT {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      id: isSet(object.id) ? Number(object.id) : 0,
+    };
+  },
+
+  toJSON(message: MsgReceiveNFT): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = Math.round(message.id));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgReceiveNFT>, I>>(object: I): MsgReceiveNFT {
+    const message = createBaseMsgReceiveNFT();
+    message.creator = object.creator ?? "";
+    message.id = object.id ?? 0;
+    return message;
+  },
+};
+
+function createBaseMsgReceiveNFTResponse(): MsgReceiveNFTResponse {
+  return {};
+}
+
+export const MsgReceiveNFTResponse = {
+  encode(_: MsgReceiveNFTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgReceiveNFTResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgReceiveNFTResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgReceiveNFTResponse {
+    return {};
+  },
+
+  toJSON(_: MsgReceiveNFTResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgReceiveNFTResponse>, I>>(_: I): MsgReceiveNFTResponse {
+    const message = createBaseMsgReceiveNFTResponse();
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   Send(request: MsgSend): Promise<MsgSendResponse>;
   Receive(request: MsgReceive): Promise<MsgReceiveResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Cancel(request: MsgCancel): Promise<MsgCancelResponse>;
+  SendNFT(request: MsgSendNFT): Promise<MsgSendNFTResponse>;
+  CancelNFT(request: MsgCancelNFT): Promise<MsgCancelNFTResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  ReceiveNFT(request: MsgReceiveNFT): Promise<MsgReceiveNFTResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -363,6 +720,9 @@ export class MsgClientImpl implements Msg {
     this.Send = this.Send.bind(this);
     this.Receive = this.Receive.bind(this);
     this.Cancel = this.Cancel.bind(this);
+    this.SendNFT = this.SendNFT.bind(this);
+    this.CancelNFT = this.CancelNFT.bind(this);
+    this.ReceiveNFT = this.ReceiveNFT.bind(this);
   }
   Send(request: MsgSend): Promise<MsgSendResponse> {
     const data = MsgSend.encode(request).finish();
@@ -380,6 +740,24 @@ export class MsgClientImpl implements Msg {
     const data = MsgCancel.encode(request).finish();
     const promise = this.rpc.request("swap.swap.Msg", "Cancel", data);
     return promise.then((data) => MsgCancelResponse.decode(new _m0.Reader(data)));
+  }
+
+  SendNFT(request: MsgSendNFT): Promise<MsgSendNFTResponse> {
+    const data = MsgSendNFT.encode(request).finish();
+    const promise = this.rpc.request("swap.swap.Msg", "SendNFT", data);
+    return promise.then((data) => MsgSendNFTResponse.decode(new _m0.Reader(data)));
+  }
+
+  CancelNFT(request: MsgCancelNFT): Promise<MsgCancelNFTResponse> {
+    const data = MsgCancelNFT.encode(request).finish();
+    const promise = this.rpc.request("swap.swap.Msg", "CancelNFT", data);
+    return promise.then((data) => MsgCancelNFTResponse.decode(new _m0.Reader(data)));
+  }
+
+  ReceiveNFT(request: MsgReceiveNFT): Promise<MsgReceiveNFTResponse> {
+    const data = MsgReceiveNFT.encode(request).finish();
+    const promise = this.rpc.request("swap.swap.Msg", "ReceiveNFT", data);
+    return promise.then((data) => MsgReceiveNFTResponse.decode(new _m0.Reader(data)));
   }
 }
 

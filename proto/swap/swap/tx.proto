@@ -10,6 +10,9 @@ service Msg {
       rpc Send(MsgSend) returns (MsgSendResponse);
   rpc Receive(MsgReceive) returns (MsgReceiveResponse);
   rpc Cancel(MsgCancel) returns (MsgCancelResponse);
+  rpc SendNFT(MsgSendNFT) returns (MsgSendNFTResponse);
+  rpc CancelNFT(MsgCancelNFT) returns (MsgCancelNFTResponse);
+  rpc ReceiveNFT(MsgReceiveNFT) returns (MsgReceiveNFTResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -38,6 +41,34 @@ message MsgCancel {
 }
 
 message MsgCancelResponse {
+}
+
+message MsgSendNFT {
+  string creator = 1;
+  string receiver = 2;
+  string classId = 3;
+  string nftId = 4;
+  string amountToReceive = 5;
+}
+
+message MsgSendNFTResponse {
+  uint64 id = 1;
+}
+
+message MsgCancelNFT {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgCancelNFTResponse {
+}
+
+message MsgReceiveNFT {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgReceiveNFTResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

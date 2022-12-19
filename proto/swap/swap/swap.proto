@@ -21,3 +21,14 @@ message Swap {
   SwapStatus status = 6;
 }
 
+message SwapNFT {
+  uint64 id = 1;
+  string sender = 2;
+  string receiver = 3;
+  string classId = 4;
+  string nftId = 5;
+  string amountToReceive = 6;
+  SwapStatus status = 7;
+}
+
+

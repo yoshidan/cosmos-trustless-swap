@@ -53,6 +53,16 @@ export interface Swap {
   status: SwapStatus;
 }
 
+export interface SwapNFT {
+  id: number;
+  sender: string;
+  receiver: string;
+  classId: string;
+  nftId: string;
+  amountToReceive: string;
+  status: SwapStatus;
+}
+
 function createBaseSwap(): Swap {
   return { id: 0, sender: "", receiver: "", amount: "", amountToReceive: "", status: 0 };
 }
@@ -141,6 +151,109 @@ export const Swap = {
     message.sender = object.sender ?? "";
     message.receiver = object.receiver ?? "";
     message.amount = object.amount ?? "";
+    message.amountToReceive = object.amountToReceive ?? "";
+    message.status = object.status ?? 0;
+    return message;
+  },
+};
+
+function createBaseSwapNFT(): SwapNFT {
+  return { id: 0, sender: "", receiver: "", classId: "", nftId: "", amountToReceive: "", status: 0 };
+}
+
+export const SwapNFT = {
+  encode(message: SwapNFT, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).uint64(message.id);
+    }
+    if (message.sender !== "") {
+      writer.uint32(18).string(message.sender);
+    }
+    if (message.receiver !== "") {
+      writer.uint32(26).string(message.receiver);
+    }
+    if (message.classId !== "") {
+      writer.uint32(34).string(message.classId);
+    }
+    if (message.nftId !== "") {
+      writer.uint32(42).string(message.nftId);
+    }
+    if (message.amountToReceive !== "") {
+      writer.uint32(50).string(message.amountToReceive);
+    }
+    if (message.status !== 0) {
+      writer.uint32(56).int32(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SwapNFT {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSwapNFT();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = longToNumber(reader.uint64() as Long);
+          break;
+        case 2:
+          message.sender = reader.string();
+          break;
+        case 3:
+          message.receiver = reader.string();
+          break;
+        case 4:
+          message.classId = reader.string();
+          break;
+        case 5:
+          message.nftId = reader.string();
+          break;
+        case 6:
+          message.amountToReceive = reader.string();
+          break;
+        case 7:
+          message.status = reader.int32() as any;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SwapNFT {
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      sender: isSet(object.sender) ? String(object.sender) : "",
+      receiver: isSet(object.receiver) ? String(object.receiver) : "",
+      classId: isSet(object.classId) ? String(object.classId) : "",
+      nftId: isSet(object.nftId) ? String(object.nftId) : "",
+      amountToReceive: isSet(object.amountToReceive) ? String(object.amountToReceive) : "",
+      status: isSet(object.status) ? swapStatusFromJSON(object.status) : 0,
+    };
+  },
+
+  toJSON(message: SwapNFT): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = Math.round(message.id));
+    message.sender !== undefined && (obj.sender = message.sender);
+    message.receiver !== undefined && (obj.receiver = message.receiver);
+    message.classId !== undefined && (obj.classId = message.classId);
+    message.nftId !== undefined && (obj.nftId = message.nftId);
+    message.amountToReceive !== undefined && (obj.amountToReceive = message.amountToReceive);
+    message.status !== undefined && (obj.status = swapStatusToJSON(message.status));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<SwapNFT>, I>>(object: I): SwapNFT {
+    const message = createBaseSwapNFT();
+    message.id = object.id ?? 0;
+    message.sender = object.sender ?? "";
+    message.receiver = object.receiver ?? "";
+    message.classId = object.classId ?? "";
+    message.nftId = object.nftId ?? "";
     message.amountToReceive = object.amountToReceive ?? "";
     message.status = object.status ?? 0;
     return message;

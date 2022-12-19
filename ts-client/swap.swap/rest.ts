@@ -20,9 +20,18 @@ export interface RpcStatus {
   details?: ProtobufAny[];
 }
 
+export type SwapMsgCancelNFTResponse = object;
+
 export type SwapMsgCancelResponse = object;
 
+export type SwapMsgReceiveNFTResponse = object;
+
 export type SwapMsgReceiveResponse = object;
+
+export interface SwapMsgSendNFTResponse {
+  /** @format uint64 */
+  id?: string;
+}
 
 export interface SwapMsgSendResponse {
   /** @format uint64 */
@@ -42,6 +51,10 @@ export interface SwapQueryParamsResponse {
   params?: SwapParams;
 }
 
+export interface SwapQueryShowNFTResponse {
+  swap?: SwapSwapNFT;
+}
+
 export interface SwapQueryShowResponse {
   /** QueryParamsResponse is response type for the Query/Params RPC method. */
   swap?: SwapSwap;
@@ -56,6 +69,17 @@ export interface SwapSwap {
   sender?: string;
   receiver?: string;
   amount?: string;
+  amountToReceive?: string;
+  status?: SwapSwapStatus;
+}
+
+export interface SwapSwapNFT {
+  /** @format uint64 */
+  id?: string;
+  sender?: string;
+  receiver?: string;
+  classId?: string;
+  nftId?: string;
   amountToReceive?: string;
   status?: SwapSwapStatus;
 }
@@ -218,6 +242,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryShow = (id: string, params: RequestParams = {}) =>
     this.request<SwapQueryShowResponse, RpcStatus>({
       path: `/swap/swap/show/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryShowNft
+   * @summary Queries a list of ShowNFT items.
+   * @request GET:/swap/swap/show_nft/{id}
+   */
+  queryShowNft = (id: string, params: RequestParams = {}) =>
+    this.request<SwapQueryShowNFTResponse, RpcStatus>({
+      path: `/swap/swap/show_nft/${id}`,
       method: "GET",
       format: "json",
       ...params,
