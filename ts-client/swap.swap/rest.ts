@@ -24,7 +24,10 @@ export type SwapMsgCancelResponse = object;
 
 export type SwapMsgReceiveResponse = object;
 
-export type SwapMsgSendResponse = object;
+export interface SwapMsgSendResponse {
+  /** @format uint64 */
+  id?: string;
+}
 
 /**
  * Params defines the parameters for the module.

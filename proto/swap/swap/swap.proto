@@ -1,0 +1,23 @@
+syntax = "proto3";
+package swap.swap;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "swap/x/swap/types";
+
+enum SwapStatus {
+  Active = 0;
+  Closed = 1;
+  Cancelled = 2;
+}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message Swap {
+  uint64 id = 1;
+  string sender = 2;
+  string receiver = 3;
+  string amount = 4;
+  string amountToReceive = 5;
+  SwapStatus status = 6;
+}
+

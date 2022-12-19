@@ -9,7 +9,7 @@ const TypeMsgReceive = "receive"
 
 var _ sdk.Msg = &MsgReceive{}
 
-func NewMsgReceive(creator string, id string) *MsgReceive {
+func NewMsgReceive(creator string, id uint64) *MsgReceive {
 	return &MsgReceive{
 		Creator: creator,
 		Id:      id,

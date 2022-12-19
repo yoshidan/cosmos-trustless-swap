@@ -21,11 +21,12 @@ message MsgSend {
 }
 
 message MsgSendResponse {
+  uint64 id = 1;
 }
 
 message MsgReceive {
   string creator = 1;
-  string id = 2;
+  uint64 id = 2;
 }
 
 message MsgReceiveResponse {
@@ -33,7 +34,7 @@ message MsgReceiveResponse {
 
 message MsgCancel {
   string creator = 1;
-  string id = 2;
+  uint64 id = 2;
 }
 
 message MsgCancelResponse {

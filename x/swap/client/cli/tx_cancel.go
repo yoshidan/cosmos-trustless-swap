@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/spf13/cast"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -18,7 +19,10 @@ func CmdCancel() *cobra.Command {
 		Short: "Broadcast message cancel",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argId := args[0]
+			argId, err := cast.ToUint64E(args[0])
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
