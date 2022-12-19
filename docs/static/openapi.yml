@@ -44718,6 +44718,49 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
+  /swap/swap/show/{id}:
+    get:
+      summary: Queries a list of Show items.
+      operationId: SwapSwapShow
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              sender:
+                type: string
+              receiver:
+                type: string
+              amountToSend:
+                type: string
+              amountToReceive:
+                type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
 definitions:
   cosmos.auth.v1beta1.AddressBytesToStringResponse:
     type: object
@@ -74271,6 +74314,12 @@ definitions:
     description: |-
       Version defines the versioning scheme used to negotiate the IBC verison in
       the connection handshake.
+  swap.swap.MsgCancelResponse:
+    type: object
+  swap.swap.MsgReceiveResponse:
+    type: object
+  swap.swap.MsgSendResponse:
+    type: object
   swap.swap.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -74281,3 +74330,14 @@ definitions:
         description: params holds all the parameters of this module.
         type: object
     description: QueryParamsResponse is response type for the Query/Params RPC method.
+  swap.swap.QueryShowResponse:
+    type: object
+    properties:
+      sender:
+        type: string
+      receiver:
+        type: string
+      amountToSend:
+        type: string
+      amountToReceive:
+        type: string

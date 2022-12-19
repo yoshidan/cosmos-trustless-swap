@@ -20,6 +20,12 @@ export interface RpcStatus {
   details?: ProtobufAny[];
 }
 
+export type SwapMsgCancelResponse = object;
+
+export type SwapMsgReceiveResponse = object;
+
+export type SwapMsgSendResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */
@@ -31,6 +37,13 @@ export type SwapParams = object;
 export interface SwapQueryParamsResponse {
   /** params holds all the parameters of this module. */
   params?: SwapParams;
+}
+
+export interface SwapQueryShowResponse {
+  sender?: string;
+  receiver?: string;
+  amountToSend?: string;
+  amountToReceive?: string;
 }
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, ResponseType } from "axios";
@@ -169,6 +182,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<SwapQueryParamsResponse, RpcStatus>({
       path: `/swap/swap/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryShow
+   * @summary Queries a list of Show items.
+   * @request GET:/swap/swap/show/{id}
+   */
+  queryShow = (id: string, params: RequestParams = {}) =>
+    this.request<SwapQueryShowResponse, RpcStatus>({
+      path: `/swap/swap/show/${id}`,
       method: "GET",
       format: "json",
       ...params,

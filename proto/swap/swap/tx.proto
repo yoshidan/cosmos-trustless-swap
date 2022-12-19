@@ -7,7 +7,36 @@ option go_package = "swap/x/swap/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc Send(MsgSend) returns (MsgSendResponse);
+  rpc Receive(MsgReceive) returns (MsgReceiveResponse);
+  rpc Cancel(MsgCancel) returns (MsgCancelResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgSend {
+  string creator = 1;
+  string receiver = 2;
+  string amount = 3;
+  string amountToReceive = 4;
+}
+
+message MsgSendResponse {
+}
+
+message MsgReceive {
+  string creator = 1;
+  string id = 2;
+}
+
+message MsgReceiveResponse {
+}
+
+message MsgCancel {
+  string creator = 1;
+  string id = 2;
+}
+
+message MsgCancelResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
