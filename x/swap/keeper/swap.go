@@ -29,7 +29,7 @@ func (k Keeper) SetSwapCount(ctx sdk.Context, count uint64) {
 
 func (k Keeper) AppendSwap(ctx sdk.Context, swap types.Swap) uint64 {
 	count := k.GetSwapCount(ctx)
-	swap.Id = count
+	swap.Id = count + 1
 	k.SetSwap(ctx, swap)
 	k.SetSwapCount(ctx, count+1)
 	return swap.Id
