@@ -13,8 +13,10 @@ const (
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_swap"
 
-	SwapKey      = "Swap/value/"
-	MaxSwapIDKey = "Swap/max/"
+	SwapKey         = "Swap/value/"
+	MaxSwapIDKey    = "Swap/max/"
+	NFTSwapKey      = "Swap/NFT/value/"
+	MaxNFTSwapIDKey = "Swap/NFT/max/"
 )
 
 func KeyPrefix(p string) []byte {

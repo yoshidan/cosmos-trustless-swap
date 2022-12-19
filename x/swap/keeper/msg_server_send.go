@@ -28,7 +28,6 @@ func (k msgServer) Send(goCtx context.Context, msg *types.MsgSend) (*types.MsgSe
 		Receiver:        msg.Receiver,
 		Amount:          msg.Amount,
 		AmountToReceive: msg.AmountToReceive,
-		Status:          types.SwapStatus_Active,
 	})
 
 	return &types.MsgSendResponse{

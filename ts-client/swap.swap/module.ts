@@ -7,36 +7,24 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgSend } from "./types/swap/swap/tx";
-import { MsgCancel } from "./types/swap/swap/tx";
-import { MsgReceive } from "./types/swap/swap/tx";
 import { MsgReceiveNFT } from "./types/swap/swap/tx";
+import { MsgSend } from "./types/swap/swap/tx";
 import { MsgCancelNFT } from "./types/swap/swap/tx";
+import { MsgCancel } from "./types/swap/swap/tx";
 import { MsgSendNFT } from "./types/swap/swap/tx";
+import { MsgReceive } from "./types/swap/swap/tx";
 
 
-export { MsgSend, MsgCancel, MsgReceive, MsgReceiveNFT, MsgCancelNFT, MsgSendNFT };
-
-type sendMsgSendParams = {
-  value: MsgSend,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCancelParams = {
-  value: MsgCancel,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgReceiveParams = {
-  value: MsgReceive,
-  fee?: StdFee,
-  memo?: string
-};
+export { MsgReceiveNFT, MsgSend, MsgCancelNFT, MsgCancel, MsgSendNFT, MsgReceive };
 
 type sendMsgReceiveNFTParams = {
   value: MsgReceiveNFT,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgSendParams = {
+  value: MsgSend,
   fee?: StdFee,
   memo?: string
 };
@@ -47,35 +35,47 @@ type sendMsgCancelNFTParams = {
   memo?: string
 };
 
+type sendMsgCancelParams = {
+  value: MsgCancel,
+  fee?: StdFee,
+  memo?: string
+};
+
 type sendMsgSendNFTParams = {
   value: MsgSendNFT,
   fee?: StdFee,
   memo?: string
 };
 
-
-type msgSendParams = {
-  value: MsgSend,
-};
-
-type msgCancelParams = {
-  value: MsgCancel,
-};
-
-type msgReceiveParams = {
+type sendMsgReceiveParams = {
   value: MsgReceive,
+  fee?: StdFee,
+  memo?: string
 };
+
 
 type msgReceiveNFTParams = {
   value: MsgReceiveNFT,
+};
+
+type msgSendParams = {
+  value: MsgSend,
 };
 
 type msgCancelNFTParams = {
   value: MsgCancelNFT,
 };
 
+type msgCancelParams = {
+  value: MsgCancel,
+};
+
 type msgSendNFTParams = {
   value: MsgSendNFT,
+};
+
+type msgReceiveParams = {
+  value: MsgReceive,
 };
 
 
@@ -96,48 +96,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
-		async sendMsgSend({ value, fee, memo }: sendMsgSendParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgSend: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgSend({ value: MsgSend.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgSend: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCancel({ value, fee, memo }: sendMsgCancelParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCancel: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCancel({ value: MsgCancel.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCancel: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgReceive({ value, fee, memo }: sendMsgReceiveParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgReceive: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgReceive({ value: MsgReceive.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgReceive: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgReceiveNFT({ value, fee, memo }: sendMsgReceiveNFTParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgReceiveNFT: Unable to sign Tx. Signer is not present.')
@@ -149,6 +107,20 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgReceiveNFT: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgSend({ value, fee, memo }: sendMsgSendParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgSend: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgSend({ value: MsgSend.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgSend: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -166,6 +138,20 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		async sendMsgCancel({ value, fee, memo }: sendMsgCancelParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCancel: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCancel({ value: MsgCancel.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCancel: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
 		async sendMsgSendNFT({ value, fee, memo }: sendMsgSendNFTParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgSendNFT: Unable to sign Tx. Signer is not present.')
@@ -180,36 +166,34 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		
-		msgSend({ value }: msgSendParams): EncodeObject {
-			try {
-				return { typeUrl: "/swap.swap.MsgSend", value: MsgSend.fromPartial( value ) }  
+		async sendMsgReceive({ value, fee, memo }: sendMsgReceiveParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgReceive: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgReceive({ value: MsgReceive.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgSend: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgReceive: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
-		msgCancel({ value }: msgCancelParams): EncodeObject {
-			try {
-				return { typeUrl: "/swap.swap.MsgCancel", value: MsgCancel.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgCancel: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgReceive({ value }: msgReceiveParams): EncodeObject {
-			try {
-				return { typeUrl: "/swap.swap.MsgReceive", value: MsgReceive.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgReceive: Could not create message: ' + e.message)
-			}
-		},
 		
 		msgReceiveNFT({ value }: msgReceiveNFTParams): EncodeObject {
 			try {
 				return { typeUrl: "/swap.swap.MsgReceiveNFT", value: MsgReceiveNFT.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgReceiveNFT: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgSend({ value }: msgSendParams): EncodeObject {
+			try {
+				return { typeUrl: "/swap.swap.MsgSend", value: MsgSend.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgSend: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -221,11 +205,27 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		msgCancel({ value }: msgCancelParams): EncodeObject {
+			try {
+				return { typeUrl: "/swap.swap.MsgCancel", value: MsgCancel.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCancel: Could not create message: ' + e.message)
+			}
+		},
+		
 		msgSendNFT({ value }: msgSendNFTParams): EncodeObject {
 			try {
 				return { typeUrl: "/swap.swap.MsgSendNFT", value: MsgSendNFT.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgSendNFT: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgReceive({ value }: msgReceiveParams): EncodeObject {
+			try {
+				return { typeUrl: "/swap.swap.MsgReceive", value: MsgReceive.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgReceive: Could not create message: ' + e.message)
 			}
 		},
 		

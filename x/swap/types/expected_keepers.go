@@ -7,8 +7,8 @@ import (
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
 type AccountKeeper interface {
+	GetModuleAddress(name string) sdk.AccAddress
 	GetAccount(ctx sdk.Context, addr sdk.AccAddress) types.AccountI
-	// Methods imported from account should be defined here
 }
 
 // BankKeeper defines the expected interface needed to retrieve account balances.
@@ -21,6 +21,6 @@ type BankKeeper interface {
 
 // NFTKeeper defines the expected nft keeper used for simulations (noalias)
 type NFTKeeper interface {
+	GetOwner(ctx sdk.Context, classID string, nftID string) sdk.AccAddress
 	Transfer(ctx sdk.Context, classId string, nftId string, receiver sdk.AccAddress) error
-	// Methods imported from nft should be defined here
 }

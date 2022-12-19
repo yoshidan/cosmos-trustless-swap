@@ -4,45 +4,6 @@ import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "swap.swap";
 
-export enum SwapStatus {
-  Active = 0,
-  Closed = 1,
-  Cancelled = 2,
-  UNRECOGNIZED = -1,
-}
-
-export function swapStatusFromJSON(object: any): SwapStatus {
-  switch (object) {
-    case 0:
-    case "Active":
-      return SwapStatus.Active;
-    case 1:
-    case "Closed":
-      return SwapStatus.Closed;
-    case 2:
-    case "Cancelled":
-      return SwapStatus.Cancelled;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return SwapStatus.UNRECOGNIZED;
-  }
-}
-
-export function swapStatusToJSON(object: SwapStatus): string {
-  switch (object) {
-    case SwapStatus.Active:
-      return "Active";
-    case SwapStatus.Closed:
-      return "Closed";
-    case SwapStatus.Cancelled:
-      return "Cancelled";
-    case SwapStatus.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
 /** QueryParamsResponse is response type for the Query/Params RPC method. */
 export interface Swap {
   id: number;
@@ -50,21 +11,19 @@ export interface Swap {
   receiver: string;
   amount: string;
   amountToReceive: string;
-  status: SwapStatus;
 }
 
-export interface SwapNFT {
+export interface NFTSwap {
   id: number;
   sender: string;
   receiver: string;
   classId: string;
   nftId: string;
   amountToReceive: string;
-  status: SwapStatus;
 }
 
 function createBaseSwap(): Swap {
-  return { id: 0, sender: "", receiver: "", amount: "", amountToReceive: "", status: 0 };
+  return { id: 0, sender: "", receiver: "", amount: "", amountToReceive: "" };
 }
 
 export const Swap = {
@@ -83,9 +42,6 @@ export const Swap = {
     }
     if (message.amountToReceive !== "") {
       writer.uint32(42).string(message.amountToReceive);
-    }
-    if (message.status !== 0) {
-      writer.uint32(48).int32(message.status);
     }
     return writer;
   },
@@ -112,9 +68,6 @@ export const Swap = {
         case 5:
           message.amountToReceive = reader.string();
           break;
-        case 6:
-          message.status = reader.int32() as any;
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -130,7 +83,6 @@ export const Swap = {
       receiver: isSet(object.receiver) ? String(object.receiver) : "",
       amount: isSet(object.amount) ? String(object.amount) : "",
       amountToReceive: isSet(object.amountToReceive) ? String(object.amountToReceive) : "",
-      status: isSet(object.status) ? swapStatusFromJSON(object.status) : 0,
     };
   },
 
@@ -141,7 +93,6 @@ export const Swap = {
     message.receiver !== undefined && (obj.receiver = message.receiver);
     message.amount !== undefined && (obj.amount = message.amount);
     message.amountToReceive !== undefined && (obj.amountToReceive = message.amountToReceive);
-    message.status !== undefined && (obj.status = swapStatusToJSON(message.status));
     return obj;
   },
 
@@ -152,17 +103,16 @@ export const Swap = {
     message.receiver = object.receiver ?? "";
     message.amount = object.amount ?? "";
     message.amountToReceive = object.amountToReceive ?? "";
-    message.status = object.status ?? 0;
     return message;
   },
 };
 
-function createBaseSwapNFT(): SwapNFT {
-  return { id: 0, sender: "", receiver: "", classId: "", nftId: "", amountToReceive: "", status: 0 };
+function createBaseNFTSwap(): NFTSwap {
+  return { id: 0, sender: "", receiver: "", classId: "", nftId: "", amountToReceive: "" };
 }
 
-export const SwapNFT = {
-  encode(message: SwapNFT, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const NFTSwap = {
+  encode(message: NFTSwap, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).uint64(message.id);
     }
@@ -181,16 +131,13 @@ export const SwapNFT = {
     if (message.amountToReceive !== "") {
       writer.uint32(50).string(message.amountToReceive);
     }
-    if (message.status !== 0) {
-      writer.uint32(56).int32(message.status);
-    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SwapNFT {
+  decode(input: _m0.Reader | Uint8Array, length?: number): NFTSwap {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSwapNFT();
+    const message = createBaseNFTSwap();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -212,9 +159,6 @@ export const SwapNFT = {
         case 6:
           message.amountToReceive = reader.string();
           break;
-        case 7:
-          message.status = reader.int32() as any;
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -223,7 +167,7 @@ export const SwapNFT = {
     return message;
   },
 
-  fromJSON(object: any): SwapNFT {
+  fromJSON(object: any): NFTSwap {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
       sender: isSet(object.sender) ? String(object.sender) : "",
@@ -231,11 +175,10 @@ export const SwapNFT = {
       classId: isSet(object.classId) ? String(object.classId) : "",
       nftId: isSet(object.nftId) ? String(object.nftId) : "",
       amountToReceive: isSet(object.amountToReceive) ? String(object.amountToReceive) : "",
-      status: isSet(object.status) ? swapStatusFromJSON(object.status) : 0,
     };
   },
 
-  toJSON(message: SwapNFT): unknown {
+  toJSON(message: NFTSwap): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
     message.sender !== undefined && (obj.sender = message.sender);
@@ -243,19 +186,17 @@ export const SwapNFT = {
     message.classId !== undefined && (obj.classId = message.classId);
     message.nftId !== undefined && (obj.nftId = message.nftId);
     message.amountToReceive !== undefined && (obj.amountToReceive = message.amountToReceive);
-    message.status !== undefined && (obj.status = swapStatusToJSON(message.status));
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<SwapNFT>, I>>(object: I): SwapNFT {
-    const message = createBaseSwapNFT();
+  fromPartial<I extends Exact<DeepPartial<NFTSwap>, I>>(object: I): NFTSwap {
+    const message = createBaseNFTSwap();
     message.id = object.id ?? 0;
     message.sender = object.sender ?? "";
     message.receiver = object.receiver ?? "";
     message.classId = object.classId ?? "";
     message.nftId = object.nftId ?? "";
     message.amountToReceive = object.amountToReceive ?? "";
-    message.status = object.status ?? 0;
     return message;
   },
 };

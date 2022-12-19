@@ -38,6 +38,16 @@ export interface SwapMsgSendResponse {
   id?: string;
 }
 
+export interface SwapNFTSwap {
+  /** @format uint64 */
+  id?: string;
+  sender?: string;
+  receiver?: string;
+  classId?: string;
+  nftId?: string;
+  amountToReceive?: string;
+}
+
 /**
  * Params defines the parameters for the module.
  */
@@ -52,7 +62,7 @@ export interface SwapQueryParamsResponse {
 }
 
 export interface SwapQueryShowNFTResponse {
-  swap?: SwapSwapNFT;
+  swap?: SwapNFTSwap;
 }
 
 export interface SwapQueryShowResponse {
@@ -70,24 +80,6 @@ export interface SwapSwap {
   receiver?: string;
   amount?: string;
   amountToReceive?: string;
-  status?: SwapSwapStatus;
-}
-
-export interface SwapSwapNFT {
-  /** @format uint64 */
-  id?: string;
-  sender?: string;
-  receiver?: string;
-  classId?: string;
-  nftId?: string;
-  amountToReceive?: string;
-  status?: SwapSwapStatus;
-}
-
-export enum SwapSwapStatus {
-  Active = "Active",
-  Closed = "Closed",
-  Cancelled = "Cancelled",
 }
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, ResponseType } from "axios";

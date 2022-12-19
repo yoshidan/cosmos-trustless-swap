@@ -44742,13 +44742,6 @@ paths:
                     type: string
                   amountToReceive:
                     type: string
-                  status:
-                    type: string
-                    enum:
-                      - Active
-                      - Closed
-                      - Cancelled
-                    default: Active
                 description: >-
                   QueryParamsResponse is response type for the Query/Params RPC
                   method.
@@ -44804,13 +44797,6 @@ paths:
                     type: string
                   amountToReceive:
                     type: string
-                  status:
-                    type: string
-                    enum:
-                      - Active
-                      - Closed
-                      - Cancelled
-                    default: Active
         default:
           description: An unexpected error response.
           schema:
@@ -74410,6 +74396,22 @@ definitions:
       id:
         type: string
         format: uint64
+  swap.swap.NFTSwap:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+      sender:
+        type: string
+      receiver:
+        type: string
+      classId:
+        type: string
+      nftId:
+        type: string
+      amountToReceive:
+        type: string
   swap.swap.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -74439,13 +74441,6 @@ definitions:
             type: string
           amountToReceive:
             type: string
-          status:
-            type: string
-            enum:
-              - Active
-              - Closed
-              - Cancelled
-            default: Active
   swap.swap.QueryShowResponse:
     type: object
     properties:
@@ -74463,13 +74458,6 @@ definitions:
             type: string
           amountToReceive:
             type: string
-          status:
-            type: string
-            enum:
-              - Active
-              - Closed
-              - Cancelled
-            default: Active
         description: QueryParamsResponse is response type for the Query/Params RPC method.
   swap.swap.Swap:
     type: object
@@ -74485,41 +74473,4 @@ definitions:
         type: string
       amountToReceive:
         type: string
-      status:
-        type: string
-        enum:
-          - Active
-          - Closed
-          - Cancelled
-        default: Active
     description: QueryParamsResponse is response type for the Query/Params RPC method.
-  swap.swap.SwapNFT:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uint64
-      sender:
-        type: string
-      receiver:
-        type: string
-      classId:
-        type: string
-      nftId:
-        type: string
-      amountToReceive:
-        type: string
-      status:
-        type: string
-        enum:
-          - Active
-          - Closed
-          - Cancelled
-        default: Active
-  swap.swap.SwapStatus:
-    type: string
-    enum:
-      - Active
-      - Closed
-      - Cancelled
-    default: Active

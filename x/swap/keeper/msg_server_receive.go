@@ -21,10 +21,6 @@ func (k msgServer) Receive(goCtx context.Context, msg *types.MsgReceive) (*types
 		return nil, types.ErrInsufficientPermission
 	}
 
-	if swap.Status != types.SwapStatus_Active {
-		return nil, errors.Wrapf(types.ErrInvalidSwapStatus, "actual = %d, expected = %d", swap.Status, types.SwapStatus_Active)
-	}
-
 	sender, err := sdk.AccAddressFromBech32(swap.Sender)
 	if err != nil {
 		return nil, err
@@ -51,7 +47,6 @@ func (k msgServer) Receive(goCtx context.Context, msg *types.MsgReceive) (*types
 	if err = k.bankKeeper.SendCoins(ctx, receiver, sender, sdk.NewCoins(amountToReceive)); err != nil {
 		return nil, err
 	}
-	swap.Status = types.SwapStatus_Closed
-	k.SetSwap(ctx, swap)
+	k.DeleteSwap(ctx, swap)
 	return &types.MsgReceiveResponse{}, nil
 }

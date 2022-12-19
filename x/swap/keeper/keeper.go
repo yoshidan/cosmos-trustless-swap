@@ -21,6 +21,7 @@ type (
 
 		accountKeeper types.AccountKeeper
 		bankKeeper    types.BankKeeper
+		nftKeeper     types.NFTKeeper
 	}
 )
 
@@ -43,7 +44,7 @@ func NewKeeper(
 		storeKey:      storeKey,
 		memKey:        memKey,
 		paramstore:    ps,
-		accountKeeper: accountKeeper, bankKeeper: bankKeeper,
+		accountKeeper: accountKeeper, bankKeeper: bankKeeper, nftKeeper: nftKeeper,
 	}
 }
 

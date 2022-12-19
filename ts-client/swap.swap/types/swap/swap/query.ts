@@ -2,7 +2,7 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { Params } from "./params";
-import { Swap, SwapNFT } from "./swap";
+import { NFTSwap, Swap } from "./swap";
 
 export const protobufPackage = "swap.swap";
 
@@ -29,7 +29,7 @@ export interface QueryShowNFTRequest {
 }
 
 export interface QueryShowNFTResponse {
-  swap: SwapNFT | undefined;
+  swap: NFTSwap | undefined;
 }
 
 function createBaseQueryParamsRequest(): QueryParamsRequest {
@@ -268,7 +268,7 @@ function createBaseQueryShowNFTResponse(): QueryShowNFTResponse {
 export const QueryShowNFTResponse = {
   encode(message: QueryShowNFTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.swap !== undefined) {
-      SwapNFT.encode(message.swap, writer.uint32(10).fork()).ldelim();
+      NFTSwap.encode(message.swap, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -281,7 +281,7 @@ export const QueryShowNFTResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.swap = SwapNFT.decode(reader, reader.uint32());
+          message.swap = NFTSwap.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -292,18 +292,18 @@ export const QueryShowNFTResponse = {
   },
 
   fromJSON(object: any): QueryShowNFTResponse {
-    return { swap: isSet(object.swap) ? SwapNFT.fromJSON(object.swap) : undefined };
+    return { swap: isSet(object.swap) ? NFTSwap.fromJSON(object.swap) : undefined };
   },
 
   toJSON(message: QueryShowNFTResponse): unknown {
     const obj: any = {};
-    message.swap !== undefined && (obj.swap = message.swap ? SwapNFT.toJSON(message.swap) : undefined);
+    message.swap !== undefined && (obj.swap = message.swap ? NFTSwap.toJSON(message.swap) : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<QueryShowNFTResponse>, I>>(object: I): QueryShowNFTResponse {
     const message = createBaseQueryShowNFTResponse();
-    message.swap = (object.swap !== undefined && object.swap !== null) ? SwapNFT.fromPartial(object.swap) : undefined;
+    message.swap = (object.swap !== undefined && object.swap !== null) ? NFTSwap.fromPartial(object.swap) : undefined;
     return message;
   },
 };

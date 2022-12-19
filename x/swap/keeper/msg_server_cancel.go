@@ -22,10 +22,6 @@ func (k msgServer) Cancel(goCtx context.Context, msg *types.MsgCancel) (*types.M
 		return nil, types.ErrInsufficientPermission
 	}
 
-	if swap.Status != types.SwapStatus_Active {
-		return nil, errors.Wrapf(types.ErrInvalidSwapStatus, "actual = %d, expected = %d", swap.Status, types.SwapStatus_Active)
-	}
-
 	sender, err := sdk.AccAddressFromBech32(swap.Sender)
 	if err != nil {
 		return nil, err
@@ -39,7 +35,6 @@ func (k msgServer) Cancel(goCtx context.Context, msg *types.MsgCancel) (*types.M
 	if err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sender, sdk.NewCoins(amount)); err != nil {
 		return nil, err
 	}
-	swap.Status = types.SwapStatus_Cancelled
-	k.SetSwap(ctx, swap)
+	k.DeleteSwap(ctx, swap)
 	return &types.MsgCancelResponse{}, nil
 }

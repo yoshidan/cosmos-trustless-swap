@@ -80,7 +80,6 @@ func (suite *IntegrationTestSuite) TestSendSuccess() {
 	queryResponse, err := app.SwapKeeper.Show(ctx, &types.QueryShowRequest{Id: response.Id})
 	swap := queryResponse.Swap
 	suite.Require().NoError(err)
-	suite.Require().Equal(types.SwapStatus_Active, swap.Status)
 	suite.Require().Equal(sender.String(), swap.Sender)
 	suite.Require().Equal(receiver.String(), swap.Receiver)
 	suite.Require().Equal(sendParam.Amount, swap.Amount)
@@ -121,9 +120,8 @@ func (suite *IntegrationTestSuite) TestCancelSuccess() {
 	}
 	_, err = server.Cancel(ctx, cancelParam)
 	suite.Require().NoError(err)
-	swap, found := app.SwapKeeper.GetSwap(ctx, response.Id)
-	suite.Require().True(found)
-	suite.Require().Equal(types.SwapStatus_Cancelled, swap.Status)
+	_, found := app.SwapKeeper.GetSwap(ctx, response.Id)
+	suite.Require().False(found)
 
 	// Check the token return
 	balanceModule, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
@@ -142,13 +140,13 @@ func (suite *IntegrationTestSuite) TestCancelSuccess() {
 
 	// Already cancelled
 	_, err = server.Cancel(ctx, cancelParam)
-	suite.Require().ErrorIs(types.ErrInvalidSwapStatus, err)
+	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 
 	_, err = server.Receive(ctx, &types.MsgReceive{
 		Creator: receiver.String(),
 		Id:      response.Id,
 	})
-	suite.Require().ErrorIs(types.ErrInvalidSwapStatus, err)
+	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
 
 func (suite *IntegrationTestSuite) TestReceiveSuccess() {
@@ -183,9 +181,8 @@ func (suite *IntegrationTestSuite) TestReceiveSuccess() {
 	}
 	_, err = server.Receive(ctx, receiveParam)
 	suite.Require().NoError(err)
-	swap, found := app.SwapKeeper.GetSwap(ctx, response.Id)
-	suite.Require().True(found)
-	suite.Require().Equal(types.SwapStatus_Closed, swap.Status)
+	_, found := app.SwapKeeper.GetSwap(ctx, response.Id)
+	suite.Require().False(found)
 
 	// Check token swapped
 	balanceModule, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
@@ -211,13 +208,13 @@ func (suite *IntegrationTestSuite) TestReceiveSuccess() {
 
 	// Already received
 	_, err = server.Receive(ctx, receiveParam)
-	suite.Require().ErrorIs(types.ErrInvalidSwapStatus, err)
+	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 
 	_, err = server.Cancel(ctx, &types.MsgCancel{
 		Creator: sender.String(),
 		Id:      response.Id,
 	})
-	suite.Require().ErrorIs(types.ErrInvalidSwapStatus, err)
+	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
 
 func (suite *IntegrationTestSuite) TestCancelError() {
