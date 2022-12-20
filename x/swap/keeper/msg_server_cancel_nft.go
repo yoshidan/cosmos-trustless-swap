@@ -5,8 +5,6 @@ import (
 
 	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -22,14 +20,9 @@ func (k msgServer) CancelNFT(goCtx context.Context, msg *types.MsgCancelNFT) (*t
 		return nil, types.ErrInvalidSwapData
 	}
 
-	moduleAddress := k.accountKeeper.GetModuleAddress(types.ModuleName)
-	if moduleAddress == nil {
-		return nil, sdkerrors.ErrInvalidAddress
-	}
-
 	ownerAddress := k.nftKeeper.GetOwner(ctx, swap.ClassId, swap.NftId)
-	if moduleAddress.String() != ownerAddress.String() {
-		return nil, types.ErrInsufficientPermission
+	if k.accountKeeper.GetModuleAddress(types.ModuleName).String() != ownerAddress.String() {
+		return nil, types.ErrInvalidSwapData
 	}
 
 	sender, err := sdk.AccAddressFromBech32(swap.Creator)

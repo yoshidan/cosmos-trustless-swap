@@ -482,3 +482,21 @@ func (suite *SwapTestSuite) TestReceiveNFTError() {
 	_, err = server.ReceiveNFT(ctx, receiveParam2)
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)
 }
+
+func (suite *SwapTestSuite) TestSendNFTError() {
+	app, ctx := suite.app, suite.ctx
+
+	sender := sdk.AccAddress("send6_______________")
+	item := nft.NFT{
+		ClassId: "classId",
+		Id:      "nft6",
+	}
+	receiver := sdk.AccAddress("recv6_______________")
+
+	// Send
+	server := keeper.NewMsgServerImpl(app.SwapKeeper)
+	sellParam := suite.defaultSendNFTParam(sender, item, receiver)
+	sellParam.NftId = "not"
+	_, err := server.SendNFT(ctx, sellParam)
+	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
+}

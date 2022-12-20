@@ -74,7 +74,7 @@ func (suite *SaleTestSuite) defaultSellParam(seller sdk.AccAddress) *types.MsgSe
 	}
 }
 
-func (suite *SaleTestSuite) defaultSendNFTParam(seller sdk.AccAddress, item nft.NFT) *types.MsgSellNFT {
+func (suite *SaleTestSuite) defaultSellNFTParam(seller sdk.AccAddress, item nft.NFT) *types.MsgSellNFT {
 	app, ctx := suite.app, suite.ctx
 	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
 	app.AccountKeeper.SetAccount(ctx, sellerAccount)
@@ -280,7 +280,7 @@ func (suite *SaleTestSuite) TestSellNFTSuccess() {
 	}
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sellParam := suite.defaultSendNFTParam(seller, item)
+	sellParam := suite.defaultSellNFTParam(seller, item)
 	_, err := server.SellNFT(ctx, sellParam)
 	suite.Require().NoError(err)
 	queryResponse, err := app.SaleKeeper.ShowNFT(ctx, &types.QueryShowNFTRequest{Id: 1, Seller: seller.String()})
@@ -312,8 +312,9 @@ func (suite *SaleTestSuite) TestCancelNFTSuccess() {
 
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sellParam := suite.defaultSendNFTParam(seller, item)
+	sellParam := suite.defaultSellNFTParam(seller, item)
 	_, err := server.SellNFT(ctx, sellParam)
+	suite.Require().NoError(err)
 
 	// Cancel
 	cancelParam := &types.MsgCancelNFT{
@@ -362,8 +363,9 @@ func (suite *SaleTestSuite) TestBuyNFTSuccess() {
 
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sellParam := suite.defaultSendNFTParam(seller, item)
+	sellParam := suite.defaultSellNFTParam(seller, item)
 	_, err := server.SellNFT(ctx, sellParam)
+	suite.Require().NoError(err)
 
 	// Buy
 	receiveParam := &types.MsgBuyNFT{
@@ -426,8 +428,9 @@ func (suite *SaleTestSuite) TestCancelNFTError() {
 
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sellParam := suite.defaultSendNFTParam(seller, item)
+	sellParam := suite.defaultSellNFTParam(seller, item)
 	_, err := server.SellNFT(ctx, sellParam)
+	suite.Require().NoError(err)
 
 	// Cancel
 	cancelParam := &types.MsgCancelNFT{
@@ -442,8 +445,6 @@ func (suite *SaleTestSuite) TestBuyNFTError() {
 	app, ctx := suite.app, suite.ctx
 
 	seller := sdk.AccAddress("send6_______________")
-	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
-	app.AccountKeeper.SetAccount(ctx, sellerAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft6",
@@ -453,8 +454,9 @@ func (suite *SaleTestSuite) TestBuyNFTError() {
 
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sellParam := suite.defaultSendNFTParam(seller, item)
+	sellParam := suite.defaultSellNFTParam(seller, item)
 	_, err := server.SellNFT(ctx, sellParam)
+	suite.Require().NoError(err)
 
 	// Buy
 	receiveParam := &types.MsgBuyNFT{
@@ -464,4 +466,21 @@ func (suite *SaleTestSuite) TestBuyNFTError() {
 	}
 	_, err = server.BuyNFT(ctx, receiveParam)
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)
+}
+
+func (suite *SaleTestSuite) TestSellNFTError() {
+	app, ctx := suite.app, suite.ctx
+
+	seller := sdk.AccAddress("send6_______________")
+	item := nft.NFT{
+		ClassId: "classId",
+		Id:      "nft7",
+	}
+
+	// Sell
+	server := keeper.NewMsgServerImpl(app.SaleKeeper)
+	sellParam := suite.defaultSellNFTParam(seller, item)
+	sellParam.NftId = "not"
+	_, err := server.SellNFT(ctx, sellParam)
+	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
 }
