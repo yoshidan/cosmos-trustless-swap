@@ -20,6 +20,23 @@ export interface RpcStatus {
   details?: ProtobufAny[];
 }
 
+export type SaleMsgBuyNFTResponse = object;
+
+export type SaleMsgBuyResponse = object;
+
+export type SaleMsgCancelNFTResponse = object;
+
+export type SaleMsgCancelResponse = object;
+
+export interface SaleMsgSellNFTResponse {
+  id?: string;
+}
+
+export interface SaleMsgSellResponse {
+  /** @format uint64 */
+  id?: string;
+}
+
 /**
  * Params defines the parameters for the module.
  */
@@ -32,6 +49,10 @@ export interface SaleQueryParamsResponse {
   /** params holds all the parameters of this module. */
   params?: SaleParams;
 }
+
+export type SaleQueryShowNFTResponse = object;
+
+export type SaleQueryShowResponse = object;
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, ResponseType } from "axios";
 
@@ -169,6 +190,38 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<SaleQueryParamsResponse, RpcStatus>({
       path: `/swap/sale/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryShow
+   * @summary Queries a list of Show items.
+   * @request GET:/swap/sale/show/{id}
+   */
+  queryShow = (id: string, params: RequestParams = {}) =>
+    this.request<SaleQueryShowResponse, RpcStatus>({
+      path: `/swap/sale/show/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryShowNft
+   * @summary Queries a list of ShowNFT items.
+   * @request GET:/swap/sale/show_nft/{id}
+   */
+  queryShowNft = (id: string, params: RequestParams = {}) =>
+    this.request<SaleQueryShowNFTResponse, RpcStatus>({
+      path: `/swap/sale/show_nft/${id}`,
       method: "GET",
       format: "json",
       ...params,

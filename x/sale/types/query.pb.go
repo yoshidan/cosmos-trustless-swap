@@ -113,33 +113,204 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
+type QueryShowRequest struct {
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (m *QueryShowRequest) Reset()         { *m = QueryShowRequest{} }
+func (m *QueryShowRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryShowRequest) ProtoMessage()    {}
+func (*QueryShowRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d49d23501111b2, []int{2}
+}
+func (m *QueryShowRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryShowRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryShowRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryShowRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryShowRequest.Merge(m, src)
+}
+func (m *QueryShowRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryShowRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryShowRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryShowRequest proto.InternalMessageInfo
+
+func (m *QueryShowRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+type QueryShowResponse struct {
+}
+
+func (m *QueryShowResponse) Reset()         { *m = QueryShowResponse{} }
+func (m *QueryShowResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryShowResponse) ProtoMessage()    {}
+func (*QueryShowResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d49d23501111b2, []int{3}
+}
+func (m *QueryShowResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryShowResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryShowResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryShowResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryShowResponse.Merge(m, src)
+}
+func (m *QueryShowResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryShowResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryShowResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryShowResponse proto.InternalMessageInfo
+
+type QueryShowNFTRequest struct {
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (m *QueryShowNFTRequest) Reset()         { *m = QueryShowNFTRequest{} }
+func (m *QueryShowNFTRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryShowNFTRequest) ProtoMessage()    {}
+func (*QueryShowNFTRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d49d23501111b2, []int{4}
+}
+func (m *QueryShowNFTRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryShowNFTRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryShowNFTRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryShowNFTRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryShowNFTRequest.Merge(m, src)
+}
+func (m *QueryShowNFTRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryShowNFTRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryShowNFTRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryShowNFTRequest proto.InternalMessageInfo
+
+func (m *QueryShowNFTRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+type QueryShowNFTResponse struct {
+}
+
+func (m *QueryShowNFTResponse) Reset()         { *m = QueryShowNFTResponse{} }
+func (m *QueryShowNFTResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryShowNFTResponse) ProtoMessage()    {}
+func (*QueryShowNFTResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d49d23501111b2, []int{5}
+}
+func (m *QueryShowNFTResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryShowNFTResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryShowNFTResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryShowNFTResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryShowNFTResponse.Merge(m, src)
+}
+func (m *QueryShowNFTResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryShowNFTResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryShowNFTResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryShowNFTResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "swap.sale.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "swap.sale.QueryParamsResponse")
+	proto.RegisterType((*QueryShowRequest)(nil), "swap.sale.QueryShowRequest")
+	proto.RegisterType((*QueryShowResponse)(nil), "swap.sale.QueryShowResponse")
+	proto.RegisterType((*QueryShowNFTRequest)(nil), "swap.sale.QueryShowNFTRequest")
+	proto.RegisterType((*QueryShowNFTResponse)(nil), "swap.sale.QueryShowNFTResponse")
 }
 
 func init() { proto.RegisterFile("swap/sale/query.proto", fileDescriptor_a9d49d23501111b2) }
 
 var fileDescriptor_a9d49d23501111b2 = []byte{
-	// 275 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x8f, 0xcf, 0x4a, 0xc3, 0x40,
-	0x10, 0xc6, 0x13, 0xd1, 0x80, 0xeb, 0x29, 0xdb, 0x2a, 0x1a, 0x74, 0x95, 0x9c, 0x44, 0x21, 0x4b,
-	0xeb, 0x1b, 0xf4, 0xe0, 0x59, 0x7b, 0xf4, 0x36, 0x91, 0x25, 0x04, 0xdb, 0xcc, 0x36, 0xb3, 0x55,
-	0x7b, 0xf5, 0x09, 0x04, 0x5f, 0xaa, 0xc7, 0x82, 0x17, 0x4f, 0x22, 0x89, 0x0f, 0x22, 0xd9, 0x5d,
-	0xfc, 0x8b, 0xb7, 0xe5, 0x37, 0xbf, 0xf9, 0x76, 0x3e, 0xb6, 0x4d, 0x77, 0xa0, 0x25, 0xc1, 0x44,
-	0xc9, 0xd9, 0x5c, 0xd5, 0x8b, 0x4c, 0xd7, 0x68, 0x90, 0x6f, 0x76, 0x38, 0xeb, 0x70, 0xd2, 0x2f,
-	0xb0, 0x40, 0x4b, 0x65, 0xf7, 0x72, 0x42, 0xb2, 0x5f, 0x20, 0x16, 0x13, 0x25, 0x41, 0x97, 0x12,
-	0xaa, 0x0a, 0x0d, 0x98, 0x12, 0x2b, 0xf2, 0xd3, 0x93, 0x6b, 0xa4, 0x29, 0x92, 0xcc, 0x81, 0x7c,
-	0xae, 0xbc, 0x1d, 0xe4, 0xca, 0xc0, 0x40, 0x6a, 0x28, 0xca, 0xca, 0xca, 0xde, 0xdd, 0xf9, 0xba,
-	0x40, 0x43, 0x0d, 0x53, 0x9f, 0x91, 0xf6, 0x19, 0xbf, 0xec, 0x36, 0x2f, 0x2c, 0x1c, 0xab, 0xd9,
-	0x5c, 0x91, 0x49, 0xcf, 0x59, 0xef, 0x07, 0x25, 0x8d, 0x15, 0x29, 0x2e, 0x59, 0xe4, 0x96, 0x77,
-	0xc3, 0xa3, 0xf0, 0x78, 0x6b, 0x18, 0x67, 0x9f, 0x05, 0x32, 0xa7, 0x8e, 0xd6, 0x97, 0xaf, 0x87,
-	0xc1, 0xd8, 0x6b, 0xc3, 0x1b, 0xb6, 0x61, 0x73, 0x78, 0xce, 0x22, 0x27, 0xf0, 0x83, 0x6f, 0x3b,
-	0x7f, 0x7f, 0x4e, 0xc4, 0x7f, 0x63, 0x77, 0x42, 0xba, 0xf7, 0xf0, 0xfc, 0xfe, 0xb4, 0xd6, 0xe3,
-	0xb1, 0xfc, 0x5d, 0x68, 0x74, 0xba, 0x6c, 0x44, 0xb8, 0x6a, 0x44, 0xf8, 0xd6, 0x88, 0xf0, 0xb1,
-	0x15, 0xc1, 0xaa, 0x15, 0xc1, 0x4b, 0x2b, 0x82, 0xab, 0xd8, 0xba, 0xf7, 0xce, 0x36, 0x0b, 0xad,
-	0x28, 0x8f, 0x6c, 0xfd, 0xb3, 0x8f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xce, 0x80, 0xfd, 0x1d, 0x9a,
-	0x01, 0x00, 0x00,
+	// 388 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0xc1, 0x4a, 0x02, 0x41,
+	0x1c, 0xc6, 0x77, 0x17, 0x33, 0x9c, 0x20, 0xda, 0x71, 0x13, 0xdb, 0x6c, 0x94, 0x85, 0x20, 0x0a,
+	0x76, 0xd0, 0xde, 0xc0, 0x83, 0xc7, 0x28, 0xeb, 0xd4, 0x45, 0x66, 0x73, 0x5a, 0x17, 0x74, 0x67,
+	0x75, 0xd6, 0x4c, 0xa2, 0x4b, 0x4f, 0x10, 0xf4, 0x36, 0x3d, 0x81, 0x47, 0xa1, 0x4b, 0xa7, 0x08,
+	0xed, 0x41, 0x62, 0x67, 0x86, 0x5c, 0x4d, 0x6f, 0xcb, 0xf7, 0xff, 0xbe, 0xdf, 0xff, 0xfb, 0x0f,
+	0x0b, 0xf6, 0xf9, 0x88, 0x44, 0x98, 0x93, 0x2e, 0xc5, 0xfd, 0x21, 0x1d, 0x8c, 0xdd, 0x68, 0xc0,
+	0x62, 0x06, 0x73, 0x89, 0xec, 0x26, 0xb2, 0x6d, 0xf9, 0xcc, 0x67, 0x42, 0xc5, 0xc9, 0x97, 0x34,
+	0xd8, 0x25, 0x9f, 0x31, 0xbf, 0x4b, 0x31, 0x89, 0x02, 0x4c, 0xc2, 0x90, 0xc5, 0x24, 0x0e, 0x58,
+	0xc8, 0xd5, 0xf4, 0xf4, 0x8e, 0xf1, 0x1e, 0xe3, 0xd8, 0x23, 0x5c, 0x71, 0xf1, 0x43, 0xd5, 0xa3,
+	0x31, 0xa9, 0xe2, 0x88, 0xf8, 0x41, 0x28, 0xcc, 0xca, 0x5b, 0x58, 0x34, 0x88, 0xc8, 0x80, 0xf4,
+	0x14, 0xc3, 0xb1, 0x00, 0xbc, 0x4a, 0x92, 0x97, 0x42, 0x6c, 0xd2, 0xfe, 0x90, 0xf2, 0xd8, 0x69,
+	0x80, 0xfc, 0x92, 0xca, 0x23, 0x16, 0x72, 0x0a, 0x31, 0xc8, 0xca, 0x70, 0x51, 0xaf, 0xe8, 0x27,
+	0x3b, 0x35, 0xd3, 0xfd, 0x3b, 0xc0, 0x95, 0xd6, 0x7a, 0x66, 0xf2, 0x55, 0xd6, 0x9a, 0xca, 0xe6,
+	0x38, 0x60, 0x4f, 0x70, 0xae, 0x3b, 0x6c, 0xa4, 0xd8, 0x70, 0x17, 0x18, 0x41, 0x5b, 0x00, 0x72,
+	0x4d, 0x23, 0x68, 0x3b, 0x79, 0x60, 0xa6, 0x3c, 0x72, 0x93, 0x73, 0xac, 0x0a, 0x24, 0xe2, 0x45,
+	0xe3, 0x66, 0x53, 0xb6, 0x00, 0xac, 0x65, 0x9b, 0x8c, 0xd7, 0xde, 0x0d, 0xb0, 0x25, 0x06, 0xd0,
+	0x03, 0x59, 0xd9, 0x0c, 0x1e, 0xa5, 0xca, 0xfe, 0x3f, 0xd9, 0x46, 0x9b, 0xc6, 0xaa, 0xd1, 0xc1,
+	0xcb, 0xc7, 0xcf, 0x9b, 0x91, 0x87, 0x26, 0x5e, 0x7d, 0x49, 0xd8, 0x02, 0x99, 0xa4, 0x00, 0x3c,
+	0x5c, 0x45, 0xa4, 0xce, 0xb6, 0x4b, 0xeb, 0x87, 0x8a, 0x5e, 0x12, 0xf4, 0x02, 0xb4, 0x52, 0x74,
+	0xde, 0x61, 0x23, 0xfc, 0x14, 0xb4, 0x9f, 0x61, 0x17, 0x6c, 0xab, 0x0b, 0x21, 0x5a, 0x87, 0x59,
+	0xbc, 0x90, 0x5d, 0xde, 0x38, 0x57, 0x9b, 0x2a, 0x62, 0x93, 0x0d, 0x8b, 0x2b, 0x9b, 0x5a, 0xe1,
+	0x7d, 0x2c, 0xb6, 0xd5, 0xcf, 0x26, 0x33, 0xa4, 0x4f, 0x67, 0x48, 0xff, 0x9e, 0x21, 0xfd, 0x75,
+	0x8e, 0xb4, 0xe9, 0x1c, 0x69, 0x9f, 0x73, 0xa4, 0xdd, 0x9a, 0x22, 0xf2, 0x28, 0x43, 0xf1, 0x38,
+	0xa2, 0xdc, 0xcb, 0x8a, 0xdf, 0xe8, 0xfc, 0x37, 0x00, 0x00, 0xff, 0xff, 0x17, 0x31, 0x54, 0xcc,
+	0xe2, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -156,6 +327,10 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	// Queries a list of Show items.
+	Show(ctx context.Context, in *QueryShowRequest, opts ...grpc.CallOption) (*QueryShowResponse, error)
+	// Queries a list of ShowNFT items.
+	ShowNFT(ctx context.Context, in *QueryShowNFTRequest, opts ...grpc.CallOption) (*QueryShowNFTResponse, error)
 }
 
 type queryClient struct {
@@ -175,10 +350,32 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 	return out, nil
 }
 
+func (c *queryClient) Show(ctx context.Context, in *QueryShowRequest, opts ...grpc.CallOption) (*QueryShowResponse, error) {
+	out := new(QueryShowResponse)
+	err := c.cc.Invoke(ctx, "/swap.sale.Query/Show", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) ShowNFT(ctx context.Context, in *QueryShowNFTRequest, opts ...grpc.CallOption) (*QueryShowNFTResponse, error) {
+	out := new(QueryShowNFTResponse)
+	err := c.cc.Invoke(ctx, "/swap.sale.Query/ShowNFT", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
+	// Queries a list of Show items.
+	Show(context.Context, *QueryShowRequest) (*QueryShowResponse, error)
+	// Queries a list of ShowNFT items.
+	ShowNFT(context.Context, *QueryShowNFTRequest) (*QueryShowNFTResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -187,6 +384,12 @@ type UnimplementedQueryServer struct {
 
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
+}
+func (*UnimplementedQueryServer) Show(ctx context.Context, req *QueryShowRequest) (*QueryShowResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Show not implemented")
+}
+func (*UnimplementedQueryServer) ShowNFT(ctx context.Context, req *QueryShowNFTRequest) (*QueryShowNFTResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ShowNFT not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -211,6 +414,42 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Show_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryShowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Show(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/swap.sale.Query/Show",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Show(ctx, req.(*QueryShowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_ShowNFT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryShowNFTRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ShowNFT(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/swap.sale.Query/ShowNFT",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ShowNFT(ctx, req.(*QueryShowNFTRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "swap.sale.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -218,6 +457,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Params",
 			Handler:    _Query_Params_Handler,
+		},
+		{
+			MethodName: "Show",
+			Handler:    _Query_Show_Handler,
+		},
+		{
+			MethodName: "ShowNFT",
+			Handler:    _Query_ShowNFT_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -280,6 +527,112 @@ func (m *QueryParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryShowRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryShowRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryShowRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Id)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryShowResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryShowResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryShowResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryShowNFTRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryShowNFTRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryShowNFTRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Id)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryShowNFTResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryShowNFTResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryShowNFTResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -308,6 +661,50 @@ func (m *QueryParamsResponse) Size() (n int) {
 	_ = l
 	l = m.Params.Size()
 	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryShowRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryShowResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryShowNFTRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryShowNFTResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
 	return n
 }
 
@@ -429,6 +826,270 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryShowRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryShowRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryShowRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryShowResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryShowResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryShowResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryShowNFTRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryShowNFTRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryShowNFTRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryShowNFTResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryShowNFTResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryShowNFTResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])

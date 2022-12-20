@@ -14,6 +14,20 @@ export interface QueryParamsResponse {
   params: Params | undefined;
 }
 
+export interface QueryShowRequest {
+  id: string;
+}
+
+export interface QueryShowResponse {
+}
+
+export interface QueryShowNFTRequest {
+  id: string;
+}
+
+export interface QueryShowNFTResponse {
+}
+
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
 }
@@ -102,10 +116,186 @@ export const QueryParamsResponse = {
   },
 };
 
+function createBaseQueryShowRequest(): QueryShowRequest {
+  return { id: "" };
+}
+
+export const QueryShowRequest = {
+  encode(message: QueryShowRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryShowRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryShowRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryShowRequest {
+    return { id: isSet(object.id) ? String(object.id) : "" };
+  },
+
+  toJSON(message: QueryShowRequest): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryShowRequest>, I>>(object: I): QueryShowRequest {
+    const message = createBaseQueryShowRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryShowResponse(): QueryShowResponse {
+  return {};
+}
+
+export const QueryShowResponse = {
+  encode(_: QueryShowResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryShowResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryShowResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryShowResponse {
+    return {};
+  },
+
+  toJSON(_: QueryShowResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryShowResponse>, I>>(_: I): QueryShowResponse {
+    const message = createBaseQueryShowResponse();
+    return message;
+  },
+};
+
+function createBaseQueryShowNFTRequest(): QueryShowNFTRequest {
+  return { id: "" };
+}
+
+export const QueryShowNFTRequest = {
+  encode(message: QueryShowNFTRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryShowNFTRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryShowNFTRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryShowNFTRequest {
+    return { id: isSet(object.id) ? String(object.id) : "" };
+  },
+
+  toJSON(message: QueryShowNFTRequest): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryShowNFTRequest>, I>>(object: I): QueryShowNFTRequest {
+    const message = createBaseQueryShowNFTRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryShowNFTResponse(): QueryShowNFTResponse {
+  return {};
+}
+
+export const QueryShowNFTResponse = {
+  encode(_: QueryShowNFTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryShowNFTResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryShowNFTResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryShowNFTResponse {
+    return {};
+  },
+
+  toJSON(_: QueryShowNFTResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryShowNFTResponse>, I>>(_: I): QueryShowNFTResponse {
+    const message = createBaseQueryShowNFTResponse();
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
+  /** Queries a list of Show items. */
+  Show(request: QueryShowRequest): Promise<QueryShowResponse>;
+  /** Queries a list of ShowNFT items. */
+  ShowNFT(request: QueryShowNFTRequest): Promise<QueryShowNFTResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -113,11 +303,25 @@ export class QueryClientImpl implements Query {
   constructor(rpc: Rpc) {
     this.rpc = rpc;
     this.Params = this.Params.bind(this);
+    this.Show = this.Show.bind(this);
+    this.ShowNFT = this.ShowNFT.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
     const promise = this.rpc.request("swap.sale.Query", "Params", data);
     return promise.then((data) => QueryParamsResponse.decode(new _m0.Reader(data)));
+  }
+
+  Show(request: QueryShowRequest): Promise<QueryShowResponse> {
+    const data = QueryShowRequest.encode(request).finish();
+    const promise = this.rpc.request("swap.sale.Query", "Show", data);
+    return promise.then((data) => QueryShowResponse.decode(new _m0.Reader(data)));
+  }
+
+  ShowNFT(request: QueryShowNFTRequest): Promise<QueryShowNFTResponse> {
+    const data = QueryShowNFTRequest.encode(request).finish();
+    const promise = this.rpc.request("swap.sale.Query", "ShowNFT", data);
+    return promise.then((data) => QueryShowNFTResponse.decode(new _m0.Reader(data)));
   }
 }
 

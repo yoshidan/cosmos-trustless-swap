@@ -15,7 +15,17 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/swap/sale/params";
   }
-  // this line is used by starport scaffolding # 2
+  // Queries a list of Show items.
+	rpc Show(QueryShowRequest) returns (QueryShowResponse) {
+		option (google.api.http).get = "/swap/sale/show/{id}";
+	}
+
+// Queries a list of ShowNFT items.
+	rpc ShowNFT(QueryShowNFTRequest) returns (QueryShowNFTResponse) {
+		option (google.api.http).get = "/swap/sale/show_nft/{id}";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -25,6 +35,20 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryShowRequest {
+  string id = 1;
+}
+
+message QueryShowResponse {
+}
+
+message QueryShowNFTRequest {
+  string id = 1;
+}
+
+message QueryShowNFTResponse {
 }
 
 // this line is used by starport scaffolding # 3

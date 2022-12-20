@@ -7,7 +7,66 @@ option go_package = "swap/x/sale/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc Sell(MsgSell) returns (MsgSellResponse);
+  rpc Cancel(MsgCancel) returns (MsgCancelResponse);
+  rpc Buy(MsgBuy) returns (MsgBuyResponse);
+  rpc SellNFT(MsgSellNFT) returns (MsgSellNFTResponse);
+  rpc BuyNFT(MsgBuyNFT) returns (MsgBuyNFTResponse);
+  rpc CancelNFT(MsgCancelNFT) returns (MsgCancelNFTResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgSell {
+  string creator = 1;
+  string amount = 2;
+  string price = 3;
+}
+
+message MsgSellResponse {
+  uint64 id = 1;
+}
+
+message MsgCancel {
+  string creator = 1;
+  string id = 2;
+}
+
+message MsgCancelResponse {
+}
+
+message MsgBuy {
+  string creator = 1;
+  string id = 2;
+}
+
+message MsgBuyResponse {
+}
+
+message MsgSellNFT {
+  string creator = 1;
+  string classId = 2;
+  string nftId = 3;
+  string price = 4;
+}
+
+message MsgSellNFTResponse {
+  string id = 1;
+}
+
+message MsgBuyNFT {
+  string creator = 1;
+  string id = 2;
+}
+
+message MsgBuyNFTResponse {
+}
+
+message MsgCancelNFT {
+  string creator = 1;
+  string id = 2;
+}
+
+message MsgCancelNFTResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
