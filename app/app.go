@@ -112,6 +112,9 @@ import (
 	swapmodulekeeper "swap/x/swap/keeper"
 	swapmoduletypes "swap/x/swap/types"
 
+	salemodule "swap/x/sale"
+	salemodulekeeper "swap/x/sale/keeper"
+	salemoduletypes "swap/x/sale/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	appparams "swap/app/params"
@@ -172,6 +175,7 @@ var (
 		vesting.AppModuleBasic{},
 		nftmodule.AppModuleBasic{},
 		swapmodule.AppModuleBasic{},
+		salemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -187,6 +191,7 @@ var (
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		nft.ModuleName:                 {authtypes.Minter, authtypes.Burner},
 		swapmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		salemoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -250,6 +255,8 @@ type App struct {
 	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 
 	SwapKeeper swapmodulekeeper.Keeper
+
+	SaleKeeper salemodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -296,6 +303,7 @@ func New(
 		icacontrollertypes.StoreKey,
 		nft.StoreKey,
 		swapmoduletypes.StoreKey,
+		salemoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -533,6 +541,17 @@ func New(
 	)
 	swapModule := swapmodule.NewAppModule(appCodec, app.SwapKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.SaleKeeper = *salemodulekeeper.NewKeeper(
+		appCodec,
+		keys[salemoduletypes.StoreKey],
+		keys[salemoduletypes.MemStoreKey],
+		app.GetSubspace(salemoduletypes.ModuleName),
+
+		app.BankKeeper,
+		app.AccountKeeper,
+	)
+	saleModule := salemodule.NewAppModule(appCodec, app.SaleKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Sealing prevents other modules from creating scoped sub-keepers
@@ -580,6 +599,7 @@ func New(
 		icaModule,
 		nftModules,
 		swapModule,
+		saleModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -611,6 +631,7 @@ func New(
 		vestingtypes.ModuleName,
 		nft.ModuleName,
 		swapmoduletypes.ModuleName,
+		salemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -637,6 +658,7 @@ func New(
 		vestingtypes.ModuleName,
 		nft.ModuleName,
 		swapmoduletypes.ModuleName,
+		salemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -668,6 +690,7 @@ func New(
 		vestingtypes.ModuleName,
 		nft.ModuleName,
 		swapmoduletypes.ModuleName,
+		salemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -699,6 +722,7 @@ func New(
 		transferModule,
 		nftModules,
 		swapModule,
+		saleModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -898,6 +922,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(swapmoduletypes.ModuleName)
+	paramsKeeper.Subspace(salemoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

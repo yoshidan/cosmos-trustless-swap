@@ -1,9 +1,11 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
 
+import SwapSale from './swap.sale'
 import SwapSwap from './swap.swap'
 
 
 export default { 
+  SwapSale: load(SwapSale, 'swap.sale'),
   SwapSwap: load(SwapSwap, 'swap.swap'),
   
 }

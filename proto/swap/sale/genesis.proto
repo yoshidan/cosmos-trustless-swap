@@ -1,0 +1,14 @@
+syntax = "proto3";
+package swap.sale;
+
+import "gogoproto/gogo.proto";
+import "swap/sale/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "swap/x/sale/types";
+
+// GenesisState defines the sale module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
