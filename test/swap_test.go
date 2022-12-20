@@ -24,23 +24,18 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-const (
-	fooDenom = "foo"
-	barDenom = "bar"
-)
-
-type IntegrationTestSuite struct {
+type SwapTestSuite struct {
 	suite.Suite
 	app         *app2.App
 	ctx         sdk.Context
 	queryClient types.QueryClient
 }
 
-func TestIntegrationTestSuite(t *testing.T) {
-	suite.Run(t, new(IntegrationTestSuite))
+func TestSwapTestSuite(t *testing.T) {
+	suite.Run(t, new(SwapTestSuite))
 }
 
-func (suite *IntegrationTestSuite) SetupTest() {
+func (suite *SwapTestSuite) SetupTest() {
 	app := internal.Setup(suite.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{Time: time.Now()})
 
@@ -63,11 +58,11 @@ func (suite *IntegrationTestSuite) SetupTest() {
 	suite.Require().NoError(app.NFTKeeper.SaveClass(ctx, class))
 }
 
-func (suite *IntegrationTestSuite) TestSendSuccess() {
+func (suite *SwapTestSuite) TestSendSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send1_______________")
-	senderBalance := sdk.NewCoins(newFooCoin(100))
+	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
 	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
 	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
@@ -79,8 +74,8 @@ func (suite *IntegrationTestSuite) TestSendSuccess() {
 	sendParam := &types.MsgSend{
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
-		Amount:          newFooCoin(10).String(),
-		AmountToReceive: newBarCoin(5).String(),
+		Amount:          internal.NewFooCoin(10).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.Send(ctx, sendParam)
 	suite.Require().NoError(err)
@@ -95,17 +90,17 @@ func (suite *IntegrationTestSuite) TestSendSuccess() {
 	suite.Require().Equal(sendParam.AmountToReceive, swap.AmountToReceive)
 	balance, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
 		Address: app.AccountKeeper.GetModuleAccount(ctx, types.ModuleName).GetAddress().String(),
-		Denom:   fooDenom,
+		Denom:   internal.FooDenom,
 	})
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(10), balance.Balance.Amount.Uint64())
 }
 
-func (suite *IntegrationTestSuite) TestCancelSuccess() {
+func (suite *SwapTestSuite) TestCancelSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send2_______________")
-	senderBalance := sdk.NewCoins(newFooCoin(100))
+	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
 	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
 	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
@@ -117,8 +112,8 @@ func (suite *IntegrationTestSuite) TestCancelSuccess() {
 	sendParam := &types.MsgSend{
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
-		Amount:          newFooCoin(10).String(),
-		AmountToReceive: newBarCoin(5).String(),
+		Amount:          internal.NewFooCoin(10).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.Send(ctx, sendParam)
 
@@ -135,14 +130,14 @@ func (suite *IntegrationTestSuite) TestCancelSuccess() {
 	// Check the token return
 	balanceModule, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
 		Address: app.AccountKeeper.GetModuleAccount(ctx, types.ModuleName).GetAddress().String(),
-		Denom:   fooDenom,
+		Denom:   internal.FooDenom,
 	})
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(0), balanceModule.Balance.Amount.Uint64())
 
 	balanceSender, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
 		Address: sender.String(),
-		Denom:   fooDenom,
+		Denom:   internal.FooDenom,
 	})
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(100), balanceSender.Balance.Amount.Uint64())
@@ -158,17 +153,17 @@ func (suite *IntegrationTestSuite) TestCancelSuccess() {
 	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
 
-func (suite *IntegrationTestSuite) TestReceiveSuccess() {
+func (suite *SwapTestSuite) TestReceiveSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send3_______________")
-	senderBalance := sdk.NewCoins(newFooCoin(100))
+	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
 	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
 	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
 
 	receiver := sdk.AccAddress("recv3_______________")
-	receiverBalance := sdk.NewCoins(newBarCoin(100))
+	receiverBalance := sdk.NewCoins(internal.NewBarCoin(100))
 	receiverAccount := app.AccountKeeper.NewAccountWithAddress(ctx, receiver)
 	app.AccountKeeper.SetAccount(ctx, receiverAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, receiver, receiverBalance))
@@ -178,8 +173,8 @@ func (suite *IntegrationTestSuite) TestReceiveSuccess() {
 	sendParam := &types.MsgSend{
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
-		Amount:          newFooCoin(10).String(),
-		AmountToReceive: newBarCoin(5).String(),
+		Amount:          internal.NewFooCoin(10).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.Send(ctx, sendParam)
 
@@ -196,21 +191,21 @@ func (suite *IntegrationTestSuite) TestReceiveSuccess() {
 	// Check token swapped
 	balanceModule, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
 		Address: app.AccountKeeper.GetModuleAccount(ctx, types.ModuleName).GetAddress().String(),
-		Denom:   fooDenom,
+		Denom:   internal.FooDenom,
 	})
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(0), balanceModule.Balance.Amount.Uint64())
 
 	balanceReceiver, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
 		Address: receiver.String(),
-		Denom:   fooDenom,
+		Denom:   internal.FooDenom,
 	})
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(10), balanceReceiver.Balance.Amount.Uint64())
 
 	balanceSender, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
 		Address: sender.String(),
-		Denom:   barDenom,
+		Denom:   internal.BarDenom,
 	})
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(5), balanceSender.Balance.Amount.Uint64())
@@ -226,17 +221,17 @@ func (suite *IntegrationTestSuite) TestReceiveSuccess() {
 	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
 
-func (suite *IntegrationTestSuite) TestCancelError() {
+func (suite *SwapTestSuite) TestCancelError() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send4_______________")
-	senderBalance := sdk.NewCoins(newFooCoin(100))
+	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
 	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
 	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
 
 	receiver := sdk.AccAddress("recv4_______________")
-	receiverBalance := sdk.NewCoins(newBarCoin(1))
+	receiverBalance := sdk.NewCoins(internal.NewBarCoin(1))
 	receiverAccount := app.AccountKeeper.NewAccountWithAddress(ctx, receiver)
 	app.AccountKeeper.SetAccount(ctx, receiverAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, receiver, receiverBalance))
@@ -246,8 +241,8 @@ func (suite *IntegrationTestSuite) TestCancelError() {
 	sendParam := &types.MsgSend{
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
-		Amount:          newFooCoin(10).String(),
-		AmountToReceive: newBarCoin(5).String(),
+		Amount:          internal.NewFooCoin(10).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.Send(ctx, sendParam)
 
@@ -260,11 +255,11 @@ func (suite *IntegrationTestSuite) TestCancelError() {
 	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
 }
 
-func (suite *IntegrationTestSuite) TestReceiveError() {
+func (suite *SwapTestSuite) TestReceiveError() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send6_______________")
-	senderBalance := sdk.NewCoins(newFooCoin(100))
+	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
 	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
 	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
@@ -276,8 +271,8 @@ func (suite *IntegrationTestSuite) TestReceiveError() {
 	sendParam := &types.MsgSend{
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
-		Amount:          newFooCoin(10).String(),
-		AmountToReceive: newBarCoin(5).String(),
+		Amount:          internal.NewFooCoin(10).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.Send(ctx, sendParam)
 
@@ -297,7 +292,7 @@ func (suite *IntegrationTestSuite) TestReceiveError() {
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)
 }
 
-func (suite *IntegrationTestSuite) TestSendNFTSuccess() {
+func (suite *SwapTestSuite) TestSendNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send1_______________")
@@ -318,7 +313,7 @@ func (suite *IntegrationTestSuite) TestSendNFTSuccess() {
 		Receiver:        receiver.String(),
 		ClassId:         item.ClassId,
 		NftId:           item.Id,
-		AmountToReceive: newBarCoin(5).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.SendNFT(ctx, sendParam)
 	suite.Require().NoError(err)
@@ -340,7 +335,7 @@ func (suite *IntegrationTestSuite) TestSendNFTSuccess() {
 	suite.Require().Equal(app.AccountKeeper.GetModuleAccount(ctx, types.ModuleName).GetAddress().String(), ownerResponse.Owner)
 }
 
-func (suite *IntegrationTestSuite) TestCancelNFTSuccess() {
+func (suite *SwapTestSuite) TestCancelNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send2_______________")
@@ -361,7 +356,7 @@ func (suite *IntegrationTestSuite) TestCancelNFTSuccess() {
 		Receiver:        receiver.String(),
 		ClassId:         item.ClassId,
 		NftId:           item.Id,
-		AmountToReceive: newBarCoin(5).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.SendNFT(ctx, sendParam)
 
@@ -394,7 +389,7 @@ func (suite *IntegrationTestSuite) TestCancelNFTSuccess() {
 	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
 
-func (suite *IntegrationTestSuite) TestReceiveNFTSuccess() {
+func (suite *SwapTestSuite) TestReceiveNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send3_______________")
@@ -407,7 +402,7 @@ func (suite *IntegrationTestSuite) TestReceiveNFTSuccess() {
 	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, sender))
 
 	receiver := sdk.AccAddress("recv3_______________")
-	receiverBalance := sdk.NewCoins(newBarCoin(100))
+	receiverBalance := sdk.NewCoins(internal.NewBarCoin(100))
 	receiverAccount := app.AccountKeeper.NewAccountWithAddress(ctx, receiver)
 	app.AccountKeeper.SetAccount(ctx, receiverAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, receiver, receiverBalance))
@@ -419,7 +414,7 @@ func (suite *IntegrationTestSuite) TestReceiveNFTSuccess() {
 		Receiver:        receiver.String(),
 		ClassId:         item.ClassId,
 		NftId:           item.Id,
-		AmountToReceive: newBarCoin(5).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.SendNFT(ctx, sendParam)
 
@@ -436,7 +431,7 @@ func (suite *IntegrationTestSuite) TestReceiveNFTSuccess() {
 	// Check token swapped
 	balanceModule, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
 		Address: app.AccountKeeper.GetModuleAccount(ctx, types.ModuleName).GetAddress().String(),
-		Denom:   fooDenom,
+		Denom:   internal.FooDenom,
 	})
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(0), balanceModule.Balance.Amount.Uint64())
@@ -450,7 +445,7 @@ func (suite *IntegrationTestSuite) TestReceiveNFTSuccess() {
 
 	balanceSender, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
 		Address: sender.String(),
-		Denom:   barDenom,
+		Denom:   internal.BarDenom,
 	})
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(5), balanceSender.Balance.Amount.Uint64())
@@ -466,7 +461,7 @@ func (suite *IntegrationTestSuite) TestReceiveNFTSuccess() {
 	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
 
-func (suite *IntegrationTestSuite) TestCancelNFTError() {
+func (suite *SwapTestSuite) TestCancelNFTError() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send4_______________")
@@ -479,7 +474,7 @@ func (suite *IntegrationTestSuite) TestCancelNFTError() {
 	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, sender))
 
 	receiver := sdk.AccAddress("recv4_______________")
-	receiverBalance := sdk.NewCoins(newBarCoin(1))
+	receiverBalance := sdk.NewCoins(internal.NewBarCoin(1))
 	receiverAccount := app.AccountKeeper.NewAccountWithAddress(ctx, receiver)
 	app.AccountKeeper.SetAccount(ctx, receiverAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, receiver, receiverBalance))
@@ -491,7 +486,7 @@ func (suite *IntegrationTestSuite) TestCancelNFTError() {
 		Receiver:        receiver.String(),
 		ClassId:         item.ClassId,
 		NftId:           item.Id,
-		AmountToReceive: newBarCoin(5).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.SendNFT(ctx, sendParam)
 
@@ -504,7 +499,7 @@ func (suite *IntegrationTestSuite) TestCancelNFTError() {
 	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
 }
 
-func (suite *IntegrationTestSuite) TestReceiveNFTError() {
+func (suite *SwapTestSuite) TestReceiveNFTError() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send6_______________")
@@ -525,7 +520,7 @@ func (suite *IntegrationTestSuite) TestReceiveNFTError() {
 		Receiver:        receiver.String(),
 		ClassId:         item.ClassId,
 		NftId:           item.Id,
-		AmountToReceive: newBarCoin(5).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
 	response, err := server.SendNFT(ctx, sendParam)
 
@@ -543,12 +538,4 @@ func (suite *IntegrationTestSuite) TestReceiveNFTError() {
 	}
 	_, err = server.ReceiveNFT(ctx, receiveParam2)
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)
-}
-
-func newFooCoin(amt int64) sdk.Coin {
-	return sdk.NewInt64Coin(fooDenom, amt)
-}
-
-func newBarCoin(amt int64) sdk.Coin {
-	return sdk.NewInt64Coin(barDenom, amt)
 }

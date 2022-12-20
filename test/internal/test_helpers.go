@@ -272,3 +272,16 @@ type EmptyAppOptions struct{}
 func (ao EmptyAppOptions) Get(o string) interface{} {
 	return nil
 }
+
+const (
+	FooDenom = "foo"
+	BarDenom = "bar"
+)
+
+func NewFooCoin(amt int64) sdk.Coin {
+	return sdk.NewInt64Coin(FooDenom, amt)
+}
+
+func NewBarCoin(amt int64) sdk.Coin {
+	return sdk.NewInt64Coin(BarDenom, amt)
+}
