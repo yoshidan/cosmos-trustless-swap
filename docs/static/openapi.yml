@@ -44727,6 +44727,22 @@ paths:
           description: A successful response.
           schema:
             type: object
+            properties:
+              sale:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uint64
+                  sender:
+                    type: string
+                  amount:
+                    type: string
+                  price:
+                    type: string
+                description: >-
+                  QueryParamsResponse is response type for the Query/Params RPC
+                  method.
         default:
           description: An unexpected error response.
           schema:
@@ -44750,6 +44766,7 @@ paths:
           in: path
           required: true
           type: string
+          format: uint64
       tags:
         - Query
   /swap/sale/show_nft/{id}:
@@ -44761,6 +44778,21 @@ paths:
           description: A successful response.
           schema:
             type: object
+            properties:
+              sale:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uint64
+                  sender:
+                    type: string
+                  classId:
+                    type: string
+                  nftId:
+                    type: string
+                  price:
+                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -44784,6 +44816,7 @@ paths:
           in: path
           required: true
           type: string
+          format: uint64
       tags:
         - Query
   /swap/swap/params:
@@ -74493,12 +74526,27 @@ definitions:
     properties:
       id:
         type: string
+        format: uint64
   swap.sale.MsgSellResponse:
     type: object
     properties:
       id:
         type: string
         format: uint64
+  swap.sale.NFTSale:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+      sender:
+        type: string
+      classId:
+        type: string
+      nftId:
+        type: string
+      price:
+        type: string
   swap.sale.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -74511,8 +74559,50 @@ definitions:
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   swap.sale.QueryShowNFTResponse:
     type: object
+    properties:
+      sale:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uint64
+          sender:
+            type: string
+          classId:
+            type: string
+          nftId:
+            type: string
+          price:
+            type: string
   swap.sale.QueryShowResponse:
     type: object
+    properties:
+      sale:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uint64
+          sender:
+            type: string
+          amount:
+            type: string
+          price:
+            type: string
+        description: QueryParamsResponse is response type for the Query/Params RPC method.
+  swap.sale.Sale:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+      sender:
+        type: string
+      amount:
+        type: string
+      price:
+        type: string
+    description: QueryParamsResponse is response type for the Query/Params RPC method.
   swap.swap.MsgCancelNFTResponse:
     type: object
   swap.swap.MsgCancelResponse:

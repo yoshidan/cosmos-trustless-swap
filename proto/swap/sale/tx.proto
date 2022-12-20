@@ -28,7 +28,7 @@ message MsgSellResponse {
 
 message MsgCancel {
   string creator = 1;
-  string id = 2;
+  uint64 id = 2;
 }
 
 message MsgCancelResponse {
@@ -36,7 +36,7 @@ message MsgCancelResponse {
 
 message MsgBuy {
   string creator = 1;
-  string id = 2;
+  uint64 id = 2;
 }
 
 message MsgBuyResponse {
@@ -50,12 +50,12 @@ message MsgSellNFT {
 }
 
 message MsgSellNFTResponse {
-  string id = 1;
+  uint64 id = 1;
 }
 
 message MsgBuyNFT {
   string creator = 1;
-  string id = 2;
+  uint64 id = 2;
 }
 
 message MsgBuyNFTResponse {
@@ -63,7 +63,7 @@ message MsgBuyNFTResponse {
 
 message MsgCancelNFT {
   string creator = 1;
-  string id = 2;
+  uint64 id = 2;
 }
 
 message MsgCancelNFTResponse {

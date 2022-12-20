@@ -9,7 +9,7 @@ const TypeMsgCancelNFT = "cancel_nft"
 
 var _ sdk.Msg = &MsgCancelNFT{}
 
-func NewMsgCancelNFT(creator string, id string) *MsgCancelNFT {
+func NewMsgCancelNFT(creator string, id uint64) *MsgCancelNFT {
 	return &MsgCancelNFT{
 		Creator: creator,
 		Id:      id,

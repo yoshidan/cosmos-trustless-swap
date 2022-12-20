@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "swap/sale/params.proto";
+import "swap/sale/sale.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "swap/x/sale/types";
@@ -38,17 +39,19 @@ message QueryParamsResponse {
 }
 
 message QueryShowRequest {
-  string id = 1;
+  uint64 id = 1;
 }
 
 message QueryShowResponse {
+  Sale sale = 1;
 }
 
 message QueryShowNFTRequest {
-  string id = 1;
+  uint64 id = 1;
 }
 
 message QueryShowNFTResponse {
+  NFTSale sale = 1;
 }
 
 // this line is used by starport scaffolding # 3

@@ -29,12 +29,22 @@ export type SaleMsgCancelNFTResponse = object;
 export type SaleMsgCancelResponse = object;
 
 export interface SaleMsgSellNFTResponse {
+  /** @format uint64 */
   id?: string;
 }
 
 export interface SaleMsgSellResponse {
   /** @format uint64 */
   id?: string;
+}
+
+export interface SaleNFTSale {
+  /** @format uint64 */
+  id?: string;
+  sender?: string;
+  classId?: string;
+  nftId?: string;
+  price?: string;
 }
 
 /**
@@ -50,9 +60,25 @@ export interface SaleQueryParamsResponse {
   params?: SaleParams;
 }
 
-export type SaleQueryShowNFTResponse = object;
+export interface SaleQueryShowNFTResponse {
+  sale?: SaleNFTSale;
+}
 
-export type SaleQueryShowResponse = object;
+export interface SaleQueryShowResponse {
+  /** QueryParamsResponse is response type for the Query/Params RPC method. */
+  sale?: SaleSale;
+}
+
+/**
+ * QueryParamsResponse is response type for the Query/Params RPC method.
+ */
+export interface SaleSale {
+  /** @format uint64 */
+  id?: string;
+  sender?: string;
+  amount?: string;
+  price?: string;
+}
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, ResponseType } from "axios";
 
