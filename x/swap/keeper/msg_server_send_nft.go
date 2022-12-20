@@ -3,10 +3,9 @@ package keeper
 import (
 	"context"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/cosmos/cosmos-sdk/x/nft"
-
 	"swap/x/swap/types"
+
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -24,7 +23,7 @@ func (k msgServer) SendNFT(goCtx context.Context, msg *types.MsgSendNFT) (*types
 		return nil, types.ErrInsufficientPermission
 	}
 
-	moduleAddress := k.accountKeeper.GetModuleAddress(nft.ModuleName)
+	moduleAddress := k.accountKeeper.GetModuleAddress(types.ModuleName)
 	if moduleAddress == nil {
 		return nil, sdkerrors.ErrInvalidAddress
 	}

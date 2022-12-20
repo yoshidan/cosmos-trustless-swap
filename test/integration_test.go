@@ -6,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cosmos/cosmos-sdk/x/nft"
+
 	"github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
@@ -52,6 +54,12 @@ func (suite *IntegrationTestSuite) SetupTest() {
 	suite.app = app
 	suite.ctx = ctx
 	suite.queryClient = queryClient
+
+	// default class
+	class := nft.Class{
+		Id: "classId",
+	}
+	suite.Require().NoError(app.NFTKeeper.SaveClass(ctx, class))
 }
 
 func (suite *IntegrationTestSuite) TestSendSuccess() {
