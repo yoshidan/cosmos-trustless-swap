@@ -8,14 +8,14 @@ option go_package = "swap/x/sale/types";
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message Sale {
   uint64 id = 1;
-  string sender = 2;
+  string seller = 2;
   string amount = 3;
   string price = 4;
 }
 
 message NFTSale {
   uint64 id = 1;
-  string sender = 2;
+  string seller = 2;
   string classId = 3;
   string nftId = 4;
   string price = 5;

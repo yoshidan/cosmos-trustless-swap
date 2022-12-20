@@ -3,15 +3,42 @@ package keeper
 import (
 	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"swap/x/sale/types"
+
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func (k msgServer) SellNFT(goCtx context.Context, msg *types.MsgSellNFT) (*types.MsgSellNFTResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	sender, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return nil, err
+	}
 
-	// TODO: Handling the message
-	_ = ctx
+	ownerAddress := k.nftKeeper.GetOwner(ctx, msg.ClassId, msg.NftId)
+	if sender.String() != ownerAddress.String() {
+		return nil, types.ErrInsufficientPermission
+	}
 
-	return &types.MsgSellNFTResponse{}, nil
+	moduleAddress := k.accountKeeper.GetModuleAddress(types.ModuleName)
+	if moduleAddress == nil {
+		return nil, sdkerrors.ErrInvalidAddress
+	}
+
+	if err = k.nftKeeper.Transfer(ctx, msg.ClassId, msg.NftId, moduleAddress); err != nil {
+		return nil, err
+	}
+
+	id := k.AppendNFTSale(ctx, types.NFTSale{
+		Seller:  msg.Creator,
+		ClassId: msg.ClassId,
+		NftId:   msg.NftId,
+		Price:   msg.Price,
+	})
+
+	return &types.MsgSellNFTResponse{
+		Id: id,
+	}, nil
 }

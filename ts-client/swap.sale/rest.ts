@@ -41,7 +41,7 @@ export interface SaleMsgSellResponse {
 export interface SaleNFTSale {
   /** @format uint64 */
   id?: string;
-  sender?: string;
+  seller?: string;
   classId?: string;
   nftId?: string;
   price?: string;
@@ -75,7 +75,7 @@ export interface SaleQueryShowResponse {
 export interface SaleSale {
   /** @format uint64 */
   id?: string;
-  sender?: string;
+  seller?: string;
   amount?: string;
   price?: string;
 }

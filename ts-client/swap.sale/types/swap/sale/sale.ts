@@ -7,21 +7,21 @@ export const protobufPackage = "swap.sale";
 /** QueryParamsResponse is response type for the Query/Params RPC method. */
 export interface Sale {
   id: number;
-  sender: string;
+  seller: string;
   amount: string;
   price: string;
 }
 
 export interface NFTSale {
   id: number;
-  sender: string;
+  seller: string;
   classId: string;
   nftId: string;
   price: string;
 }
 
 function createBaseSale(): Sale {
-  return { id: 0, sender: "", amount: "", price: "" };
+  return { id: 0, seller: "", amount: "", price: "" };
 }
 
 export const Sale = {
@@ -29,8 +29,8 @@ export const Sale = {
     if (message.id !== 0) {
       writer.uint32(8).uint64(message.id);
     }
-    if (message.sender !== "") {
-      writer.uint32(18).string(message.sender);
+    if (message.seller !== "") {
+      writer.uint32(18).string(message.seller);
     }
     if (message.amount !== "") {
       writer.uint32(26).string(message.amount);
@@ -52,7 +52,7 @@ export const Sale = {
           message.id = longToNumber(reader.uint64() as Long);
           break;
         case 2:
-          message.sender = reader.string();
+          message.seller = reader.string();
           break;
         case 3:
           message.amount = reader.string();
@@ -71,7 +71,7 @@ export const Sale = {
   fromJSON(object: any): Sale {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
-      sender: isSet(object.sender) ? String(object.sender) : "",
+      seller: isSet(object.seller) ? String(object.seller) : "",
       amount: isSet(object.amount) ? String(object.amount) : "",
       price: isSet(object.price) ? String(object.price) : "",
     };
@@ -80,7 +80,7 @@ export const Sale = {
   toJSON(message: Sale): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
-    message.sender !== undefined && (obj.sender = message.sender);
+    message.seller !== undefined && (obj.seller = message.seller);
     message.amount !== undefined && (obj.amount = message.amount);
     message.price !== undefined && (obj.price = message.price);
     return obj;
@@ -89,7 +89,7 @@ export const Sale = {
   fromPartial<I extends Exact<DeepPartial<Sale>, I>>(object: I): Sale {
     const message = createBaseSale();
     message.id = object.id ?? 0;
-    message.sender = object.sender ?? "";
+    message.seller = object.seller ?? "";
     message.amount = object.amount ?? "";
     message.price = object.price ?? "";
     return message;
@@ -97,7 +97,7 @@ export const Sale = {
 };
 
 function createBaseNFTSale(): NFTSale {
-  return { id: 0, sender: "", classId: "", nftId: "", price: "" };
+  return { id: 0, seller: "", classId: "", nftId: "", price: "" };
 }
 
 export const NFTSale = {
@@ -105,8 +105,8 @@ export const NFTSale = {
     if (message.id !== 0) {
       writer.uint32(8).uint64(message.id);
     }
-    if (message.sender !== "") {
-      writer.uint32(18).string(message.sender);
+    if (message.seller !== "") {
+      writer.uint32(18).string(message.seller);
     }
     if (message.classId !== "") {
       writer.uint32(26).string(message.classId);
@@ -131,7 +131,7 @@ export const NFTSale = {
           message.id = longToNumber(reader.uint64() as Long);
           break;
         case 2:
-          message.sender = reader.string();
+          message.seller = reader.string();
           break;
         case 3:
           message.classId = reader.string();
@@ -153,7 +153,7 @@ export const NFTSale = {
   fromJSON(object: any): NFTSale {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
-      sender: isSet(object.sender) ? String(object.sender) : "",
+      seller: isSet(object.seller) ? String(object.seller) : "",
       classId: isSet(object.classId) ? String(object.classId) : "",
       nftId: isSet(object.nftId) ? String(object.nftId) : "",
       price: isSet(object.price) ? String(object.price) : "",
@@ -163,7 +163,7 @@ export const NFTSale = {
   toJSON(message: NFTSale): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
-    message.sender !== undefined && (obj.sender = message.sender);
+    message.seller !== undefined && (obj.seller = message.seller);
     message.classId !== undefined && (obj.classId = message.classId);
     message.nftId !== undefined && (obj.nftId = message.nftId);
     message.price !== undefined && (obj.price = message.price);
@@ -173,7 +173,7 @@ export const NFTSale = {
   fromPartial<I extends Exact<DeepPartial<NFTSale>, I>>(object: I): NFTSale {
     const message = createBaseNFTSale();
     message.id = object.id ?? 0;
-    message.sender = object.sender ?? "";
+    message.seller = object.seller ?? "";
     message.classId = object.classId ?? "";
     message.nftId = object.nftId ?? "";
     message.price = object.price ?? "";

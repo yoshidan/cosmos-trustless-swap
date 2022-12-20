@@ -115,6 +115,7 @@ import (
 	salemodule "swap/x/sale"
 	salemodulekeeper "swap/x/sale/keeper"
 	salemoduletypes "swap/x/sale/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	appparams "swap/app/params"
@@ -549,6 +550,7 @@ func New(
 
 		app.BankKeeper,
 		app.AccountKeeper,
+		app.NFTKeeper,
 	)
 	saleModule := salemodule.NewAppModule(appCodec, app.SaleKeeper, app.AccountKeeper, app.BankKeeper)
 

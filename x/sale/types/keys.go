@@ -12,6 +12,11 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_sale"
+
+	SaleKey         = "Sale/value/"
+	MaxSaleIDKey    = "Sale/max/"
+	NFTSaleKey      = "Sale/NFT/value/"
+	MaxNFTSaleIDKey = "Sale/NFT/max/"
 )
 
 func KeyPrefix(p string) []byte {

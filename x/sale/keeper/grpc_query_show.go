@@ -3,10 +3,11 @@ package keeper
 import (
 	"context"
 
+	"swap/x/sale/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"swap/x/sale/types"
 )
 
 func (k Keeper) Show(goCtx context.Context, req *types.QueryShowRequest) (*types.QueryShowResponse, error) {
@@ -16,8 +17,11 @@ func (k Keeper) Show(goCtx context.Context, req *types.QueryShowRequest) (*types
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Process the query
-	_ = ctx
-
-	return &types.QueryShowResponse{}, nil
+	sale, found := k.GetSale(ctx, req.GetId())
+	if !found {
+		return nil, types.ErrSaleNotFound
+	}
+	return &types.QueryShowResponse{
+		Sale: &sale,
+	}, nil
 }

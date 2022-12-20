@@ -3,10 +3,11 @@ package keeper
 import (
 	"context"
 
+	"swap/x/sale/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"swap/x/sale/types"
 )
 
 func (k Keeper) ShowNFT(goCtx context.Context, req *types.QueryShowNFTRequest) (*types.QueryShowNFTResponse, error) {
@@ -16,8 +17,11 @@ func (k Keeper) ShowNFT(goCtx context.Context, req *types.QueryShowNFTRequest) (
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Process the query
-	_ = ctx
-
-	return &types.QueryShowNFTResponse{}, nil
+	sale, found := k.GetNFTSale(ctx, req.GetId())
+	if !found {
+		return nil, types.ErrSaleNotFound
+	}
+	return &types.QueryShowNFTResponse{
+		Sale: &sale,
+	}, nil
 }

@@ -44734,7 +44734,7 @@ paths:
                   id:
                     type: string
                     format: uint64
-                  sender:
+                  seller:
                     type: string
                   amount:
                     type: string
@@ -44785,7 +44785,7 @@ paths:
                   id:
                     type: string
                     format: uint64
-                  sender:
+                  seller:
                     type: string
                   classId:
                     type: string
@@ -74539,7 +74539,7 @@ definitions:
       id:
         type: string
         format: uint64
-      sender:
+      seller:
         type: string
       classId:
         type: string
@@ -74566,7 +74566,7 @@ definitions:
           id:
             type: string
             format: uint64
-          sender:
+          seller:
             type: string
           classId:
             type: string
@@ -74583,7 +74583,7 @@ definitions:
           id:
             type: string
             format: uint64
-          sender:
+          seller:
             type: string
           amount:
             type: string
@@ -74596,7 +74596,7 @@ definitions:
       id:
         type: string
         format: uint64
-      sender:
+      seller:
         type: string
       amount:
         type: string

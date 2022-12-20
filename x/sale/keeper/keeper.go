@@ -3,12 +3,13 @@ package keeper
 import (
 	"fmt"
 
+	"swap/x/sale/types"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
-	"swap/x/sale/types"
 )
 
 type (
@@ -20,6 +21,7 @@ type (
 
 		bankKeeper    types.BankKeeper
 		accountKeeper types.AccountKeeper
+		nftKeeper     types.NFTKeeper
 	}
 )
 
@@ -29,7 +31,7 @@ func NewKeeper(
 	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
 
-	bankKeeper types.BankKeeper, accountKeeper types.AccountKeeper,
+	bankKeeper types.BankKeeper, accountKeeper types.AccountKeeper, nftKeeper types.NFTKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -42,7 +44,7 @@ func NewKeeper(
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramstore: ps,
-		bankKeeper: bankKeeper, accountKeeper: accountKeeper,
+		bankKeeper: bankKeeper, accountKeeper: accountKeeper, nftKeeper: nftKeeper,
 	}
 }
 

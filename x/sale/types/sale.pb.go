@@ -26,7 +26,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 // QueryParamsResponse is response type for the Query/Params RPC method.
 type Sale struct {
 	Id     uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Sender string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	Seller string `protobuf:"bytes,2,opt,name=seller,proto3" json:"seller,omitempty"`
 	Amount string `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
 	Price  string `protobuf:"bytes,4,opt,name=price,proto3" json:"price,omitempty"`
 }
@@ -71,9 +71,9 @@ func (m *Sale) GetId() uint64 {
 	return 0
 }
 
-func (m *Sale) GetSender() string {
+func (m *Sale) GetSeller() string {
 	if m != nil {
-		return m.Sender
+		return m.Seller
 	}
 	return ""
 }
@@ -94,7 +94,7 @@ func (m *Sale) GetPrice() string {
 
 type NFTSale struct {
 	Id      uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Sender  string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	Seller  string `protobuf:"bytes,2,opt,name=seller,proto3" json:"seller,omitempty"`
 	ClassId string `protobuf:"bytes,3,opt,name=classId,proto3" json:"classId,omitempty"`
 	NftId   string `protobuf:"bytes,4,opt,name=nftId,proto3" json:"nftId,omitempty"`
 	Price   string `protobuf:"bytes,5,opt,name=price,proto3" json:"price,omitempty"`
@@ -140,9 +140,9 @@ func (m *NFTSale) GetId() uint64 {
 	return 0
 }
 
-func (m *NFTSale) GetSender() string {
+func (m *NFTSale) GetSeller() string {
 	if m != nil {
-		return m.Sender
+		return m.Seller
 	}
 	return ""
 }
@@ -181,7 +181,7 @@ var fileDescriptor_8a28812ad8623733 = []byte{
 	0xd0, 0x2f, 0x4e, 0xcc, 0x49, 0x05, 0x13, 0x7a, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0x42, 0x9c, 0x20,
 	0x51, 0x3d, 0x90, 0x80, 0x94, 0x48, 0x7a, 0x7e, 0x7a, 0x3e, 0x58, 0x54, 0x1f, 0xc4, 0x82, 0x28,
 	0x50, 0x8a, 0xe1, 0x62, 0x09, 0x4e, 0xcc, 0x49, 0x15, 0xe2, 0xe3, 0x62, 0xca, 0x4c, 0x91, 0x60,
-	0x54, 0x60, 0xd4, 0x60, 0x09, 0x62, 0xca, 0x4c, 0x11, 0x12, 0xe3, 0x62, 0x2b, 0x4e, 0xcd, 0x4b,
+	0x54, 0x60, 0xd4, 0x60, 0x09, 0x62, 0xca, 0x4c, 0x11, 0x12, 0xe3, 0x62, 0x2b, 0x4e, 0xcd, 0xc9,
 	0x49, 0x2d, 0x92, 0x60, 0x52, 0x60, 0xd4, 0xe0, 0x0c, 0x82, 0xf2, 0x40, 0xe2, 0x89, 0xb9, 0xf9,
 	0xa5, 0x79, 0x25, 0x12, 0xcc, 0x10, 0x71, 0x08, 0x4f, 0x48, 0x84, 0x8b, 0xb5, 0xa0, 0x28, 0x33,
 	0x39, 0x55, 0x82, 0x05, 0x2c, 0x0c, 0xe1, 0x28, 0x95, 0x73, 0xb1, 0xfb, 0xb9, 0x85, 0x90, 0x64,
@@ -190,7 +190,7 @@ var fileDescriptor_8a28812ad8623733 = []byte{
 	0xda, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8, 0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7,
 	0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7, 0x10, 0x25, 0x08, 0x0e, 0xa7, 0x0a,
 	0x48, 0x48, 0x95, 0x54, 0x16, 0xa4, 0x16, 0x27, 0xb1, 0x81, 0x83, 0xc2, 0x18, 0x10, 0x00, 0x00,
-	0xff, 0xff, 0x64, 0xd5, 0xac, 0x9d, 0x43, 0x01, 0x00, 0x00,
+	0xff, 0xff, 0x85, 0x03, 0x3f, 0x42, 0x43, 0x01, 0x00, 0x00,
 }
 
 func (m *Sale) Marshal() (dAtA []byte, err error) {
@@ -227,10 +227,10 @@ func (m *Sale) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.Sender) > 0 {
-		i -= len(m.Sender)
-		copy(dAtA[i:], m.Sender)
-		i = encodeVarintSale(dAtA, i, uint64(len(m.Sender)))
+	if len(m.Seller) > 0 {
+		i -= len(m.Seller)
+		copy(dAtA[i:], m.Seller)
+		i = encodeVarintSale(dAtA, i, uint64(len(m.Seller)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -283,10 +283,10 @@ func (m *NFTSale) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.Sender) > 0 {
-		i -= len(m.Sender)
-		copy(dAtA[i:], m.Sender)
-		i = encodeVarintSale(dAtA, i, uint64(len(m.Sender)))
+	if len(m.Seller) > 0 {
+		i -= len(m.Seller)
+		copy(dAtA[i:], m.Seller)
+		i = encodeVarintSale(dAtA, i, uint64(len(m.Seller)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -318,7 +318,7 @@ func (m *Sale) Size() (n int) {
 	if m.Id != 0 {
 		n += 1 + sovSale(uint64(m.Id))
 	}
-	l = len(m.Sender)
+	l = len(m.Seller)
 	if l > 0 {
 		n += 1 + l + sovSale(uint64(l))
 	}
@@ -342,7 +342,7 @@ func (m *NFTSale) Size() (n int) {
 	if m.Id != 0 {
 		n += 1 + sovSale(uint64(m.Id))
 	}
-	l = len(m.Sender)
+	l = len(m.Seller)
 	if l > 0 {
 		n += 1 + l + sovSale(uint64(l))
 	}
@@ -417,7 +417,7 @@ func (m *Sale) Unmarshal(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Seller", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -445,7 +445,7 @@ func (m *Sale) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Sender = string(dAtA[iNdEx:postIndex])
+			m.Seller = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -582,7 +582,7 @@ func (m *NFTSale) Unmarshal(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Seller", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -610,7 +610,7 @@ func (m *NFTSale) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Sender = string(dAtA[iNdEx:postIndex])
+			m.Seller = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
