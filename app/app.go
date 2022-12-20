@@ -190,9 +190,9 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		nft.ModuleName:                 {authtypes.Minter, authtypes.Burner},
-		swapmoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner, authtypes.Staking},
-		salemoduletypes.ModuleName:     {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		nft.ModuleName:                 nil,
+		swapmoduletypes.ModuleName:     nil,
+		salemoduletypes.ModuleName:     nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
