@@ -8,12 +8,12 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgSend{}, "swap/Send", nil)
-	cdc.RegisterConcrete(&MsgReceive{}, "swap/Receive", nil)
-	cdc.RegisterConcrete(&MsgCancel{}, "swap/Cancel", nil)
-	cdc.RegisterConcrete(&MsgSendNFT{}, "swap/SendNFT", nil)
-	cdc.RegisterConcrete(&MsgCancelNFT{}, "swap/CancelNFT", nil)
-	cdc.RegisterConcrete(&MsgReceiveNFT{}, "swap/ReceiveNFT", nil)
+	cdc.RegisterConcrete(&MsgSend{}, "github.com/yoshidan/cosmos-trustless-swap/Send", nil)
+	cdc.RegisterConcrete(&MsgReceive{}, "github.com/yoshidan/cosmos-trustless-swap/Receive", nil)
+	cdc.RegisterConcrete(&MsgCancel{}, "github.com/yoshidan/cosmos-trustless-swap/Cancel", nil)
+	cdc.RegisterConcrete(&MsgSendNFT{}, "github.com/yoshidan/cosmos-trustless-swap/SendNFT", nil)
+	cdc.RegisterConcrete(&MsgCancelNFT{}, "github.com/yoshidan/cosmos-trustless-swap/CancelNFT", nil)
+	cdc.RegisterConcrete(&MsgReceiveNFT{}, "github.com/yoshidan/cosmos-trustless-swap/ReceiveNFT", nil)
 	// this line is used by starport scaffolding # 2
 }
 

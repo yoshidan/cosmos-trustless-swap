@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
-	"swap/app"
-	"swap/cmd/swapd/cmd"
+	"github.com/yoshidan/cosmos-trustless-swap/app"
+	"github.com/yoshidan/cosmos-trustless-swap/cmd/swapd/cmd"
 )
 
 func main() {

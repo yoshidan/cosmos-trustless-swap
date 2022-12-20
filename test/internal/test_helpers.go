@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
-	"swap/app"
-	"swap/app/params"
 	"testing"
 	"time"
+
+	"github.com/yoshidan/cosmos-trustless-swap/app"
+	"github.com/yoshidan/cosmos-trustless-swap/app/params"
 
 	"cosmossdk.io/math"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"

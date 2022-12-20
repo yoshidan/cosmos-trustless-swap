@@ -8,7 +8,7 @@ import "swap/swap/params.proto";
 import "swap/swap/swap.proto";
 // this line is used by starport scaffolding # 1
 
-option go_package = "swap/x/swap/types";
+option go_package = "github.com/yoshidan/cosmos-trustless-swap/x/swap/types";
 
 // Query defines the gRPC querier service.
 service Query {

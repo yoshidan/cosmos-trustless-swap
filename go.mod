@@ -1,4 +1,4 @@
-module swap
+module github.com/yoshidan/cosmos-trustless-swap
 
 go 1.18
 

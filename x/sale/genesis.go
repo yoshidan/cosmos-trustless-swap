@@ -2,8 +2,8 @@ package sale
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"swap/x/sale/keeper"
-	"swap/x/sale/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/keeper"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.

@@ -3,7 +3,7 @@ package cmd
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"swap/app"
+	"github.com/yoshidan/cosmos-trustless-swap/app"
 )
 
 func initSDKConfig() {

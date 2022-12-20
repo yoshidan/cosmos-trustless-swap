@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"swap/x/sale/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 )
 
 func TestGenesisState_Validate(t *testing.T) {

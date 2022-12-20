@@ -1,8 +1,8 @@
-import { Client, registry, MissingWalletError } from 'swap-client-ts'
+import { Client, registry, MissingWalletError } from 'yoshidan-cosmos-trustless-swap-client-ts'
 
-import { Params } from "swap-client-ts/swap.swap/types"
-import { Swap } from "swap-client-ts/swap.swap/types"
-import { NFTSwap } from "swap-client-ts/swap.swap/types"
+import { Params } from "yoshidan-cosmos-trustless-swap-client-ts/swap.swap/types"
+import { Swap } from "yoshidan-cosmos-trustless-swap-client-ts/swap.swap/types"
+import { NFTSwap } from "yoshidan-cosmos-trustless-swap-client-ts/swap.swap/types"
 
 
 export { Params, Swap, NFTSwap };
@@ -203,16 +203,16 @@ export default {
 				}
 			}
 		},
-		async sendMsgReceiveNFT({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgSend({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.SwapSwap.tx.sendMsgReceiveNFT({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.SwapSwap.tx.sendMsgSend({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgReceiveNFT:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgSend:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgReceiveNFT:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgSend:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -242,16 +242,16 @@ export default {
 				}
 			}
 		},
-		async sendMsgSend({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgReceiveNFT({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.SwapSwap.tx.sendMsgSend({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.SwapSwap.tx.sendMsgReceiveNFT({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSend:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgReceiveNFT:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgSend:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgReceiveNFT:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -282,16 +282,16 @@ export default {
 				}
 			}
 		},
-		async MsgReceiveNFT({ rootGetters }, { value }) {
+		async MsgSend({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.SwapSwap.tx.msgReceiveNFT({value})
+				const msg = await client.SwapSwap.tx.msgSend({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgReceiveNFT:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgSend:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgReceiveNFT:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgSend:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -321,16 +321,16 @@ export default {
 				}
 			}
 		},
-		async MsgSend({ rootGetters }, { value }) {
+		async MsgReceiveNFT({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.SwapSwap.tx.msgSend({value})
+				const msg = await client.SwapSwap.tx.msgReceiveNFT({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSend:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgReceiveNFT:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgSend:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgReceiveNFT:Create Could not create message: ' + e.message)
 				}
 			}
 		},

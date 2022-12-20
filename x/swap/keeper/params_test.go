@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	testkeeper "swap/testutil/keeper"
-	"swap/x/swap/types"
+	testkeeper "github.com/yoshidan/cosmos-trustless-swap/testutil/keeper"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 )
 
 func TestGetParams(t *testing.T) {

@@ -2,7 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 )
 
 // GetParams get all parameters as types.Params

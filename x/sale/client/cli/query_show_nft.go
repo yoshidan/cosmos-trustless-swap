@@ -3,7 +3,7 @@ package cli
 import (
 	"strconv"
 
-	"swap/x/sale/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"

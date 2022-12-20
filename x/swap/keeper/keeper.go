@@ -3,7 +3,7 @@ package keeper
 import (
 	"fmt"
 
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"

@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cast"
 
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"

@@ -4,10 +4,10 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	keepertest "swap/testutil/keeper"
-	"swap/testutil/nullify"
-	"swap/x/sale"
-	"swap/x/sale/types"
+	keepertest "github.com/yoshidan/cosmos-trustless-swap/testutil/keeper"
+	"github.com/yoshidan/cosmos-trustless-swap/testutil/nullify"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 )
 
 func TestGenesis(t *testing.T) {

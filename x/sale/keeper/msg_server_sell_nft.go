@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"swap/x/sale/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 

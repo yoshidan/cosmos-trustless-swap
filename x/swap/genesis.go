@@ -2,8 +2,8 @@ package swap
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"swap/x/swap/keeper"
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/keeper"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.

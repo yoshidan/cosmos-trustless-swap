@@ -5,7 +5,7 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
-	"swap/testutil/sample"
+	"github.com/yoshidan/cosmos-trustless-swap/testutil/sample"
 )
 
 func TestMsgCancel_ValidateBasic(t *testing.T) {

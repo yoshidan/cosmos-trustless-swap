@@ -1,14 +1,15 @@
 package cli
 
 import (
-	"github.com/spf13/cast"
 	"strconv"
+
+	"github.com/spf13/cast"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cobra"
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 )
 
 var _ = strconv.Itoa(0)

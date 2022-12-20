@@ -36,8 +36,8 @@ import (
 	dbm "github.com/tendermint/tm-db"
 	// this line is used by starport scaffolding # root/moduleImport
 
-	"swap/app"
-	appparams "swap/app/params"
+	"github.com/yoshidan/cosmos-trustless-swap/app"
+	appparams "github.com/yoshidan/cosmos-trustless-swap/app/params"
 )
 
 // NewRootCmd creates a new root command for a Cosmos SDK application

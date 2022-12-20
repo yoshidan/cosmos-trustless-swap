@@ -1,11 +1,12 @@
 package test
 
 import (
-	app2 "swap/app"
-	"swap/test/internal"
-	"swap/x/swap/keeper"
 	"testing"
 	"time"
+
+	app2 "github.com/yoshidan/cosmos-trustless-swap/app"
+	"github.com/yoshidan/cosmos-trustless-swap/test/internal"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/keeper"
 
 	"github.com/cosmos/cosmos-sdk/x/nft"
 
@@ -19,7 +20,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

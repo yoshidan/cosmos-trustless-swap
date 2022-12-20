@@ -3,8 +3,8 @@ package keeper
 import (
 	"testing"
 
-	"swap/x/swap/keeper"
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/keeper"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"

@@ -13,10 +13,10 @@ const (
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_swap"
 
-	SwapKey         = "Swap/value/"
-	MaxSwapIDKey    = "Swap/max/"
-	NFTSwapKey      = "Swap/NFT/value/"
-	MaxNFTSwapIDKey = "Swap/NFT/max/"
+	SwapKey         = "github.com/yoshidan/cosmos-trustless-swap/value/"
+	MaxSwapIDKey    = "github.com/yoshidan/cosmos-trustless-swap/max/"
+	NFTSwapKey      = "github.com/yoshidan/cosmos-trustless-swap/NFT/value/"
+	MaxNFTSwapIDKey = "github.com/yoshidan/cosmos-trustless-swap/NFT/max/"
 )
 
 func KeyPrefix(p string) []byte {

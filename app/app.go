@@ -108,18 +108,18 @@ import (
 	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
 	nftmodule "github.com/cosmos/cosmos-sdk/x/nft/module"
 
-	swapmodule "swap/x/swap"
-	swapmodulekeeper "swap/x/swap/keeper"
-	swapmoduletypes "swap/x/swap/types"
+	swapmodule "github.com/yoshidan/cosmos-trustless-swap/x/swap"
+	swapmodulekeeper "github.com/yoshidan/cosmos-trustless-swap/x/swap/keeper"
+	swapmoduletypes "github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
-	salemodule "swap/x/sale"
-	salemodulekeeper "swap/x/sale/keeper"
-	salemoduletypes "swap/x/sale/types"
+	salemodule "github.com/yoshidan/cosmos-trustless-swap/x/sale"
+	salemodulekeeper "github.com/yoshidan/cosmos-trustless-swap/x/sale/keeper"
+	salemoduletypes "github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
-	appparams "swap/app/params"
-	"swap/docs"
+	appparams "github.com/yoshidan/cosmos-trustless-swap/app/params"
+	"github.com/yoshidan/cosmos-trustless-swap/docs"
 )
 
 const (

@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 )
 
 type msgServer struct {

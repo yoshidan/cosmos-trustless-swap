@@ -9,9 +9,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"swap/testutil/sample"
-	salesimulation "swap/x/sale/simulation"
-	"swap/x/sale/types"
+	"github.com/yoshidan/cosmos-trustless-swap/testutil/sample"
+	salesimulation "github.com/yoshidan/cosmos-trustless-swap/x/sale/simulation"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 )
 
 // avoid unused import issue

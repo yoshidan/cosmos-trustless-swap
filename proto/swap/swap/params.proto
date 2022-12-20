@@ -3,7 +3,7 @@ package swap.swap;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "swap/x/swap/types";
+option go_package = "github.com/yoshidan/cosmos-trustless-swap/x/swap/types";
 
 // Params defines the parameters for the module.
 message Params {

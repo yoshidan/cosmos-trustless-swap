@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"swap/x/swap/keeper"
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/keeper"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 )
 
 func SimulateMsgCancelNFT(

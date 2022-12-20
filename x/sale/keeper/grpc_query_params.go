@@ -4,9 +4,9 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"swap/x/sale/types"
 )
 
 func (k Keeper) Params(c context.Context, req *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {

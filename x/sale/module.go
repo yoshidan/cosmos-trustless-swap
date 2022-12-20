@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	// this line is used by starport scaffolding # 1
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -16,9 +17,9 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"swap/x/sale/client/cli"
-	"swap/x/sale/keeper"
-	"swap/x/sale/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/client/cli"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/keeper"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 )
 
 var (

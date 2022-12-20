@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 import "swap/sale/params.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
-option go_package = "swap/x/sale/types";
+option go_package = "github.com/yoshidan/cosmos-trustless-swap/x/sale/types";
 
 // GenesisState defines the sale module's genesis state.
 message GenesisState {

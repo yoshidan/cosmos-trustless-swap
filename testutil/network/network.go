@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"swap/app"
+	"github.com/yoshidan/cosmos-trustless-swap/app"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"

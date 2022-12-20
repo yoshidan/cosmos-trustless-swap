@@ -1,8 +1,8 @@
-import { Client, registry, MissingWalletError } from 'swap-client-ts'
+import { Client, registry, MissingWalletError } from 'yoshidan-cosmos-trustless-swap-client-ts'
 
-import { Params } from "swap-client-ts/swap.sale/types"
-import { Sale } from "swap-client-ts/swap.sale/types"
-import { NFTSale } from "swap-client-ts/swap.sale/types"
+import { Params } from "yoshidan-cosmos-trustless-swap-client-ts/swap.sale/types"
+import { Sale } from "yoshidan-cosmos-trustless-swap-client-ts/swap.sale/types"
+import { NFTSale } from "yoshidan-cosmos-trustless-swap-client-ts/swap.sale/types"
 
 
 export { Params, Sale, NFTSale };
@@ -190,32 +190,6 @@ export default {
 		},
 		
 		
-		async sendMsgCancel({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.SwapSale.tx.sendMsgCancel({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCancel:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCancel:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgSell({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.SwapSale.tx.sendMsgSell({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSell:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgSell:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgBuy({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -226,6 +200,19 @@ export default {
 					throw new Error('TxClient:MsgBuy:Init Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new Error('TxClient:MsgBuy:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgBuyNFT({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.SwapSale.tx.sendMsgBuyNFT({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgBuyNFT:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgBuyNFT:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -242,16 +229,29 @@ export default {
 				}
 			}
 		},
-		async sendMsgBuyNFT({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgSell({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.SwapSale.tx.sendMsgBuyNFT({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.SwapSale.tx.sendMsgSell({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBuyNFT:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgSell:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgBuyNFT:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgSell:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCancel({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.SwapSale.tx.sendMsgCancel({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCancel:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCancel:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -269,32 +269,6 @@ export default {
 			}
 		},
 		
-		async MsgCancel({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.SwapSale.tx.msgCancel({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCancel:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgCancel:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgSell({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.SwapSale.tx.msgSell({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSell:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgSell:Create Could not create message: ' + e.message)
-				}
-			}
-		},
 		async MsgBuy({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -305,6 +279,19 @@ export default {
 					throw new Error('TxClient:MsgBuy:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgBuy:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgBuyNFT({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.SwapSale.tx.msgBuyNFT({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgBuyNFT:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgBuyNFT:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -321,16 +308,29 @@ export default {
 				}
 			}
 		},
-		async MsgBuyNFT({ rootGetters }, { value }) {
+		async MsgSell({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.SwapSale.tx.msgBuyNFT({value})
+				const msg = await client.SwapSale.tx.msgSell({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBuyNFT:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgSell:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgBuyNFT:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgSell:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCancel({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.SwapSale.tx.msgCancel({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCancel:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCancel:Create Could not create message: ' + e.message)
 				}
 			}
 		},

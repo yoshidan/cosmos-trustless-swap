@@ -1,8 +1,8 @@
 package keeper
 
 import (
-	"swap/x/internal"
-	"swap/x/swap/types"
+	"github.com/yoshidan/cosmos-trustless-swap/x/internal"
+	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

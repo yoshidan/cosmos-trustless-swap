@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	keepertest "swap/testutil/keeper"
-	"swap/x/sale/keeper"
-	"swap/x/sale/types"
+	keepertest "github.com/yoshidan/cosmos-trustless-swap/testutil/keeper"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/keeper"
+	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
