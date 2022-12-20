@@ -17,7 +17,7 @@ func (k Keeper) Show(goCtx context.Context, req *types.QueryShowRequest) (*types
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	sale, found := k.GetSale(ctx, req.GetId())
+	sale, found := k.GetSale(ctx, req.Seller, req.Id)
 	if !found {
 		return nil, types.ErrSaleNotFound
 	}

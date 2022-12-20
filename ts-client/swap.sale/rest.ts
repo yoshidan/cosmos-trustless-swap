@@ -28,20 +28,14 @@ export type SaleMsgCancelNFTResponse = object;
 
 export type SaleMsgCancelResponse = object;
 
-export interface SaleMsgSellNFTResponse {
-  /** @format uint64 */
-  id?: string;
-}
+export type SaleMsgSellNFTResponse = object;
 
-export interface SaleMsgSellResponse {
-  /** @format uint64 */
-  id?: string;
-}
+export type SaleMsgSellResponse = object;
 
 export interface SaleNFTSale {
   /** @format uint64 */
   id?: string;
-  seller?: string;
+  creator?: string;
   classId?: string;
   nftId?: string;
   price?: string;
@@ -75,7 +69,7 @@ export interface SaleQueryShowResponse {
 export interface SaleSale {
   /** @format uint64 */
   id?: string;
-  seller?: string;
+  creator?: string;
   amount?: string;
   price?: string;
 }
@@ -229,10 +223,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @summary Queries a list of Show items.
    * @request GET:/swap/sale/show/{id}
    */
-  queryShow = (id: string, params: RequestParams = {}) =>
+  queryShow = (id: string, query?: { seller?: string }, params: RequestParams = {}) =>
     this.request<SaleQueryShowResponse, RpcStatus>({
       path: `/swap/sale/show/${id}`,
       method: "GET",
+      query: query,
       format: "json",
       ...params,
     });
@@ -245,10 +240,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @summary Queries a list of ShowNFT items.
    * @request GET:/swap/sale/show_nft/{id}
    */
-  queryShowNft = (id: string, params: RequestParams = {}) =>
+  queryShowNft = (id: string, query?: { seller?: string }, params: RequestParams = {}) =>
     this.request<SaleQueryShowNFTResponse, RpcStatus>({
       path: `/swap/sale/show_nft/${id}`,
       method: "GET",
+      query: query,
       format: "json",
       ...params,
     });

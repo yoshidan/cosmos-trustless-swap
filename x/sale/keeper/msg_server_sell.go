@@ -24,13 +24,12 @@ func (k msgServer) Sell(goCtx context.Context, msg *types.MsgSell) (*types.MsgSe
 		return nil, err
 	}
 
-	id := k.AppendSale(ctx, types.Sale{
-		Seller: msg.Creator,
-		Amount: msg.Amount,
-		Price:  msg.Price,
+	k.SetSale(ctx, types.Sale{
+		Id:      msg.Id,
+		Creator: msg.Creator,
+		Amount:  msg.Amount,
+		Price:   msg.Price,
 	})
 
-	return &types.MsgSellResponse{
-		Id: id,
-	}, nil
+	return &types.MsgSellResponse{}, nil
 }

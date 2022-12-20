@@ -18,18 +18,19 @@ service Msg {
 
 message MsgSend {
   string creator = 1;
-  string receiver = 2;
-  string amount = 3;
-  string amountToReceive = 4;
+  uint64 id = 2;
+  string receiver = 3;
+  string amount = 4;
+  string amountToReceive = 5;
 }
 
 message MsgSendResponse {
-  uint64 id = 1;
 }
 
 message MsgReceive {
   string creator = 1;
-  uint64 id = 2;
+  string sender = 2;
+  uint64 id = 3;
 }
 
 message MsgReceiveResponse {
@@ -45,14 +46,14 @@ message MsgCancelResponse {
 
 message MsgSendNFT {
   string creator = 1;
-  string receiver = 2;
-  string classId = 3;
-  string nftId = 4;
-  string amountToReceive = 5;
+  uint64 id = 2;
+  string receiver = 3;
+  string classId = 4;
+  string nftId = 5;
+  string amountToReceive = 6;
 }
 
 message MsgSendNFTResponse {
-  uint64 id = 1;
 }
 
 message MsgCancelNFT {
@@ -65,7 +66,8 @@ message MsgCancelNFTResponse {
 
 message MsgReceiveNFT {
   string creator = 1;
-  uint64 id = 2;
+  string sender = 2;
+  uint64 id = 3;
 }
 
 message MsgReceiveNFTResponse {

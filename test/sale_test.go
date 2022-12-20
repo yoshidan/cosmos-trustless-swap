@@ -71,18 +71,18 @@ func (suite *SaleTestSuite) TestSellSuccess() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSell{
+		Id:      1,
 		Creator: seller.String(),
 		Amount:  internal.NewFooCoin(10).String(),
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Sell(ctx, sendParam)
+	_, err := server.Sell(ctx, sendParam)
 	suite.Require().NoError(err)
-	suite.Require().Equal(uint64(1), response.Id)
-	suite.Require().Equal(response.Id, app.SaleKeeper.GetMaxSaleID(ctx))
-	queryResponse, err := app.SaleKeeper.Show(ctx, &types.QueryShowRequest{Id: response.Id})
+	queryResponse, err := app.SaleKeeper.Show(ctx, &types.QueryShowRequest{Id: 1, Seller: seller.String()})
 	swap := queryResponse.Sale
 	suite.Require().NoError(err)
-	suite.Require().Equal(seller.String(), swap.Seller)
+	suite.Require().Equal(uint64(1), swap.Id)
+	suite.Require().Equal(seller.String(), swap.Creator)
 	suite.Require().Equal(sendParam.Amount, swap.Amount)
 	suite.Require().Equal(sendParam.Price, swap.Price)
 	balance, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
@@ -107,20 +107,21 @@ func (suite *SaleTestSuite) TestCancelSuccess() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSell{
+		Id:      1,
 		Creator: seller.String(),
 		Amount:  internal.NewFooCoin(10).String(),
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Sell(ctx, sendParam)
+	_, err := server.Sell(ctx, sendParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancel{
 		Creator: seller.String(),
-		Id:      response.Id,
+		Id:      1,
 	}
 	_, err = server.Cancel(ctx, cancelParam)
 	suite.Require().NoError(err)
-	_, found := app.SaleKeeper.GetSale(ctx, response.Id)
+	_, found := app.SaleKeeper.GetSale(ctx, seller.String(), 1)
 	suite.Require().False(found)
 
 	// Check the token return
@@ -144,7 +145,8 @@ func (suite *SaleTestSuite) TestCancelSuccess() {
 
 	_, err = server.Buy(ctx, &types.MsgBuy{
 		Creator: buyer.String(),
-		Id:      response.Id,
+		Seller:  seller.String(),
+		Id:      1,
 	})
 	suite.Require().ErrorIs(types.ErrSaleNotFound, err)
 }
@@ -167,20 +169,22 @@ func (suite *SaleTestSuite) TestBuySuccess() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSell{
+		Id:      1,
 		Creator: seller.String(),
 		Amount:  internal.NewFooCoin(10).String(),
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Sell(ctx, sendParam)
+	_, err := server.Sell(ctx, sendParam)
 
 	// Buy
 	receiveParam := &types.MsgBuy{
 		Creator: buyer.String(),
-		Id:      response.Id,
+		Seller:  seller.String(),
+		Id:      1,
 	}
 	_, err = server.Buy(ctx, receiveParam)
 	suite.Require().NoError(err)
-	_, found := app.SaleKeeper.GetSale(ctx, response.Id)
+	_, found := app.SaleKeeper.GetSale(ctx, seller.String(), 1)
 	suite.Require().False(found)
 
 	// Check token swapped
@@ -211,7 +215,7 @@ func (suite *SaleTestSuite) TestBuySuccess() {
 
 	_, err = server.Cancel(ctx, &types.MsgCancel{
 		Creator: seller.String(),
-		Id:      response.Id,
+		Id:      1,
 	})
 	suite.Require().ErrorIs(types.ErrSaleNotFound, err)
 }
@@ -234,19 +238,20 @@ func (suite *SaleTestSuite) TestCancelError() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSell{
+		Id:      1,
 		Creator: seller.String(),
 		Amount:  internal.NewFooCoin(10).String(),
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Sell(ctx, sendParam)
+	_, err := server.Sell(ctx, sendParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancel{
 		Creator: buyer.String(),
-		Id:      response.Id,
+		Id:      1,
 	}
 	_, err = server.Cancel(ctx, cancelParam)
-	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
+	suite.Require().ErrorIs(types.ErrSaleNotFound, err)
 }
 
 func (suite *SaleTestSuite) TestBuyError() {
@@ -263,16 +268,18 @@ func (suite *SaleTestSuite) TestBuyError() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSell{
+		Id:      1,
 		Creator: seller.String(),
 		Amount:  internal.NewFooCoin(10).String(),
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Sell(ctx, sendParam)
+	_, err := server.Sell(ctx, sendParam)
 
 	// Buy
 	receiveParam := &types.MsgBuy{
 		Creator: buyer.String(),
-		Id:      response.Id,
+		Seller:  seller.String(),
+		Id:      1,
 	}
 	_, err = server.Buy(ctx, receiveParam)
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)
@@ -293,19 +300,19 @@ func (suite *SaleTestSuite) TestSellNFTSuccess() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSellNFT{
+		Id:      1,
 		Creator: seller.String(),
 		ClassId: item.ClassId,
 		NftId:   item.Id,
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SellNFT(ctx, sendParam)
+	_, err := server.SellNFT(ctx, sendParam)
 	suite.Require().NoError(err)
-	suite.Require().Equal(uint64(1), response.Id)
-	suite.Require().Equal(response.Id, app.SaleKeeper.GetMaxNFTSaleID(ctx))
-	queryResponse, err := app.SaleKeeper.ShowNFT(ctx, &types.QueryShowNFTRequest{Id: response.Id})
+	queryResponse, err := app.SaleKeeper.ShowNFT(ctx, &types.QueryShowNFTRequest{Id: 1, Seller: seller.String()})
 	swap := queryResponse.Sale
 	suite.Require().NoError(err)
-	suite.Require().Equal(seller.String(), swap.Seller)
+	suite.Require().Equal(uint64(1), swap.Id)
+	suite.Require().Equal(seller.String(), swap.Creator)
 	suite.Require().Equal(sendParam.ClassId, swap.ClassId)
 	suite.Require().Equal(sendParam.NftId, swap.NftId)
 	suite.Require().Equal(sendParam.Price, swap.Price)
@@ -334,21 +341,22 @@ func (suite *SaleTestSuite) TestCancelNFTSuccess() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSellNFT{
+		Id:      1,
 		Creator: seller.String(),
 		ClassId: item.ClassId,
 		NftId:   item.Id,
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SellNFT(ctx, sendParam)
+	_, err := server.SellNFT(ctx, sendParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancelNFT{
 		Creator: seller.String(),
-		Id:      response.Id,
+		Id:      1,
 	}
 	_, err = server.CancelNFT(ctx, cancelParam)
 	suite.Require().NoError(err)
-	_, found := app.SaleKeeper.GetNFTSale(ctx, response.Id)
+	_, found := app.SaleKeeper.GetNFTSale(ctx, seller.String(), 1)
 	suite.Require().False(found)
 
 	// Check the token return
@@ -365,7 +373,8 @@ func (suite *SaleTestSuite) TestCancelNFTSuccess() {
 
 	_, err = server.BuyNFT(ctx, &types.MsgBuyNFT{
 		Creator: buyer.String(),
-		Id:      response.Id,
+		Seller:  seller.String(),
+		Id:      1,
 	})
 	suite.Require().ErrorIs(types.ErrSaleNotFound, err)
 }
@@ -391,21 +400,23 @@ func (suite *SaleTestSuite) TestBuyNFTSuccess() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSellNFT{
+		Id:      1,
 		Creator: seller.String(),
 		ClassId: item.ClassId,
 		NftId:   item.Id,
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SellNFT(ctx, sendParam)
+	_, err := server.SellNFT(ctx, sendParam)
 
 	// Buy
 	receiveParam := &types.MsgBuyNFT{
 		Creator: buyer.String(),
-		Id:      response.Id,
+		Seller:  seller.String(),
+		Id:      1,
 	}
 	_, err = server.BuyNFT(ctx, receiveParam)
 	suite.Require().NoError(err)
-	_, found := app.SaleKeeper.GetNFTSale(ctx, response.Id)
+	_, found := app.SaleKeeper.GetNFTSale(ctx, seller.String(), 1)
 	suite.Require().False(found)
 
 	// Check token swapped
@@ -436,7 +447,7 @@ func (suite *SaleTestSuite) TestBuyNFTSuccess() {
 
 	_, err = server.CancelNFT(ctx, &types.MsgCancelNFT{
 		Creator: seller.String(),
-		Id:      response.Id,
+		Id:      1,
 	})
 	suite.Require().ErrorIs(types.ErrSaleNotFound, err)
 }
@@ -462,20 +473,21 @@ func (suite *SaleTestSuite) TestCancelNFTError() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSellNFT{
+		Id:      1,
 		Creator: seller.String(),
 		ClassId: item.ClassId,
 		NftId:   item.Id,
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SellNFT(ctx, sendParam)
+	_, err := server.SellNFT(ctx, sendParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancelNFT{
 		Creator: buyer.String(),
-		Id:      response.Id,
+		Id:      1,
 	}
 	_, err = server.CancelNFT(ctx, cancelParam)
-	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
+	suite.Require().ErrorIs(types.ErrSaleNotFound, err)
 }
 
 func (suite *SaleTestSuite) TestBuyNFTError() {
@@ -495,17 +507,19 @@ func (suite *SaleTestSuite) TestBuyNFTError() {
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 	sendParam := &types.MsgSellNFT{
+		Id:      1,
 		Creator: seller.String(),
 		ClassId: item.ClassId,
 		NftId:   item.Id,
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SellNFT(ctx, sendParam)
+	_, err := server.SellNFT(ctx, sendParam)
 
 	// Buy
 	receiveParam := &types.MsgBuyNFT{
 		Creator: buyer.String(),
-		Id:      response.Id,
+		Seller:  seller.String(),
+		Id:      1,
 	}
 	_, err = server.BuyNFT(ctx, receiveParam)
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)

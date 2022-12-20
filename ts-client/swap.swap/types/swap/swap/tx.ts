@@ -6,17 +6,18 @@ export const protobufPackage = "swap.swap";
 
 export interface MsgSend {
   creator: string;
+  id: number;
   receiver: string;
   amount: string;
   amountToReceive: string;
 }
 
 export interface MsgSendResponse {
-  id: number;
 }
 
 export interface MsgReceive {
   creator: string;
+  sender: string;
   id: number;
 }
 
@@ -33,6 +34,7 @@ export interface MsgCancelResponse {
 
 export interface MsgSendNFT {
   creator: string;
+  id: number;
   receiver: string;
   classId: string;
   nftId: string;
@@ -40,7 +42,6 @@ export interface MsgSendNFT {
 }
 
 export interface MsgSendNFTResponse {
-  id: number;
 }
 
 export interface MsgCancelNFT {
@@ -53,6 +54,7 @@ export interface MsgCancelNFTResponse {
 
 export interface MsgReceiveNFT {
   creator: string;
+  sender: string;
   id: number;
 }
 
@@ -60,7 +62,7 @@ export interface MsgReceiveNFTResponse {
 }
 
 function createBaseMsgSend(): MsgSend {
-  return { creator: "", receiver: "", amount: "", amountToReceive: "" };
+  return { creator: "", id: 0, receiver: "", amount: "", amountToReceive: "" };
 }
 
 export const MsgSend = {
@@ -68,14 +70,17 @@ export const MsgSend = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
     if (message.receiver !== "") {
-      writer.uint32(18).string(message.receiver);
+      writer.uint32(26).string(message.receiver);
     }
     if (message.amount !== "") {
-      writer.uint32(26).string(message.amount);
+      writer.uint32(34).string(message.amount);
     }
     if (message.amountToReceive !== "") {
-      writer.uint32(34).string(message.amountToReceive);
+      writer.uint32(42).string(message.amountToReceive);
     }
     return writer;
   },
@@ -91,12 +96,15 @@ export const MsgSend = {
           message.creator = reader.string();
           break;
         case 2:
-          message.receiver = reader.string();
+          message.id = longToNumber(reader.uint64() as Long);
           break;
         case 3:
-          message.amount = reader.string();
+          message.receiver = reader.string();
           break;
         case 4:
+          message.amount = reader.string();
+          break;
+        case 5:
           message.amountToReceive = reader.string();
           break;
         default:
@@ -110,6 +118,7 @@ export const MsgSend = {
   fromJSON(object: any): MsgSend {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
+      id: isSet(object.id) ? Number(object.id) : 0,
       receiver: isSet(object.receiver) ? String(object.receiver) : "",
       amount: isSet(object.amount) ? String(object.amount) : "",
       amountToReceive: isSet(object.amountToReceive) ? String(object.amountToReceive) : "",
@@ -119,6 +128,7 @@ export const MsgSend = {
   toJSON(message: MsgSend): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = Math.round(message.id));
     message.receiver !== undefined && (obj.receiver = message.receiver);
     message.amount !== undefined && (obj.amount = message.amount);
     message.amountToReceive !== undefined && (obj.amountToReceive = message.amountToReceive);
@@ -128,6 +138,7 @@ export const MsgSend = {
   fromPartial<I extends Exact<DeepPartial<MsgSend>, I>>(object: I): MsgSend {
     const message = createBaseMsgSend();
     message.creator = object.creator ?? "";
+    message.id = object.id ?? 0;
     message.receiver = object.receiver ?? "";
     message.amount = object.amount ?? "";
     message.amountToReceive = object.amountToReceive ?? "";
@@ -136,14 +147,11 @@ export const MsgSend = {
 };
 
 function createBaseMsgSendResponse(): MsgSendResponse {
-  return { id: 0 };
+  return {};
 }
 
 export const MsgSendResponse = {
-  encode(message: MsgSendResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint64(message.id);
-    }
+  encode(_: MsgSendResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
@@ -154,9 +162,6 @@ export const MsgSendResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.id = longToNumber(reader.uint64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -165,25 +170,23 @@ export const MsgSendResponse = {
     return message;
   },
 
-  fromJSON(object: any): MsgSendResponse {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+  fromJSON(_: any): MsgSendResponse {
+    return {};
   },
 
-  toJSON(message: MsgSendResponse): unknown {
+  toJSON(_: MsgSendResponse): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgSendResponse>, I>>(object: I): MsgSendResponse {
+  fromPartial<I extends Exact<DeepPartial<MsgSendResponse>, I>>(_: I): MsgSendResponse {
     const message = createBaseMsgSendResponse();
-    message.id = object.id ?? 0;
     return message;
   },
 };
 
 function createBaseMsgReceive(): MsgReceive {
-  return { creator: "", id: 0 };
+  return { creator: "", sender: "", id: 0 };
 }
 
 export const MsgReceive = {
@@ -191,8 +194,11 @@ export const MsgReceive = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
+    if (message.sender !== "") {
+      writer.uint32(18).string(message.sender);
+    }
     if (message.id !== 0) {
-      writer.uint32(16).uint64(message.id);
+      writer.uint32(24).uint64(message.id);
     }
     return writer;
   },
@@ -208,6 +214,9 @@ export const MsgReceive = {
           message.creator = reader.string();
           break;
         case 2:
+          message.sender = reader.string();
+          break;
+        case 3:
           message.id = longToNumber(reader.uint64() as Long);
           break;
         default:
@@ -221,6 +230,7 @@ export const MsgReceive = {
   fromJSON(object: any): MsgReceive {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
+      sender: isSet(object.sender) ? String(object.sender) : "",
       id: isSet(object.id) ? Number(object.id) : 0,
     };
   },
@@ -228,6 +238,7 @@ export const MsgReceive = {
   toJSON(message: MsgReceive): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
+    message.sender !== undefined && (obj.sender = message.sender);
     message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
@@ -235,6 +246,7 @@ export const MsgReceive = {
   fromPartial<I extends Exact<DeepPartial<MsgReceive>, I>>(object: I): MsgReceive {
     const message = createBaseMsgReceive();
     message.creator = object.creator ?? "";
+    message.sender = object.sender ?? "";
     message.id = object.id ?? 0;
     return message;
   },
@@ -377,7 +389,7 @@ export const MsgCancelResponse = {
 };
 
 function createBaseMsgSendNFT(): MsgSendNFT {
-  return { creator: "", receiver: "", classId: "", nftId: "", amountToReceive: "" };
+  return { creator: "", id: 0, receiver: "", classId: "", nftId: "", amountToReceive: "" };
 }
 
 export const MsgSendNFT = {
@@ -385,17 +397,20 @@ export const MsgSendNFT = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
     if (message.receiver !== "") {
-      writer.uint32(18).string(message.receiver);
+      writer.uint32(26).string(message.receiver);
     }
     if (message.classId !== "") {
-      writer.uint32(26).string(message.classId);
+      writer.uint32(34).string(message.classId);
     }
     if (message.nftId !== "") {
-      writer.uint32(34).string(message.nftId);
+      writer.uint32(42).string(message.nftId);
     }
     if (message.amountToReceive !== "") {
-      writer.uint32(42).string(message.amountToReceive);
+      writer.uint32(50).string(message.amountToReceive);
     }
     return writer;
   },
@@ -411,15 +426,18 @@ export const MsgSendNFT = {
           message.creator = reader.string();
           break;
         case 2:
-          message.receiver = reader.string();
+          message.id = longToNumber(reader.uint64() as Long);
           break;
         case 3:
-          message.classId = reader.string();
+          message.receiver = reader.string();
           break;
         case 4:
-          message.nftId = reader.string();
+          message.classId = reader.string();
           break;
         case 5:
+          message.nftId = reader.string();
+          break;
+        case 6:
           message.amountToReceive = reader.string();
           break;
         default:
@@ -433,6 +451,7 @@ export const MsgSendNFT = {
   fromJSON(object: any): MsgSendNFT {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
+      id: isSet(object.id) ? Number(object.id) : 0,
       receiver: isSet(object.receiver) ? String(object.receiver) : "",
       classId: isSet(object.classId) ? String(object.classId) : "",
       nftId: isSet(object.nftId) ? String(object.nftId) : "",
@@ -443,6 +462,7 @@ export const MsgSendNFT = {
   toJSON(message: MsgSendNFT): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = Math.round(message.id));
     message.receiver !== undefined && (obj.receiver = message.receiver);
     message.classId !== undefined && (obj.classId = message.classId);
     message.nftId !== undefined && (obj.nftId = message.nftId);
@@ -453,6 +473,7 @@ export const MsgSendNFT = {
   fromPartial<I extends Exact<DeepPartial<MsgSendNFT>, I>>(object: I): MsgSendNFT {
     const message = createBaseMsgSendNFT();
     message.creator = object.creator ?? "";
+    message.id = object.id ?? 0;
     message.receiver = object.receiver ?? "";
     message.classId = object.classId ?? "";
     message.nftId = object.nftId ?? "";
@@ -462,14 +483,11 @@ export const MsgSendNFT = {
 };
 
 function createBaseMsgSendNFTResponse(): MsgSendNFTResponse {
-  return { id: 0 };
+  return {};
 }
 
 export const MsgSendNFTResponse = {
-  encode(message: MsgSendNFTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint64(message.id);
-    }
+  encode(_: MsgSendNFTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
@@ -480,9 +498,6 @@ export const MsgSendNFTResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.id = longToNumber(reader.uint64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -491,19 +506,17 @@ export const MsgSendNFTResponse = {
     return message;
   },
 
-  fromJSON(object: any): MsgSendNFTResponse {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+  fromJSON(_: any): MsgSendNFTResponse {
+    return {};
   },
 
-  toJSON(message: MsgSendNFTResponse): unknown {
+  toJSON(_: MsgSendNFTResponse): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgSendNFTResponse>, I>>(object: I): MsgSendNFTResponse {
+  fromPartial<I extends Exact<DeepPartial<MsgSendNFTResponse>, I>>(_: I): MsgSendNFTResponse {
     const message = createBaseMsgSendNFTResponse();
-    message.id = object.id ?? 0;
     return message;
   },
 };
@@ -606,7 +619,7 @@ export const MsgCancelNFTResponse = {
 };
 
 function createBaseMsgReceiveNFT(): MsgReceiveNFT {
-  return { creator: "", id: 0 };
+  return { creator: "", sender: "", id: 0 };
 }
 
 export const MsgReceiveNFT = {
@@ -614,8 +627,11 @@ export const MsgReceiveNFT = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
+    if (message.sender !== "") {
+      writer.uint32(18).string(message.sender);
+    }
     if (message.id !== 0) {
-      writer.uint32(16).uint64(message.id);
+      writer.uint32(24).uint64(message.id);
     }
     return writer;
   },
@@ -631,6 +647,9 @@ export const MsgReceiveNFT = {
           message.creator = reader.string();
           break;
         case 2:
+          message.sender = reader.string();
+          break;
+        case 3:
           message.id = longToNumber(reader.uint64() as Long);
           break;
         default:
@@ -644,6 +663,7 @@ export const MsgReceiveNFT = {
   fromJSON(object: any): MsgReceiveNFT {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
+      sender: isSet(object.sender) ? String(object.sender) : "",
       id: isSet(object.id) ? Number(object.id) : 0,
     };
   },
@@ -651,6 +671,7 @@ export const MsgReceiveNFT = {
   toJSON(message: MsgReceiveNFT): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
+    message.sender !== undefined && (obj.sender = message.sender);
     message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
@@ -658,6 +679,7 @@ export const MsgReceiveNFT = {
   fromPartial<I extends Exact<DeepPartial<MsgReceiveNFT>, I>>(object: I): MsgReceiveNFT {
     const message = createBaseMsgReceiveNFT();
     message.creator = object.creator ?? "";
+    message.sender = object.sender ?? "";
     message.id = object.id ?? 0;
     return message;
   },

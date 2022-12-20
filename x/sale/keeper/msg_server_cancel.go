@@ -3,8 +3,6 @@ package keeper
 import (
 	"context"
 
-	"cosmossdk.io/errors"
-
 	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,16 +11,16 @@ import (
 func (k msgServer) Cancel(goCtx context.Context, msg *types.MsgCancel) (*types.MsgCancelResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	swap, found := k.GetSale(ctx, msg.Id)
+	swap, found := k.GetSale(ctx, msg.Creator, msg.Id)
 	if !found {
-		return nil, errors.Wrapf(types.ErrSaleNotFound, "id = %d", msg.Id)
+		return nil, types.ErrSaleNotFound
 	}
 
-	if swap.Seller != msg.Creator {
-		return nil, types.ErrInsufficientPermission
+	if swap.Creator != msg.Creator {
+		return nil, types.ErrInvalidSaleData
 	}
 
-	seller, err := sdk.AccAddressFromBech32(swap.Seller)
+	seller, err := sdk.AccAddressFromBech32(swap.Creator)
 	if err != nil {
 		return nil, err
 	}

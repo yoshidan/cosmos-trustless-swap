@@ -8,7 +8,7 @@ option go_package = "github.com/yoshidan/cosmos-trustless-swap/x/swap/types";
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message Swap {
   uint64 id = 1;
-  string sender = 2;
+  string creator = 2;
   string receiver = 3;
   string amount = 4;
   string amountToReceive = 5;
@@ -16,7 +16,7 @@ message Swap {
 
 message NFTSwap {
   uint64 id = 1;
-  string sender = 2;
+  string creator = 2;
   string receiver = 3;
   string classId = 4;
   string nftId = 5;

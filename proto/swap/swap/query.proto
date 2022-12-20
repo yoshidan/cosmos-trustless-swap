@@ -39,7 +39,8 @@ message QueryParamsResponse {
 }
 
 message QueryShowRequest {
-  uint64 id = 1;
+  string sender = 1;
+  uint64 id = 2;
 }
 
 message QueryShowResponse {
@@ -47,7 +48,8 @@ message QueryShowResponse {
 }
 
 message QueryShowNFTRequest {
-  uint64 id = 1;
+  string sender = 1;
+  uint64 id = 2;
 }
 
 message QueryShowNFTResponse {

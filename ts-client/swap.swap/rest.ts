@@ -28,20 +28,14 @@ export type SwapMsgReceiveNFTResponse = object;
 
 export type SwapMsgReceiveResponse = object;
 
-export interface SwapMsgSendNFTResponse {
-  /** @format uint64 */
-  id?: string;
-}
+export type SwapMsgSendNFTResponse = object;
 
-export interface SwapMsgSendResponse {
-  /** @format uint64 */
-  id?: string;
-}
+export type SwapMsgSendResponse = object;
 
 export interface SwapNFTSwap {
   /** @format uint64 */
   id?: string;
-  sender?: string;
+  creator?: string;
   receiver?: string;
   classId?: string;
   nftId?: string;
@@ -76,7 +70,7 @@ export interface SwapQueryShowResponse {
 export interface SwapSwap {
   /** @format uint64 */
   id?: string;
-  sender?: string;
+  creator?: string;
   receiver?: string;
   amount?: string;
   amountToReceive?: string;
@@ -231,10 +225,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @summary Queries a list of Show items.
    * @request GET:/swap/swap/show/{id}
    */
-  queryShow = (id: string, params: RequestParams = {}) =>
+  queryShow = (id: string, query?: { sender?: string }, params: RequestParams = {}) =>
     this.request<SwapQueryShowResponse, RpcStatus>({
       path: `/swap/swap/show/${id}`,
       method: "GET",
+      query: query,
       format: "json",
       ...params,
     });
@@ -247,10 +242,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @summary Queries a list of ShowNFT items.
    * @request GET:/swap/swap/show_nft/{id}
    */
-  queryShowNft = (id: string, params: RequestParams = {}) =>
+  queryShowNft = (id: string, query?: { sender?: string }, params: RequestParams = {}) =>
     this.request<SwapQueryShowNFTResponse, RpcStatus>({
       path: `/swap/swap/show_nft/${id}`,
       method: "GET",
+      query: query,
       format: "json",
       ...params,
     });

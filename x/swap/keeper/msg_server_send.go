@@ -24,14 +24,13 @@ func (k msgServer) Send(goCtx context.Context, msg *types.MsgSend) (*types.MsgSe
 		return nil, err
 	}
 
-	id := k.AppendSwap(ctx, types.Swap{
-		Sender:          msg.Creator,
+	k.SetSwap(ctx, types.Swap{
+		Id:              msg.Id,
+		Creator:         msg.Creator,
 		Receiver:        msg.Receiver,
 		Amount:          msg.Amount,
 		AmountToReceive: msg.AmountToReceive,
 	})
 
-	return &types.MsgSendResponse{
-		Id: id,
-	}, nil
+	return &types.MsgSendResponse{}, nil
 }

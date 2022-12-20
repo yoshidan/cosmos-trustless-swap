@@ -17,7 +17,7 @@ func (k Keeper) ShowNFT(goCtx context.Context, req *types.QueryShowNFTRequest) (
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	swap, found := k.GetNFTSwap(ctx, req.GetId())
+	swap, found := k.GetNFTSwap(ctx, req.Sender, req.Id)
 	if !found {
 		return nil, types.ErrSwapNotFound
 	}

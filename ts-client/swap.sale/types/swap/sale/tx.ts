@@ -6,12 +6,12 @@ export const protobufPackage = "swap.sale";
 
 export interface MsgSell {
   creator: string;
+  id: number;
   amount: string;
   price: string;
 }
 
 export interface MsgSellResponse {
-  id: number;
 }
 
 export interface MsgCancel {
@@ -24,6 +24,7 @@ export interface MsgCancelResponse {
 
 export interface MsgBuy {
   creator: string;
+  seller: string;
   id: number;
 }
 
@@ -32,17 +33,18 @@ export interface MsgBuyResponse {
 
 export interface MsgSellNFT {
   creator: string;
+  id: number;
   classId: string;
   nftId: string;
   price: string;
 }
 
 export interface MsgSellNFTResponse {
-  id: number;
 }
 
 export interface MsgBuyNFT {
   creator: string;
+  seller: string;
   id: number;
 }
 
@@ -58,7 +60,7 @@ export interface MsgCancelNFTResponse {
 }
 
 function createBaseMsgSell(): MsgSell {
-  return { creator: "", amount: "", price: "" };
+  return { creator: "", id: 0, amount: "", price: "" };
 }
 
 export const MsgSell = {
@@ -66,11 +68,14 @@ export const MsgSell = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
     if (message.amount !== "") {
-      writer.uint32(18).string(message.amount);
+      writer.uint32(26).string(message.amount);
     }
     if (message.price !== "") {
-      writer.uint32(26).string(message.price);
+      writer.uint32(34).string(message.price);
     }
     return writer;
   },
@@ -86,9 +91,12 @@ export const MsgSell = {
           message.creator = reader.string();
           break;
         case 2:
-          message.amount = reader.string();
+          message.id = longToNumber(reader.uint64() as Long);
           break;
         case 3:
+          message.amount = reader.string();
+          break;
+        case 4:
           message.price = reader.string();
           break;
         default:
@@ -102,6 +110,7 @@ export const MsgSell = {
   fromJSON(object: any): MsgSell {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
+      id: isSet(object.id) ? Number(object.id) : 0,
       amount: isSet(object.amount) ? String(object.amount) : "",
       price: isSet(object.price) ? String(object.price) : "",
     };
@@ -110,6 +119,7 @@ export const MsgSell = {
   toJSON(message: MsgSell): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = Math.round(message.id));
     message.amount !== undefined && (obj.amount = message.amount);
     message.price !== undefined && (obj.price = message.price);
     return obj;
@@ -118,6 +128,7 @@ export const MsgSell = {
   fromPartial<I extends Exact<DeepPartial<MsgSell>, I>>(object: I): MsgSell {
     const message = createBaseMsgSell();
     message.creator = object.creator ?? "";
+    message.id = object.id ?? 0;
     message.amount = object.amount ?? "";
     message.price = object.price ?? "";
     return message;
@@ -125,14 +136,11 @@ export const MsgSell = {
 };
 
 function createBaseMsgSellResponse(): MsgSellResponse {
-  return { id: 0 };
+  return {};
 }
 
 export const MsgSellResponse = {
-  encode(message: MsgSellResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint64(message.id);
-    }
+  encode(_: MsgSellResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
@@ -143,9 +151,6 @@ export const MsgSellResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.id = longToNumber(reader.uint64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -154,19 +159,17 @@ export const MsgSellResponse = {
     return message;
   },
 
-  fromJSON(object: any): MsgSellResponse {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+  fromJSON(_: any): MsgSellResponse {
+    return {};
   },
 
-  toJSON(message: MsgSellResponse): unknown {
+  toJSON(_: MsgSellResponse): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgSellResponse>, I>>(object: I): MsgSellResponse {
+  fromPartial<I extends Exact<DeepPartial<MsgSellResponse>, I>>(_: I): MsgSellResponse {
     const message = createBaseMsgSellResponse();
-    message.id = object.id ?? 0;
     return message;
   },
 };
@@ -269,7 +272,7 @@ export const MsgCancelResponse = {
 };
 
 function createBaseMsgBuy(): MsgBuy {
-  return { creator: "", id: 0 };
+  return { creator: "", seller: "", id: 0 };
 }
 
 export const MsgBuy = {
@@ -277,8 +280,11 @@ export const MsgBuy = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
+    if (message.seller !== "") {
+      writer.uint32(18).string(message.seller);
+    }
     if (message.id !== 0) {
-      writer.uint32(16).uint64(message.id);
+      writer.uint32(24).uint64(message.id);
     }
     return writer;
   },
@@ -294,6 +300,9 @@ export const MsgBuy = {
           message.creator = reader.string();
           break;
         case 2:
+          message.seller = reader.string();
+          break;
+        case 3:
           message.id = longToNumber(reader.uint64() as Long);
           break;
         default:
@@ -307,6 +316,7 @@ export const MsgBuy = {
   fromJSON(object: any): MsgBuy {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
+      seller: isSet(object.seller) ? String(object.seller) : "",
       id: isSet(object.id) ? Number(object.id) : 0,
     };
   },
@@ -314,6 +324,7 @@ export const MsgBuy = {
   toJSON(message: MsgBuy): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
+    message.seller !== undefined && (obj.seller = message.seller);
     message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
@@ -321,6 +332,7 @@ export const MsgBuy = {
   fromPartial<I extends Exact<DeepPartial<MsgBuy>, I>>(object: I): MsgBuy {
     const message = createBaseMsgBuy();
     message.creator = object.creator ?? "";
+    message.seller = object.seller ?? "";
     message.id = object.id ?? 0;
     return message;
   },
@@ -366,7 +378,7 @@ export const MsgBuyResponse = {
 };
 
 function createBaseMsgSellNFT(): MsgSellNFT {
-  return { creator: "", classId: "", nftId: "", price: "" };
+  return { creator: "", id: 0, classId: "", nftId: "", price: "" };
 }
 
 export const MsgSellNFT = {
@@ -374,14 +386,17 @@ export const MsgSellNFT = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
     if (message.classId !== "") {
-      writer.uint32(18).string(message.classId);
+      writer.uint32(26).string(message.classId);
     }
     if (message.nftId !== "") {
-      writer.uint32(26).string(message.nftId);
+      writer.uint32(34).string(message.nftId);
     }
     if (message.price !== "") {
-      writer.uint32(34).string(message.price);
+      writer.uint32(42).string(message.price);
     }
     return writer;
   },
@@ -397,12 +412,15 @@ export const MsgSellNFT = {
           message.creator = reader.string();
           break;
         case 2:
-          message.classId = reader.string();
+          message.id = longToNumber(reader.uint64() as Long);
           break;
         case 3:
-          message.nftId = reader.string();
+          message.classId = reader.string();
           break;
         case 4:
+          message.nftId = reader.string();
+          break;
+        case 5:
           message.price = reader.string();
           break;
         default:
@@ -416,6 +434,7 @@ export const MsgSellNFT = {
   fromJSON(object: any): MsgSellNFT {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
+      id: isSet(object.id) ? Number(object.id) : 0,
       classId: isSet(object.classId) ? String(object.classId) : "",
       nftId: isSet(object.nftId) ? String(object.nftId) : "",
       price: isSet(object.price) ? String(object.price) : "",
@@ -425,6 +444,7 @@ export const MsgSellNFT = {
   toJSON(message: MsgSellNFT): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = Math.round(message.id));
     message.classId !== undefined && (obj.classId = message.classId);
     message.nftId !== undefined && (obj.nftId = message.nftId);
     message.price !== undefined && (obj.price = message.price);
@@ -434,6 +454,7 @@ export const MsgSellNFT = {
   fromPartial<I extends Exact<DeepPartial<MsgSellNFT>, I>>(object: I): MsgSellNFT {
     const message = createBaseMsgSellNFT();
     message.creator = object.creator ?? "";
+    message.id = object.id ?? 0;
     message.classId = object.classId ?? "";
     message.nftId = object.nftId ?? "";
     message.price = object.price ?? "";
@@ -442,14 +463,11 @@ export const MsgSellNFT = {
 };
 
 function createBaseMsgSellNFTResponse(): MsgSellNFTResponse {
-  return { id: 0 };
+  return {};
 }
 
 export const MsgSellNFTResponse = {
-  encode(message: MsgSellNFTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint64(message.id);
-    }
+  encode(_: MsgSellNFTResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
@@ -460,9 +478,6 @@ export const MsgSellNFTResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.id = longToNumber(reader.uint64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -471,25 +486,23 @@ export const MsgSellNFTResponse = {
     return message;
   },
 
-  fromJSON(object: any): MsgSellNFTResponse {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+  fromJSON(_: any): MsgSellNFTResponse {
+    return {};
   },
 
-  toJSON(message: MsgSellNFTResponse): unknown {
+  toJSON(_: MsgSellNFTResponse): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<MsgSellNFTResponse>, I>>(object: I): MsgSellNFTResponse {
+  fromPartial<I extends Exact<DeepPartial<MsgSellNFTResponse>, I>>(_: I): MsgSellNFTResponse {
     const message = createBaseMsgSellNFTResponse();
-    message.id = object.id ?? 0;
     return message;
   },
 };
 
 function createBaseMsgBuyNFT(): MsgBuyNFT {
-  return { creator: "", id: 0 };
+  return { creator: "", seller: "", id: 0 };
 }
 
 export const MsgBuyNFT = {
@@ -497,8 +510,11 @@ export const MsgBuyNFT = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
+    if (message.seller !== "") {
+      writer.uint32(18).string(message.seller);
+    }
     if (message.id !== 0) {
-      writer.uint32(16).uint64(message.id);
+      writer.uint32(24).uint64(message.id);
     }
     return writer;
   },
@@ -514,6 +530,9 @@ export const MsgBuyNFT = {
           message.creator = reader.string();
           break;
         case 2:
+          message.seller = reader.string();
+          break;
+        case 3:
           message.id = longToNumber(reader.uint64() as Long);
           break;
         default:
@@ -527,6 +546,7 @@ export const MsgBuyNFT = {
   fromJSON(object: any): MsgBuyNFT {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
+      seller: isSet(object.seller) ? String(object.seller) : "",
       id: isSet(object.id) ? Number(object.id) : 0,
     };
   },
@@ -534,6 +554,7 @@ export const MsgBuyNFT = {
   toJSON(message: MsgBuyNFT): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
+    message.seller !== undefined && (obj.seller = message.seller);
     message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
@@ -541,6 +562,7 @@ export const MsgBuyNFT = {
   fromPartial<I extends Exact<DeepPartial<MsgBuyNFT>, I>>(object: I): MsgBuyNFT {
     const message = createBaseMsgBuyNFT();
     message.creator = object.creator ?? "";
+    message.seller = object.seller ?? "";
     message.id = object.id ?? 0;
     return message;
   },
@@ -595,7 +617,7 @@ export const MsgCancelNFT = {
       writer.uint32(10).string(message.creator);
     }
     if (message.id !== 0) {
-      writer.uint32(16).uint64(message.id);
+      writer.uint32(24).uint64(message.id);
     }
     return writer;
   },
@@ -610,7 +632,7 @@ export const MsgCancelNFT = {
         case 1:
           message.creator = reader.string();
           break;
-        case 2:
+        case 3:
           message.id = longToNumber(reader.uint64() as Long);
           break;
         default:

@@ -5,23 +5,22 @@ import (
 
 	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
-	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func (k msgServer) Receive(goCtx context.Context, msg *types.MsgReceive) (*types.MsgReceiveResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	swap, found := k.GetSwap(ctx, msg.Id)
+	swap, found := k.GetSwap(ctx, msg.Sender, msg.Id)
 	if !found {
-		return nil, errors.Wrapf(types.ErrSwapNotFound, "id = %d", msg.Id)
+		return nil, types.ErrSwapNotFound
 	}
 
 	if swap.Receiver != msg.Creator {
 		return nil, types.ErrInsufficientPermission
 	}
 
-	sender, err := sdk.AccAddressFromBech32(swap.Sender)
+	sender, err := sdk.AccAddressFromBech32(swap.Creator)
 	if err != nil {
 		return nil, err
 	}

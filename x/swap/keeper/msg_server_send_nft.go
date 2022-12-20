@@ -32,15 +32,14 @@ func (k msgServer) SendNFT(goCtx context.Context, msg *types.MsgSendNFT) (*types
 		return nil, err
 	}
 
-	id := k.AppendNFTSwap(ctx, types.NFTSwap{
-		Sender:          msg.Creator,
+	k.SetNFTSwap(ctx, types.NFTSwap{
+		Id:              msg.Id,
+		Creator:         msg.Creator,
 		Receiver:        msg.Receiver,
 		ClassId:         msg.ClassId,
 		NftId:           msg.NftId,
 		AmountToReceive: msg.AmountToReceive,
 	})
 
-	return &types.MsgSendNFTResponse{
-		Id: id,
-	}, nil
+	return &types.MsgSendNFTResponse{}, nil
 }

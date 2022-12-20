@@ -17,6 +17,7 @@ export interface QueryParamsResponse {
 }
 
 export interface QueryShowRequest {
+  sender: string;
   id: number;
 }
 
@@ -25,6 +26,7 @@ export interface QueryShowResponse {
 }
 
 export interface QueryShowNFTRequest {
+  sender: string;
   id: number;
 }
 
@@ -121,13 +123,16 @@ export const QueryParamsResponse = {
 };
 
 function createBaseQueryShowRequest(): QueryShowRequest {
-  return { id: 0 };
+  return { sender: "", id: 0 };
 }
 
 export const QueryShowRequest = {
   encode(message: QueryShowRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sender !== "") {
+      writer.uint32(10).string(message.sender);
+    }
     if (message.id !== 0) {
-      writer.uint32(8).uint64(message.id);
+      writer.uint32(16).uint64(message.id);
     }
     return writer;
   },
@@ -140,6 +145,9 @@ export const QueryShowRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          message.sender = reader.string();
+          break;
+        case 2:
           message.id = longToNumber(reader.uint64() as Long);
           break;
         default:
@@ -151,17 +159,19 @@ export const QueryShowRequest = {
   },
 
   fromJSON(object: any): QueryShowRequest {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { sender: isSet(object.sender) ? String(object.sender) : "", id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   toJSON(message: QueryShowRequest): unknown {
     const obj: any = {};
+    message.sender !== undefined && (obj.sender = message.sender);
     message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<QueryShowRequest>, I>>(object: I): QueryShowRequest {
     const message = createBaseQueryShowRequest();
+    message.sender = object.sender ?? "";
     message.id = object.id ?? 0;
     return message;
   },
@@ -215,13 +225,16 @@ export const QueryShowResponse = {
 };
 
 function createBaseQueryShowNFTRequest(): QueryShowNFTRequest {
-  return { id: 0 };
+  return { sender: "", id: 0 };
 }
 
 export const QueryShowNFTRequest = {
   encode(message: QueryShowNFTRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sender !== "") {
+      writer.uint32(10).string(message.sender);
+    }
     if (message.id !== 0) {
-      writer.uint32(8).uint64(message.id);
+      writer.uint32(16).uint64(message.id);
     }
     return writer;
   },
@@ -234,6 +247,9 @@ export const QueryShowNFTRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          message.sender = reader.string();
+          break;
+        case 2:
           message.id = longToNumber(reader.uint64() as Long);
           break;
         default:
@@ -245,17 +261,19 @@ export const QueryShowNFTRequest = {
   },
 
   fromJSON(object: any): QueryShowNFTRequest {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { sender: isSet(object.sender) ? String(object.sender) : "", id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   toJSON(message: QueryShowNFTRequest): unknown {
     const obj: any = {};
+    message.sender !== undefined && (obj.sender = message.sender);
     message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<QueryShowNFTRequest>, I>>(object: I): QueryShowNFTRequest {
     const message = createBaseQueryShowNFTRequest();
+    message.sender = object.sender ?? "";
     message.id = object.id ?? 0;
     return message;
   },

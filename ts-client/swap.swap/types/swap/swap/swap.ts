@@ -7,7 +7,7 @@ export const protobufPackage = "swap.swap";
 /** QueryParamsResponse is response type for the Query/Params RPC method. */
 export interface Swap {
   id: number;
-  sender: string;
+  creator: string;
   receiver: string;
   amount: string;
   amountToReceive: string;
@@ -15,7 +15,7 @@ export interface Swap {
 
 export interface NFTSwap {
   id: number;
-  sender: string;
+  creator: string;
   receiver: string;
   classId: string;
   nftId: string;
@@ -23,7 +23,7 @@ export interface NFTSwap {
 }
 
 function createBaseSwap(): Swap {
-  return { id: 0, sender: "", receiver: "", amount: "", amountToReceive: "" };
+  return { id: 0, creator: "", receiver: "", amount: "", amountToReceive: "" };
 }
 
 export const Swap = {
@@ -31,8 +31,8 @@ export const Swap = {
     if (message.id !== 0) {
       writer.uint32(8).uint64(message.id);
     }
-    if (message.sender !== "") {
-      writer.uint32(18).string(message.sender);
+    if (message.creator !== "") {
+      writer.uint32(18).string(message.creator);
     }
     if (message.receiver !== "") {
       writer.uint32(26).string(message.receiver);
@@ -57,7 +57,7 @@ export const Swap = {
           message.id = longToNumber(reader.uint64() as Long);
           break;
         case 2:
-          message.sender = reader.string();
+          message.creator = reader.string();
           break;
         case 3:
           message.receiver = reader.string();
@@ -79,7 +79,7 @@ export const Swap = {
   fromJSON(object: any): Swap {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
-      sender: isSet(object.sender) ? String(object.sender) : "",
+      creator: isSet(object.creator) ? String(object.creator) : "",
       receiver: isSet(object.receiver) ? String(object.receiver) : "",
       amount: isSet(object.amount) ? String(object.amount) : "",
       amountToReceive: isSet(object.amountToReceive) ? String(object.amountToReceive) : "",
@@ -89,7 +89,7 @@ export const Swap = {
   toJSON(message: Swap): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
-    message.sender !== undefined && (obj.sender = message.sender);
+    message.creator !== undefined && (obj.creator = message.creator);
     message.receiver !== undefined && (obj.receiver = message.receiver);
     message.amount !== undefined && (obj.amount = message.amount);
     message.amountToReceive !== undefined && (obj.amountToReceive = message.amountToReceive);
@@ -99,7 +99,7 @@ export const Swap = {
   fromPartial<I extends Exact<DeepPartial<Swap>, I>>(object: I): Swap {
     const message = createBaseSwap();
     message.id = object.id ?? 0;
-    message.sender = object.sender ?? "";
+    message.creator = object.creator ?? "";
     message.receiver = object.receiver ?? "";
     message.amount = object.amount ?? "";
     message.amountToReceive = object.amountToReceive ?? "";
@@ -108,7 +108,7 @@ export const Swap = {
 };
 
 function createBaseNFTSwap(): NFTSwap {
-  return { id: 0, sender: "", receiver: "", classId: "", nftId: "", amountToReceive: "" };
+  return { id: 0, creator: "", receiver: "", classId: "", nftId: "", amountToReceive: "" };
 }
 
 export const NFTSwap = {
@@ -116,8 +116,8 @@ export const NFTSwap = {
     if (message.id !== 0) {
       writer.uint32(8).uint64(message.id);
     }
-    if (message.sender !== "") {
-      writer.uint32(18).string(message.sender);
+    if (message.creator !== "") {
+      writer.uint32(18).string(message.creator);
     }
     if (message.receiver !== "") {
       writer.uint32(26).string(message.receiver);
@@ -145,7 +145,7 @@ export const NFTSwap = {
           message.id = longToNumber(reader.uint64() as Long);
           break;
         case 2:
-          message.sender = reader.string();
+          message.creator = reader.string();
           break;
         case 3:
           message.receiver = reader.string();
@@ -170,7 +170,7 @@ export const NFTSwap = {
   fromJSON(object: any): NFTSwap {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
-      sender: isSet(object.sender) ? String(object.sender) : "",
+      creator: isSet(object.creator) ? String(object.creator) : "",
       receiver: isSet(object.receiver) ? String(object.receiver) : "",
       classId: isSet(object.classId) ? String(object.classId) : "",
       nftId: isSet(object.nftId) ? String(object.nftId) : "",
@@ -181,7 +181,7 @@ export const NFTSwap = {
   toJSON(message: NFTSwap): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
-    message.sender !== undefined && (obj.sender = message.sender);
+    message.creator !== undefined && (obj.creator = message.creator);
     message.receiver !== undefined && (obj.receiver = message.receiver);
     message.classId !== undefined && (obj.classId = message.classId);
     message.nftId !== undefined && (obj.nftId = message.nftId);
@@ -192,7 +192,7 @@ export const NFTSwap = {
   fromPartial<I extends Exact<DeepPartial<NFTSwap>, I>>(object: I): NFTSwap {
     const message = createBaseNFTSwap();
     message.id = object.id ?? 0;
-    message.sender = object.sender ?? "";
+    message.creator = object.creator ?? "";
     message.receiver = object.receiver ?? "";
     message.classId = object.classId ?? "";
     message.nftId = object.nftId ?? "";

@@ -17,7 +17,7 @@ func (k Keeper) Show(goCtx context.Context, req *types.QueryShowRequest) (*types
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	swap, found := k.GetSwap(ctx, req.GetId())
+	swap, found := k.GetSwap(ctx, req.Sender, req.Id)
 	if !found {
 		return nil, types.ErrSwapNotFound
 	}

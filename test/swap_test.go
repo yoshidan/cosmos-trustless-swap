@@ -73,19 +73,19 @@ func (suite *SwapTestSuite) TestSendSuccess() {
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
 	sendParam := &types.MsgSend{
+		Id:              1,
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		Amount:          internal.NewFooCoin(10).String(),
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Send(ctx, sendParam)
+	_, err := server.Send(ctx, sendParam)
 	suite.Require().NoError(err)
-	suite.Require().Equal(uint64(1), response.Id)
-	suite.Require().Equal(response.Id, app.SwapKeeper.GetMaxSwapID(ctx))
-	queryResponse, err := app.SwapKeeper.Show(ctx, &types.QueryShowRequest{Id: response.Id})
+	queryResponse, err := app.SwapKeeper.Show(ctx, &types.QueryShowRequest{Id: 1, Sender: sender.String()})
 	swap := queryResponse.Swap
 	suite.Require().NoError(err)
-	suite.Require().Equal(sender.String(), swap.Sender)
+	suite.Require().Equal(uint64(1), swap.Id)
+	suite.Require().Equal(sender.String(), swap.Creator)
 	suite.Require().Equal(receiver.String(), swap.Receiver)
 	suite.Require().Equal(sendParam.Amount, swap.Amount)
 	suite.Require().Equal(sendParam.AmountToReceive, swap.AmountToReceive)
@@ -111,21 +111,22 @@ func (suite *SwapTestSuite) TestCancelSuccess() {
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
 	sendParam := &types.MsgSend{
+		Id:              1,
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		Amount:          internal.NewFooCoin(10).String(),
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Send(ctx, sendParam)
+	_, err := server.Send(ctx, sendParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancel{
 		Creator: sender.String(),
-		Id:      response.Id,
+		Id:      1,
 	}
 	_, err = server.Cancel(ctx, cancelParam)
 	suite.Require().NoError(err)
-	_, found := app.SwapKeeper.GetSwap(ctx, response.Id)
+	_, found := app.SwapKeeper.GetSwap(ctx, sender.String(), 1)
 	suite.Require().False(found)
 
 	// Check the token return
@@ -149,7 +150,7 @@ func (suite *SwapTestSuite) TestCancelSuccess() {
 
 	_, err = server.Receive(ctx, &types.MsgReceive{
 		Creator: receiver.String(),
-		Id:      response.Id,
+		Id:      1,
 	})
 	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
@@ -172,21 +173,23 @@ func (suite *SwapTestSuite) TestReceiveSuccess() {
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
 	sendParam := &types.MsgSend{
+		Id:              1,
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		Amount:          internal.NewFooCoin(10).String(),
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Send(ctx, sendParam)
+	_, err := server.Send(ctx, sendParam)
 
 	// Receive
 	receiveParam := &types.MsgReceive{
 		Creator: receiver.String(),
-		Id:      response.Id,
+		Sender:  sender.String(),
+		Id:      1,
 	}
 	_, err = server.Receive(ctx, receiveParam)
 	suite.Require().NoError(err)
-	_, found := app.SwapKeeper.GetSwap(ctx, response.Id)
+	_, found := app.SwapKeeper.GetSwap(ctx, sender.String(), 1)
 	suite.Require().False(found)
 
 	// Check token swapped
@@ -217,7 +220,7 @@ func (suite *SwapTestSuite) TestReceiveSuccess() {
 
 	_, err = server.Cancel(ctx, &types.MsgCancel{
 		Creator: sender.String(),
-		Id:      response.Id,
+		Id:      1,
 	})
 	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
@@ -240,20 +243,21 @@ func (suite *SwapTestSuite) TestCancelError() {
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
 	sendParam := &types.MsgSend{
+		Id:              1,
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		Amount:          internal.NewFooCoin(10).String(),
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Send(ctx, sendParam)
+	_, err := server.Send(ctx, sendParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancel{
 		Creator: receiver.String(),
-		Id:      response.Id,
+		Id:      1,
 	}
 	_, err = server.Cancel(ctx, cancelParam)
-	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
+	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
 
 func (suite *SwapTestSuite) TestReceiveError() {
@@ -270,24 +274,27 @@ func (suite *SwapTestSuite) TestReceiveError() {
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
 	sendParam := &types.MsgSend{
+		Id:              1,
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		Amount:          internal.NewFooCoin(10).String(),
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.Send(ctx, sendParam)
+	_, err := server.Send(ctx, sendParam)
 
 	// Receive
 	receiveParam := &types.MsgReceive{
 		Creator: sender.String(),
-		Id:      response.Id,
+		Sender:  sender.String(),
+		Id:      1,
 	}
 	_, err = server.Receive(ctx, receiveParam)
 	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
 
 	receiveParam2 := &types.MsgReceive{
 		Creator: receiver.String(),
-		Id:      response.Id,
+		Sender:  sender.String(),
+		Id:      1,
 	}
 	_, err = server.Receive(ctx, receiveParam2)
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)
@@ -310,20 +317,20 @@ func (suite *SwapTestSuite) TestSendNFTSuccess() {
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
 	sendParam := &types.MsgSendNFT{
+		Id:              1,
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		ClassId:         item.ClassId,
 		NftId:           item.Id,
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SendNFT(ctx, sendParam)
+	_, err := server.SendNFT(ctx, sendParam)
 	suite.Require().NoError(err)
-	suite.Require().Equal(uint64(1), response.Id)
-	suite.Require().Equal(response.Id, app.SwapKeeper.GetMaxNFTSwapID(ctx))
-	queryResponse, err := app.SwapKeeper.ShowNFT(ctx, &types.QueryShowNFTRequest{Id: response.Id})
+	queryResponse, err := app.SwapKeeper.ShowNFT(ctx, &types.QueryShowNFTRequest{Id: 1, Sender: sender.String()})
 	swap := queryResponse.Swap
 	suite.Require().NoError(err)
-	suite.Require().Equal(sender.String(), swap.Sender)
+	suite.Require().Equal(uint64(1), swap.Id)
+	suite.Require().Equal(sender.String(), swap.Creator)
 	suite.Require().Equal(receiver.String(), swap.Receiver)
 	suite.Require().Equal(sendParam.ClassId, swap.ClassId)
 	suite.Require().Equal(sendParam.NftId, swap.NftId)
@@ -353,22 +360,23 @@ func (suite *SwapTestSuite) TestCancelNFTSuccess() {
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
 	sendParam := &types.MsgSendNFT{
+		Id:              1,
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		ClassId:         item.ClassId,
 		NftId:           item.Id,
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SendNFT(ctx, sendParam)
+	_, err := server.SendNFT(ctx, sendParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancelNFT{
 		Creator: sender.String(),
-		Id:      response.Id,
+		Id:      1,
 	}
 	_, err = server.CancelNFT(ctx, cancelParam)
 	suite.Require().NoError(err)
-	_, found := app.SwapKeeper.GetNFTSwap(ctx, response.Id)
+	_, found := app.SwapKeeper.GetNFTSwap(ctx, sender.String(), 1)
 	suite.Require().False(found)
 
 	// Check the token return
@@ -385,7 +393,7 @@ func (suite *SwapTestSuite) TestCancelNFTSuccess() {
 
 	_, err = server.ReceiveNFT(ctx, &types.MsgReceiveNFT{
 		Creator: receiver.String(),
-		Id:      response.Id,
+		Id:      1,
 	})
 	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
@@ -411,22 +419,24 @@ func (suite *SwapTestSuite) TestReceiveNFTSuccess() {
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
 	sendParam := &types.MsgSendNFT{
+		Id:              1,
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		ClassId:         item.ClassId,
 		NftId:           item.Id,
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SendNFT(ctx, sendParam)
+	_, err := server.SendNFT(ctx, sendParam)
 
 	// Receive
 	receiveParam := &types.MsgReceiveNFT{
 		Creator: receiver.String(),
-		Id:      response.Id,
+		Sender:  sender.String(),
+		Id:      1,
 	}
 	_, err = server.ReceiveNFT(ctx, receiveParam)
 	suite.Require().NoError(err)
-	_, found := app.SwapKeeper.GetNFTSwap(ctx, response.Id)
+	_, found := app.SwapKeeper.GetNFTSwap(ctx, sender.String(), 1)
 	suite.Require().False(found)
 
 	// Check token swapped
@@ -457,7 +467,7 @@ func (suite *SwapTestSuite) TestReceiveNFTSuccess() {
 
 	_, err = server.CancelNFT(ctx, &types.MsgCancelNFT{
 		Creator: sender.String(),
-		Id:      response.Id,
+		Id:      1,
 	})
 	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
@@ -489,15 +499,15 @@ func (suite *SwapTestSuite) TestCancelNFTError() {
 		NftId:           item.Id,
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SendNFT(ctx, sendParam)
+	_, err := server.SendNFT(ctx, sendParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancelNFT{
 		Creator: receiver.String(),
-		Id:      response.Id,
+		Id:      1,
 	}
 	_, err = server.CancelNFT(ctx, cancelParam)
-	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
+	suite.Require().ErrorIs(types.ErrSwapNotFound, err)
 }
 
 func (suite *SwapTestSuite) TestReceiveNFTError() {
@@ -517,25 +527,28 @@ func (suite *SwapTestSuite) TestReceiveNFTError() {
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
 	sendParam := &types.MsgSendNFT{
+		Id:              1,
 		Creator:         sender.String(),
 		Receiver:        receiver.String(),
 		ClassId:         item.ClassId,
 		NftId:           item.Id,
 		AmountToReceive: internal.NewBarCoin(5).String(),
 	}
-	response, err := server.SendNFT(ctx, sendParam)
+	_, err := server.SendNFT(ctx, sendParam)
 
 	// Receive
 	receiveParam := &types.MsgReceiveNFT{
 		Creator: sender.String(),
-		Id:      response.Id,
+		Sender:  sender.String(),
+		Id:      1,
 	}
 	_, err = server.ReceiveNFT(ctx, receiveParam)
 	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
 
 	receiveParam2 := &types.MsgReceiveNFT{
 		Creator: receiver.String(),
-		Id:      response.Id,
+		Sender:  sender.String(),
+		Id:      1,
 	}
 	_, err = server.ReceiveNFT(ctx, receiveParam2)
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)

@@ -12,42 +12,26 @@ import (
 type entity interface {
 	codec.ProtoMarshaler
 	GetId() uint64
-}
-
-func GetMaxID(ctx sdk.Context, storeKey storetypes.StoreKey, keyPrefix []byte) uint64 {
-	store := prefix.NewStore(ctx.KVStore(storeKey), keyPrefix)
-	bz := store.Get(keyPrefix)
-
-	if bz == nil {
-		return 0
-	}
-	return binary.BigEndian.Uint64(bz)
-}
-
-func SetMaxID(ctx sdk.Context, storeKey storetypes.StoreKey, keyPrefix []byte, value uint64) {
-	store := prefix.NewStore(ctx.KVStore(storeKey), keyPrefix)
-	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, value)
-	store.Set(keyPrefix, bz)
+	GetCreator() string
 }
 
 func SetData(ctx sdk.Context, cdc codec.BinaryCodec, storeKey storetypes.StoreKey, keyPrefix []byte, swap entity) {
-	store := prefix.NewStore(ctx.KVStore(storeKey), keyPrefix)
-	byteKey := make([]byte, 8)
-	binary.BigEndian.PutUint64(byteKey, swap.GetId())
+	store := prefix.NewStore(ctx.KVStore(storeKey), append(keyPrefix, swap.GetCreator()...))
+	idKey := make([]byte, 8)
+	binary.BigEndian.PutUint64(idKey, swap.GetId())
 	updatedValue := cdc.MustMarshal(swap)
-	store.Set(byteKey, updatedValue)
+	store.Set(idKey, updatedValue)
 }
 
 func DeleteData(ctx sdk.Context, storeKey storetypes.StoreKey, keyPrefix []byte, data entity) {
-	store := prefix.NewStore(ctx.KVStore(storeKey), keyPrefix)
+	store := prefix.NewStore(ctx.KVStore(storeKey), append(keyPrefix, data.GetCreator()...))
 	byteKey := make([]byte, 8)
 	binary.BigEndian.PutUint64(byteKey, data.GetId())
 	store.Delete(byteKey)
 }
 
-func GetData(ctx sdk.Context, cdc codec.BinaryCodec, storeKey storetypes.StoreKey, keyPrefix []byte, id uint64, swap entity) bool {
-	store := prefix.NewStore(ctx.KVStore(storeKey), keyPrefix)
+func GetData(ctx sdk.Context, cdc codec.BinaryCodec, storeKey storetypes.StoreKey, keyPrefix []byte, creator string, id uint64, swap entity) bool {
+	store := prefix.NewStore(ctx.KVStore(storeKey), append(keyPrefix, creator...))
 
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, id)

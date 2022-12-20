@@ -5,8 +5,6 @@ import (
 
 	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 
-	"cosmossdk.io/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -14,13 +12,13 @@ import (
 func (k msgServer) CancelNFT(goCtx context.Context, msg *types.MsgCancelNFT) (*types.MsgCancelNFTResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	swap, found := k.GetNFTSale(ctx, msg.Id)
+	swap, found := k.GetNFTSale(ctx, msg.Creator, msg.Id)
 	if !found {
-		return nil, errors.Wrapf(types.ErrSaleNotFound, "id = %d", msg.Id)
+		return nil, types.ErrSaleNotFound
 	}
 
-	if swap.Seller != msg.Creator {
-		return nil, types.ErrInsufficientPermission
+	if swap.Creator != msg.Creator {
+		return nil, types.ErrInvalidSaleData
 	}
 
 	moduleAddress := k.accountKeeper.GetModuleAddress(types.ModuleName)
@@ -33,12 +31,12 @@ func (k msgServer) CancelNFT(goCtx context.Context, msg *types.MsgCancelNFT) (*t
 		return nil, types.ErrInsufficientPermission
 	}
 
-	sender, err := sdk.AccAddressFromBech32(swap.Seller)
+	seller, err := sdk.AccAddressFromBech32(swap.Creator)
 	if err != nil {
 		return nil, err
 	}
 
-	if err = k.nftKeeper.Transfer(ctx, swap.ClassId, swap.NftId, sender); err != nil {
+	if err = k.nftKeeper.Transfer(ctx, swap.ClassId, swap.NftId, seller); err != nil {
 		return nil, err
 	}
 	k.DeleteNFTSale(ctx, swap)

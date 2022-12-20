@@ -7,20 +7,19 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	errors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func (k msgServer) CancelNFT(goCtx context.Context, msg *types.MsgCancelNFT) (*types.MsgCancelNFTResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	swap, found := k.GetNFTSwap(ctx, msg.Id)
+	swap, found := k.GetNFTSwap(ctx, msg.Creator, msg.Id)
 	if !found {
-		return nil, errors.Wrapf(types.ErrSwapNotFound, "id = %d", msg.Id)
+		return nil, types.ErrSwapNotFound
 	}
 
-	if swap.Sender != msg.Creator {
-		return nil, types.ErrInsufficientPermission
+	if swap.Creator != msg.Creator {
+		return nil, types.ErrInvalidSwapData
 	}
 
 	moduleAddress := k.accountKeeper.GetModuleAddress(types.ModuleName)
@@ -33,7 +32,7 @@ func (k msgServer) CancelNFT(goCtx context.Context, msg *types.MsgCancelNFT) (*t
 		return nil, types.ErrInsufficientPermission
 	}
 
-	sender, err := sdk.AccAddressFromBech32(swap.Sender)
+	sender, err := sdk.AccAddressFromBech32(swap.Creator)
 	if err != nil {
 		return nil, err
 	}

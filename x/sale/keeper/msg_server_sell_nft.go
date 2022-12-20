@@ -31,14 +31,13 @@ func (k msgServer) SellNFT(goCtx context.Context, msg *types.MsgSellNFT) (*types
 		return nil, err
 	}
 
-	id := k.AppendNFTSale(ctx, types.NFTSale{
-		Seller:  msg.Creator,
+	k.SetNFTSale(ctx, types.NFTSale{
+		Id:      msg.Id,
+		Creator: msg.Creator,
 		ClassId: msg.ClassId,
 		NftId:   msg.NftId,
 		Price:   msg.Price,
 	})
 
-	return &types.MsgSellNFTResponse{
-		Id: id,
-	}, nil
+	return &types.MsgSellNFTResponse{}, nil
 }

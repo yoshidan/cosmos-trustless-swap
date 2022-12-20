@@ -18,12 +18,12 @@ service Msg {
 
 message MsgSell {
   string creator = 1;
-  string amount = 2;
-  string price = 3;
+  uint64 id = 2;
+  string amount = 3;
+  string price = 4;
 }
 
 message MsgSellResponse {
-  uint64 id = 1;
 }
 
 message MsgCancel {
@@ -36,7 +36,8 @@ message MsgCancelResponse {
 
 message MsgBuy {
   string creator = 1;
-  uint64 id = 2;
+  string seller = 2;
+  uint64 id = 3;
 }
 
 message MsgBuyResponse {
@@ -44,18 +45,19 @@ message MsgBuyResponse {
 
 message MsgSellNFT {
   string creator = 1;
-  string classId = 2;
-  string nftId = 3;
-  string price = 4;
+  uint64 id = 2;
+  string classId = 3;
+  string nftId = 4;
+  string price = 5;
 }
 
 message MsgSellNFTResponse {
-  uint64 id = 1;
 }
 
 message MsgBuyNFT {
   string creator = 1;
-  uint64 id = 2;
+  string seller = 2;
+  uint64 id = 3;
 }
 
 message MsgBuyNFTResponse {
@@ -63,7 +65,7 @@ message MsgBuyNFTResponse {
 
 message MsgCancelNFT {
   string creator = 1;
-  uint64 id = 2;
+  uint64 id = 3;
 }
 
 message MsgCancelNFTResponse {

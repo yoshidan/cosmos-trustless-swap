@@ -17,7 +17,7 @@ func (k Keeper) ShowNFT(goCtx context.Context, req *types.QueryShowNFTRequest) (
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	sale, found := k.GetNFTSale(ctx, req.GetId())
+	sale, found := k.GetNFTSale(ctx, req.Seller, req.Id)
 	if !found {
 		return nil, types.ErrSaleNotFound
 	}

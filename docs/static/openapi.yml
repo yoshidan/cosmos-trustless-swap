@@ -44734,7 +44734,7 @@ paths:
                   id:
                     type: string
                     format: uint64
-                  seller:
+                  creator:
                     type: string
                   amount:
                     type: string
@@ -44767,6 +44767,10 @@ paths:
           required: true
           type: string
           format: uint64
+        - name: seller
+          in: query
+          required: false
+          type: string
       tags:
         - Query
   /swap/sale/show_nft/{id}:
@@ -44785,7 +44789,7 @@ paths:
                   id:
                     type: string
                     format: uint64
-                  seller:
+                  creator:
                     type: string
                   classId:
                     type: string
@@ -44817,6 +44821,10 @@ paths:
           required: true
           type: string
           format: uint64
+        - name: seller
+          in: query
+          required: false
+          type: string
       tags:
         - Query
   /swap/swap/params:
@@ -44871,7 +44879,7 @@ paths:
                   id:
                     type: string
                     format: uint64
-                  sender:
+                  creator:
                     type: string
                   receiver:
                     type: string
@@ -44906,6 +44914,10 @@ paths:
           required: true
           type: string
           format: uint64
+        - name: sender
+          in: query
+          required: false
+          type: string
       tags:
         - Query
   /swap/swap/show_nft/{id}:
@@ -44924,7 +44936,7 @@ paths:
                   id:
                     type: string
                     format: uint64
-                  sender:
+                  creator:
                     type: string
                   receiver:
                     type: string
@@ -44958,6 +44970,10 @@ paths:
           required: true
           type: string
           format: uint64
+        - name: sender
+          in: query
+          required: false
+          type: string
       tags:
         - Query
 definitions:
@@ -74523,23 +74539,15 @@ definitions:
     type: object
   swap.sale.MsgSellNFTResponse:
     type: object
-    properties:
-      id:
-        type: string
-        format: uint64
   swap.sale.MsgSellResponse:
     type: object
-    properties:
-      id:
-        type: string
-        format: uint64
   swap.sale.NFTSale:
     type: object
     properties:
       id:
         type: string
         format: uint64
-      seller:
+      creator:
         type: string
       classId:
         type: string
@@ -74566,7 +74574,7 @@ definitions:
           id:
             type: string
             format: uint64
-          seller:
+          creator:
             type: string
           classId:
             type: string
@@ -74583,7 +74591,7 @@ definitions:
           id:
             type: string
             format: uint64
-          seller:
+          creator:
             type: string
           amount:
             type: string
@@ -74596,7 +74604,7 @@ definitions:
       id:
         type: string
         format: uint64
-      seller:
+      creator:
         type: string
       amount:
         type: string
@@ -74613,23 +74621,15 @@ definitions:
     type: object
   swap.swap.MsgSendNFTResponse:
     type: object
-    properties:
-      id:
-        type: string
-        format: uint64
   swap.swap.MsgSendResponse:
     type: object
-    properties:
-      id:
-        type: string
-        format: uint64
   swap.swap.NFTSwap:
     type: object
     properties:
       id:
         type: string
         format: uint64
-      sender:
+      creator:
         type: string
       receiver:
         type: string
@@ -74658,7 +74658,7 @@ definitions:
           id:
             type: string
             format: uint64
-          sender:
+          creator:
             type: string
           receiver:
             type: string
@@ -74677,7 +74677,7 @@ definitions:
           id:
             type: string
             format: uint64
-          sender:
+          creator:
             type: string
           receiver:
             type: string
@@ -74692,7 +74692,7 @@ definitions:
       id:
         type: string
         format: uint64
-      sender:
+      creator:
         type: string
       receiver:
         type: string
