@@ -36,6 +36,37 @@ func TestSwapTestSuite(t *testing.T) {
 	suite.Run(t, new(SwapTestSuite))
 }
 
+func (suite *SwapTestSuite) defaultSendParam(sender sdk.AccAddress, receiver sdk.AccAddress) *types.MsgSend {
+	app, ctx := suite.app, suite.ctx
+	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
+	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
+	app.AccountKeeper.SetAccount(ctx, senderAccount)
+	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
+
+	return &types.MsgSend{
+		Id:              1,
+		Creator:         sender.String(),
+		Receiver:        receiver.String(),
+		Amount:          internal.NewFooCoin(10).String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
+	}
+}
+
+func (suite *SwapTestSuite) defaultSendNFTParam(sender sdk.AccAddress, item nft.NFT, receiver sdk.AccAddress) *types.MsgSendNFT {
+	app, ctx := suite.app, suite.ctx
+	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
+	app.AccountKeeper.SetAccount(ctx, senderAccount)
+	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, sender))
+	return &types.MsgSendNFT{
+		Id:              1,
+		Creator:         sender.String(),
+		ClassId:         item.ClassId,
+		NftId:           item.Id,
+		Receiver:        receiver.String(),
+		AmountToReceive: internal.NewBarCoin(5).String(),
+	}
+}
+
 func (suite *SwapTestSuite) SetupTest() {
 	app := internal.Setup(suite.T(), false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{Time: time.Now()})
@@ -63,22 +94,11 @@ func (suite *SwapTestSuite) TestSendSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send1_______________")
-	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
-	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
-
 	receiver := sdk.AccAddress("recv1_______________")
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSend{
-		Id:              1,
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		Amount:          internal.NewFooCoin(10).String(),
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendParam(sender, receiver)
 	_, err := server.Send(ctx, sendParam)
 	suite.Require().NoError(err)
 	queryResponse, err := app.SwapKeeper.Show(ctx, &types.QueryShowRequest{Id: 1, Sender: sender.String()})
@@ -101,22 +121,11 @@ func (suite *SwapTestSuite) TestCancelSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send2_______________")
-	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
-	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
-
 	receiver := sdk.AccAddress("recv2_______________")
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSend{
-		Id:              1,
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		Amount:          internal.NewFooCoin(10).String(),
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendParam(sender, receiver)
 	_, err := server.Send(ctx, sendParam)
 
 	// Cancel
@@ -159,10 +168,6 @@ func (suite *SwapTestSuite) TestReceiveSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send3_______________")
-	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
-	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
 
 	receiver := sdk.AccAddress("recv3_______________")
 	receiverBalance := sdk.NewCoins(internal.NewBarCoin(100))
@@ -172,13 +177,7 @@ func (suite *SwapTestSuite) TestReceiveSuccess() {
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSend{
-		Id:              1,
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		Amount:          internal.NewFooCoin(10).String(),
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendParam(sender, receiver)
 	_, err := server.Send(ctx, sendParam)
 
 	// Receive
@@ -229,10 +228,6 @@ func (suite *SwapTestSuite) TestCancelError() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send4_______________")
-	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
-	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
 
 	receiver := sdk.AccAddress("recv4_______________")
 	receiverBalance := sdk.NewCoins(internal.NewBarCoin(1))
@@ -242,13 +237,7 @@ func (suite *SwapTestSuite) TestCancelError() {
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSend{
-		Id:              1,
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		Amount:          internal.NewFooCoin(10).String(),
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendParam(sender, receiver)
 	_, err := server.Send(ctx, sendParam)
 
 	// Cancel
@@ -264,22 +253,11 @@ func (suite *SwapTestSuite) TestReceiveError() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send6_______________")
-	senderBalance := sdk.NewCoins(internal.NewFooCoin(100))
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
-	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, sender, senderBalance))
-
 	receiver := sdk.AccAddress("recv6_______________")
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSend{
-		Id:              1,
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		Amount:          internal.NewFooCoin(10).String(),
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendParam(sender, receiver)
 	_, err := server.Send(ctx, sendParam)
 
 	// Receive
@@ -304,26 +282,16 @@ func (suite *SwapTestSuite) TestSendNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send1_______________")
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft1",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, sender))
 
 	receiver := sdk.AccAddress("recv1_______________")
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSendNFT{
-		Id:              1,
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		ClassId:         item.ClassId,
-		NftId:           item.Id,
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendNFTParam(sender, item, receiver)
 	_, err := server.SendNFT(ctx, sendParam)
 	suite.Require().NoError(err)
 	queryResponse, err := app.SwapKeeper.ShowNFT(ctx, &types.QueryShowNFTRequest{Id: 1, Sender: sender.String()})
@@ -347,26 +315,16 @@ func (suite *SwapTestSuite) TestCancelNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send2_______________")
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft2",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, sender))
 
 	receiver := sdk.AccAddress("recv2_______________")
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSendNFT{
-		Id:              1,
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		ClassId:         item.ClassId,
-		NftId:           item.Id,
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendNFTParam(sender, item, receiver)
 	_, err := server.SendNFT(ctx, sendParam)
 
 	// Cancel
@@ -402,13 +360,10 @@ func (suite *SwapTestSuite) TestReceiveNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send3_______________")
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft3",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, sender))
 
 	receiver := sdk.AccAddress("recv3_______________")
 	receiverBalance := sdk.NewCoins(internal.NewBarCoin(100))
@@ -418,14 +373,7 @@ func (suite *SwapTestSuite) TestReceiveNFTSuccess() {
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSendNFT{
-		Id:              1,
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		ClassId:         item.ClassId,
-		NftId:           item.Id,
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendNFTParam(sender, item, receiver)
 	_, err := server.SendNFT(ctx, sendParam)
 
 	// Receive
@@ -476,13 +424,10 @@ func (suite *SwapTestSuite) TestCancelNFTError() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send4_______________")
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft4",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, sender))
 
 	receiver := sdk.AccAddress("recv4_______________")
 	receiverBalance := sdk.NewCoins(internal.NewBarCoin(1))
@@ -492,13 +437,7 @@ func (suite *SwapTestSuite) TestCancelNFTError() {
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSendNFT{
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		ClassId:         item.ClassId,
-		NftId:           item.Id,
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendNFTParam(sender, item, receiver)
 	_, err := server.SendNFT(ctx, sendParam)
 
 	// Cancel
@@ -514,26 +453,16 @@ func (suite *SwapTestSuite) TestReceiveNFTError() {
 	app, ctx := suite.app, suite.ctx
 
 	sender := sdk.AccAddress("send6_______________")
-	senderAccount := app.AccountKeeper.NewAccountWithAddress(ctx, sender)
-	app.AccountKeeper.SetAccount(ctx, senderAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft6",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, sender))
 
 	receiver := sdk.AccAddress("recv6_______________")
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
-	sendParam := &types.MsgSendNFT{
-		Id:              1,
-		Creator:         sender.String(),
-		Receiver:        receiver.String(),
-		ClassId:         item.ClassId,
-		NftId:           item.Id,
-		AmountToReceive: internal.NewBarCoin(5).String(),
-	}
+	sendParam := suite.defaultSendNFTParam(sender, item, receiver)
 	_, err := server.SendNFT(ctx, sendParam)
 
 	// Receive

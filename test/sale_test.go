@@ -59,32 +59,52 @@ func (suite *SaleTestSuite) SetupTest() {
 	suite.Require().NoError(app.NFTKeeper.SaveClass(ctx, class))
 }
 
-func (suite *SaleTestSuite) TestSellSuccess() {
+func (suite *SaleTestSuite) defaultSellParam(seller sdk.AccAddress) *types.MsgSell {
 	app, ctx := suite.app, suite.ctx
-
-	seller := sdk.AccAddress("send1_______________")
 	sellerBalance := sdk.NewCoins(internal.NewFooCoin(100))
 	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
 	app.AccountKeeper.SetAccount(ctx, sellerAccount)
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, seller, sellerBalance))
 
-	// Sell
-	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSell{
+	return &types.MsgSell{
 		Id:      1,
 		Creator: seller.String(),
 		Amount:  internal.NewFooCoin(10).String(),
 		Price:   internal.NewBarCoin(5).String(),
 	}
-	_, err := server.Sell(ctx, sendParam)
+}
+
+func (suite *SaleTestSuite) defaultSendNFTParam(seller sdk.AccAddress, item nft.NFT) *types.MsgSellNFT {
+	app, ctx := suite.app, suite.ctx
+	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
+	app.AccountKeeper.SetAccount(ctx, sellerAccount)
+	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, seller))
+	return &types.MsgSellNFT{
+		Id:      1,
+		Creator: seller.String(),
+		ClassId: item.ClassId,
+		NftId:   item.Id,
+		Price:   internal.NewBarCoin(5).String(),
+	}
+}
+
+func (suite *SaleTestSuite) TestSellSuccess() {
+	app, ctx := suite.app, suite.ctx
+
+	server := keeper.NewMsgServerImpl(app.SaleKeeper)
+
+	// Sell
+	seller := sdk.AccAddress("send1_______________")
+	sellParam := suite.defaultSellParam(seller)
+	_, err := server.Sell(ctx, sellParam)
 	suite.Require().NoError(err)
 	queryResponse, err := app.SaleKeeper.Show(ctx, &types.QueryShowRequest{Id: 1, Seller: seller.String()})
 	swap := queryResponse.Sale
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(1), swap.Id)
 	suite.Require().Equal(seller.String(), swap.Creator)
-	suite.Require().Equal(sendParam.Amount, swap.Amount)
-	suite.Require().Equal(sendParam.Price, swap.Price)
+	suite.Require().Equal(sellParam.Amount, swap.Amount)
+	suite.Require().Equal(sellParam.Price, swap.Price)
 	balance, err := app.BankKeeper.Balance(ctx, &banktypes.QueryBalanceRequest{
 		Address: app.AccountKeeper.GetModuleAccount(ctx, types.ModuleName).GetAddress().String(),
 		Denom:   internal.FooDenom,
@@ -96,23 +116,14 @@ func (suite *SaleTestSuite) TestSellSuccess() {
 func (suite *SaleTestSuite) TestCancelSuccess() {
 	app, ctx := suite.app, suite.ctx
 
-	seller := sdk.AccAddress("send2_______________")
-	sellerBalance := sdk.NewCoins(internal.NewFooCoin(100))
-	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
-	app.AccountKeeper.SetAccount(ctx, sellerAccount)
-	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, seller, sellerBalance))
+	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 
+	seller := sdk.AccAddress("send2_______________")
 	buyer := sdk.AccAddress("recv2_______________")
 
 	// Sell
-	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSell{
-		Id:      1,
-		Creator: seller.String(),
-		Amount:  internal.NewFooCoin(10).String(),
-		Price:   internal.NewBarCoin(5).String(),
-	}
-	_, err := server.Sell(ctx, sendParam)
+	sellParam := suite.defaultSellParam(seller)
+	_, err := server.Sell(ctx, sellParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancel{
@@ -154,11 +165,9 @@ func (suite *SaleTestSuite) TestCancelSuccess() {
 func (suite *SaleTestSuite) TestBuySuccess() {
 	app, ctx := suite.app, suite.ctx
 
+	server := keeper.NewMsgServerImpl(app.SaleKeeper)
+
 	seller := sdk.AccAddress("send3_______________")
-	sellerBalance := sdk.NewCoins(internal.NewFooCoin(100))
-	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
-	app.AccountKeeper.SetAccount(ctx, sellerAccount)
-	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, seller, sellerBalance))
 
 	buyer := sdk.AccAddress("recv3_______________")
 	buyerBalance := sdk.NewCoins(internal.NewBarCoin(100))
@@ -167,14 +176,8 @@ func (suite *SaleTestSuite) TestBuySuccess() {
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, buyer, buyerBalance))
 
 	// Sell
-	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSell{
-		Id:      1,
-		Creator: seller.String(),
-		Amount:  internal.NewFooCoin(10).String(),
-		Price:   internal.NewBarCoin(5).String(),
-	}
-	_, err := server.Sell(ctx, sendParam)
+	sellParam := suite.defaultSellParam(seller)
+	_, err := server.Sell(ctx, sellParam)
 
 	// Buy
 	receiveParam := &types.MsgBuy{
@@ -223,11 +226,9 @@ func (suite *SaleTestSuite) TestBuySuccess() {
 func (suite *SaleTestSuite) TestCancelError() {
 	app, ctx := suite.app, suite.ctx
 
+	server := keeper.NewMsgServerImpl(app.SaleKeeper)
+
 	seller := sdk.AccAddress("send4_______________")
-	sellerBalance := sdk.NewCoins(internal.NewFooCoin(100))
-	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
-	app.AccountKeeper.SetAccount(ctx, sellerAccount)
-	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, seller, sellerBalance))
 
 	buyer := sdk.AccAddress("recv4_______________")
 	buyerBalance := sdk.NewCoins(internal.NewBarCoin(1))
@@ -236,14 +237,8 @@ func (suite *SaleTestSuite) TestCancelError() {
 	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, buyer, buyerBalance))
 
 	// Sell
-	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSell{
-		Id:      1,
-		Creator: seller.String(),
-		Amount:  internal.NewFooCoin(10).String(),
-		Price:   internal.NewBarCoin(5).String(),
-	}
-	_, err := server.Sell(ctx, sendParam)
+	sellParam := suite.defaultSellParam(seller)
+	_, err := server.Sell(ctx, sellParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancel{
@@ -256,24 +251,14 @@ func (suite *SaleTestSuite) TestCancelError() {
 
 func (suite *SaleTestSuite) TestBuyError() {
 	app, ctx := suite.app, suite.ctx
+	server := keeper.NewMsgServerImpl(app.SaleKeeper)
 
 	seller := sdk.AccAddress("send6_______________")
-	sellerBalance := sdk.NewCoins(internal.NewFooCoin(100))
-	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
-	app.AccountKeeper.SetAccount(ctx, sellerAccount)
-	suite.Require().NoError(testutil.FundAccount(app.BankKeeper, ctx, seller, sellerBalance))
-
 	buyer := sdk.AccAddress("recv6_______________")
 
 	// Sell
-	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSell{
-		Id:      1,
-		Creator: seller.String(),
-		Amount:  internal.NewFooCoin(10).String(),
-		Price:   internal.NewBarCoin(5).String(),
-	}
-	_, err := server.Sell(ctx, sendParam)
+	sellParam := suite.defaultSellParam(seller)
+	_, err := server.Sell(ctx, sellParam)
 
 	// Buy
 	receiveParam := &types.MsgBuy{
@@ -289,33 +274,23 @@ func (suite *SaleTestSuite) TestSellNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	seller := sdk.AccAddress("send1_______________")
-	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
-	app.AccountKeeper.SetAccount(ctx, sellerAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft1",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, seller))
-
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSellNFT{
-		Id:      1,
-		Creator: seller.String(),
-		ClassId: item.ClassId,
-		NftId:   item.Id,
-		Price:   internal.NewBarCoin(5).String(),
-	}
-	_, err := server.SellNFT(ctx, sendParam)
+	sellParam := suite.defaultSendNFTParam(seller, item)
+	_, err := server.SellNFT(ctx, sellParam)
 	suite.Require().NoError(err)
 	queryResponse, err := app.SaleKeeper.ShowNFT(ctx, &types.QueryShowNFTRequest{Id: 1, Seller: seller.String()})
 	swap := queryResponse.Sale
 	suite.Require().NoError(err)
 	suite.Require().Equal(uint64(1), swap.Id)
 	suite.Require().Equal(seller.String(), swap.Creator)
-	suite.Require().Equal(sendParam.ClassId, swap.ClassId)
-	suite.Require().Equal(sendParam.NftId, swap.NftId)
-	suite.Require().Equal(sendParam.Price, swap.Price)
+	suite.Require().Equal(sellParam.ClassId, swap.ClassId)
+	suite.Require().Equal(sellParam.NftId, swap.NftId)
+	suite.Require().Equal(sellParam.Price, swap.Price)
 	ownerResponse, err := app.NFTKeeper.Owner(ctx, &nft.QueryOwnerRequest{
 		ClassId: item.ClassId,
 		Id:      item.Id,
@@ -328,26 +303,17 @@ func (suite *SaleTestSuite) TestCancelNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	seller := sdk.AccAddress("send2_______________")
-	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
-	app.AccountKeeper.SetAccount(ctx, sellerAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft2",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, seller))
 
 	buyer := sdk.AccAddress("recv2_______________")
 
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSellNFT{
-		Id:      1,
-		Creator: seller.String(),
-		ClassId: item.ClassId,
-		NftId:   item.Id,
-		Price:   internal.NewBarCoin(5).String(),
-	}
-	_, err := server.SellNFT(ctx, sendParam)
+	sellParam := suite.defaultSendNFTParam(seller, item)
+	_, err := server.SellNFT(ctx, sellParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancelNFT{
@@ -383,13 +349,10 @@ func (suite *SaleTestSuite) TestBuyNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
 	seller := sdk.AccAddress("send3_______________")
-	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
-	app.AccountKeeper.SetAccount(ctx, sellerAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft3",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, seller))
 
 	buyer := sdk.AccAddress("recv3_______________")
 	buyerBalance := sdk.NewCoins(internal.NewBarCoin(100))
@@ -399,14 +362,8 @@ func (suite *SaleTestSuite) TestBuyNFTSuccess() {
 
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSellNFT{
-		Id:      1,
-		Creator: seller.String(),
-		ClassId: item.ClassId,
-		NftId:   item.Id,
-		Price:   internal.NewBarCoin(5).String(),
-	}
-	_, err := server.SellNFT(ctx, sendParam)
+	sellParam := suite.defaultSendNFTParam(seller, item)
+	_, err := server.SellNFT(ctx, sellParam)
 
 	// Buy
 	receiveParam := &types.MsgBuyNFT{
@@ -456,13 +413,10 @@ func (suite *SaleTestSuite) TestCancelNFTError() {
 	app, ctx := suite.app, suite.ctx
 
 	seller := sdk.AccAddress("send4_______________")
-	sellerAccount := app.AccountKeeper.NewAccountWithAddress(ctx, seller)
-	app.AccountKeeper.SetAccount(ctx, sellerAccount)
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft4",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, seller))
 
 	buyer := sdk.AccAddress("recv4_______________")
 	buyerBalance := sdk.NewCoins(internal.NewBarCoin(1))
@@ -472,14 +426,8 @@ func (suite *SaleTestSuite) TestCancelNFTError() {
 
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSellNFT{
-		Id:      1,
-		Creator: seller.String(),
-		ClassId: item.ClassId,
-		NftId:   item.Id,
-		Price:   internal.NewBarCoin(5).String(),
-	}
-	_, err := server.SellNFT(ctx, sendParam)
+	sellParam := suite.defaultSendNFTParam(seller, item)
+	_, err := server.SellNFT(ctx, sellParam)
 
 	// Cancel
 	cancelParam := &types.MsgCancelNFT{
@@ -500,20 +448,13 @@ func (suite *SaleTestSuite) TestBuyNFTError() {
 		ClassId: "classId",
 		Id:      "nft6",
 	}
-	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, seller))
 
 	buyer := sdk.AccAddress("recv6_______________")
 
 	// Sell
 	server := keeper.NewMsgServerImpl(app.SaleKeeper)
-	sendParam := &types.MsgSellNFT{
-		Id:      1,
-		Creator: seller.String(),
-		ClassId: item.ClassId,
-		NftId:   item.Id,
-		Price:   internal.NewBarCoin(5).String(),
-	}
-	_, err := server.SellNFT(ctx, sendParam)
+	sellParam := suite.defaultSendNFTParam(seller, item)
+	_, err := server.SellNFT(ctx, sellParam)
 
 	// Buy
 	receiveParam := &types.MsgBuyNFT{
