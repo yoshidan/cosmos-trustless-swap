@@ -14,8 +14,8 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
       Alice ->>+ Module: send 10token (price 20stake)
       Bob ->>+ Module: call receive
       activate Module
-      Module ->>+ Bob: send 10token 
       Module ->>+ Alice: send 20stake from Bob
+      Module ->>+ Bob: send 10token 
       deactivate Module
 ```
 
