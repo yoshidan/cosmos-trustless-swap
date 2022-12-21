@@ -11,15 +11,30 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
       actor Alice
       participant Module
       actor Bob
-      Alice ->>+ Module: send 10token (price 20stake)
+      Alice ->> Module: send 10token (price 20stake)
+      Note over Module: get 10token
       Bob ->>+ Module: call receive
-      activate Module
-      Module ->>+ Alice: send 20stake from Bob
-      Module ->>+ Bob: send 10token 
-      deactivate Module
+      Module ->> Alice: send 20stake from Bob
+      Module ->>- Bob: send 10token 
+      Note over Alice: get 20stake
+      Note over Bob: get 10token
 ```
 
 * Swap Non Fungible Token
+```mermaid
+  sequenceDiagram
+      actor Alice
+      participant Module
+      actor Bob
+      Alice ->> Module: send NFT (price 20stake)
+      Note over Module: get NFT
+      Bob ->>+ Module: call receive
+      Module ->> Alice: send 20stake from Bob
+      Module ->>- Bob: send NFT 
+      Note over Alice: get 20stake
+      Note over Bob: get NFT
+```
+
 * Sell Fungible Token
 * Sell Non Fungible Token
 
