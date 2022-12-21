@@ -20,6 +20,10 @@ func (k msgServer) Sell(goCtx context.Context, msg *types.MsgSell) (*types.MsgSe
 		return nil, err
 	}
 
+	if _, found := k.GetSale(ctx, msg.Creator, msg.Id); found {
+		return nil, types.ErrSaleExists
+	}
+
 	if err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(amount)); err != nil {
 		return nil, err
 	}

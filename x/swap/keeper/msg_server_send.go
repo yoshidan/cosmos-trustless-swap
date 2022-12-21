@@ -23,7 +23,9 @@ func (k msgServer) Send(goCtx context.Context, msg *types.MsgSend) (*types.MsgSe
 	if err != nil {
 		return nil, err
 	}
-
+	if _, found := k.GetSwap(ctx, msg.Creator, msg.Id); found {
+		return nil, types.ErrSwapExists
+	}
 	if err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(amount)); err != nil {
 		return nil, err
 	}
