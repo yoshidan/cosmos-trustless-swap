@@ -3,6 +3,8 @@
 **cosmos-trustless-swap** is a module for swapping and selling tokens between two users.  
 It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
 
+![CI](https://github.com/yoshidan/cosmos-trustless-swap/workflows/CI/badge.svg?branch=main)
+
 ## Features
 
 * Swap or Sell Fungible Token
