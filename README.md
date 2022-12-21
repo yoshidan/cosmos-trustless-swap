@@ -8,9 +8,9 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
 * Swap Fungible Token
 ```mermaid
   sequenceDiagram
-      participant Alice
+      actor Alice
       participant Module
-      participant Bob
+      actor Bob
       Alice ->>+ Module: send 10token (price 20stake)
       Bob ->>+ Module: call
       Module ->>+ Bob: send 10token 
