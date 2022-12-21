@@ -24,7 +24,7 @@ func (k msgServer) SellNFT(goCtx context.Context, msg *types.MsgSellNFT) (*types
 	if moduleAddress == nil {
 		return nil, sdkerrors.ErrInvalidAddress
 	}
-	if _, found := k.GetSale(ctx, msg.Creator, msg.Id); found {
+	if _, found := k.GetNFTSale(ctx, msg.Creator, msg.Id); found {
 		return nil, types.ErrSaleExists
 	}
 	if err = k.nftKeeper.Transfer(ctx, msg.ClassId, msg.NftId, moduleAddress); err != nil {

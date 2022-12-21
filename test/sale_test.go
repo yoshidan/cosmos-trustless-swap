@@ -270,6 +270,20 @@ func (suite *SaleTestSuite) TestBuyError() {
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)
 }
 
+func (suite *SaleTestSuite) TestSellDuplicateError() {
+	app, ctx := suite.app, suite.ctx
+
+	seller := sdk.AccAddress("send7_______________")
+
+	// Send
+	server := keeper.NewMsgServerImpl(app.SaleKeeper)
+	sendParam := suite.defaultSellParam(seller)
+	_, err := server.Sell(ctx, sendParam)
+	suite.Require().NoError(err)
+	_, err = server.Sell(ctx, sendParam)
+	suite.Require().ErrorIs(types.ErrSaleExists, err)
+}
+
 func (suite *SaleTestSuite) TestSellNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
@@ -471,7 +485,7 @@ func (suite *SaleTestSuite) TestBuyNFTError() {
 func (suite *SaleTestSuite) TestSellNFTError() {
 	app, ctx := suite.app, suite.ctx
 
-	seller := sdk.AccAddress("send6_______________")
+	seller := sdk.AccAddress("send7_______________")
 	item := nft.NFT{
 		ClassId: "classId",
 		Id:      "nft7",
@@ -483,4 +497,25 @@ func (suite *SaleTestSuite) TestSellNFTError() {
 	sellParam.NftId = "not"
 	_, err := server.SellNFT(ctx, sellParam)
 	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
+}
+
+func (suite *SaleTestSuite) TestSellNFTDuplicateError() {
+	app, ctx := suite.app, suite.ctx
+
+	seller := sdk.AccAddress("send8_______________")
+	item := nft.NFT{
+		ClassId: "classId",
+		Id:      "nft8",
+	}
+
+	// Send
+	server := keeper.NewMsgServerImpl(app.SaleKeeper)
+	sendParam := suite.defaultSellNFTParam(seller, item)
+	_, err := server.SellNFT(ctx, sendParam)
+	suite.Require().NoError(err)
+	item.Id = "nftx"
+	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, seller))
+	sendParam.NftId = item.Id
+	_, err = server.SellNFT(ctx, sendParam)
+	suite.Require().ErrorIs(types.ErrSaleExists, err)
 }

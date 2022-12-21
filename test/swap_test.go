@@ -292,6 +292,21 @@ func (suite *SwapTestSuite) TestSendError() {
 	suite.Require().Equal("decoding bech32 failed: invalid bech32 string length 7", err.Error())
 }
 
+func (suite *SwapTestSuite) TestSendDuplicateError() {
+	app, ctx := suite.app, suite.ctx
+
+	sender := sdk.AccAddress("send7_______________")
+	receiver := sdk.AccAddress("recv7_______________")
+
+	// Send
+	server := keeper.NewMsgServerImpl(app.SwapKeeper)
+	sendParam := suite.defaultSendParam(sender, receiver)
+	_, err := server.Send(ctx, sendParam)
+	suite.Require().NoError(err)
+	_, err = server.Send(ctx, sendParam)
+	suite.Require().ErrorIs(types.ErrSwapExists, err)
+}
+
 func (suite *SwapTestSuite) TestSendNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
@@ -500,12 +515,12 @@ func (suite *SwapTestSuite) TestReceiveNFTError() {
 func (suite *SwapTestSuite) TestSendNFTError() {
 	app, ctx := suite.app, suite.ctx
 
-	sender := sdk.AccAddress("send6_______________")
+	sender := sdk.AccAddress("send7_______________")
 	item := nft.NFT{
 		ClassId: "classId",
-		Id:      "nft6",
+		Id:      "nft7",
 	}
-	receiver := sdk.AccAddress("recv6_______________")
+	receiver := sdk.AccAddress("recv7_______________")
 
 	// Send
 	server := keeper.NewMsgServerImpl(app.SwapKeeper)
@@ -518,4 +533,27 @@ func (suite *SwapTestSuite) TestSendNFTError() {
 	sellParam.Receiver = "invalid"
 	_, err = server.SendNFT(ctx, sellParam)
 	suite.Require().Equal("decoding bech32 failed: invalid bech32 string length 7", err.Error())
+}
+
+func (suite *SwapTestSuite) TestSendNFTDuplicateError() {
+	app, ctx := suite.app, suite.ctx
+
+	sender := sdk.AccAddress("send8_______________")
+	item := nft.NFT{
+		ClassId: "classId",
+		Id:      "nft8",
+	}
+
+	receiver := sdk.AccAddress("recv8_______________")
+
+	// Send
+	server := keeper.NewMsgServerImpl(app.SwapKeeper)
+	sendParam := suite.defaultSendNFTParam(sender, item, receiver)
+	_, err := server.SendNFT(ctx, sendParam)
+	suite.Require().NoError(err)
+	item.Id = "nftx"
+	suite.Require().NoError(app.NFTKeeper.Mint(ctx, item, sender))
+	sendParam.NftId = item.Id
+	_, err = server.SendNFT(ctx, sendParam)
+	suite.Require().ErrorIs(types.ErrSwapExists, err)
 }
