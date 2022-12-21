@@ -5,6 +5,13 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
 
 ## Features
 
+* Swap Fungible Token
+* Swap Non Fungible Token
+* Sell Fungible Token
+* Sell Non Fungible Token
+
+## Commands 
+
 ### Swap Fungible Token
 ```sh
 tx swap send [id] [receiver] [amount] [amountToReceive] --from keyname
@@ -36,11 +43,11 @@ tx swap receive [sender] [id] --from keyname
 # ex) tx swap receive cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
 ```
 
-| proeprty          | description                                                              | ex                |
-|-------------------|--------------------------------------------------------------------------|-------------------| 
-| [id]              | It is the id specified when sending                                      | 1                 |
-| [sender]          | The address of the sender of send.                                       | cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 |
-| --from | It is the recipient. It must match the address specified in `[receiver]` | bob |
+| proeprty          | description                                                                             | ex                |
+|-------------------|-----------------------------------------------------------------------------------------|-------------------| 
+| [id]              | It is the id specified when sending                                                     | 1                 |
+| [sender]          | The address of the sender.                                                              | cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 |
+| --from | It is the recipient. It must match the address specified in `[receiver]` in saved sale  | bob |
 
 ```sh
 tx swap cancel [id] --from keyname
@@ -50,12 +57,152 @@ tx swap cancel [id] --from keyname
 | proeprty          | description                                                          | ex                |
 |-------------------|----------------------------------------------------------------------|-------------------| 
 | [id]              | It is the id specified when sending                                  | 1                 |
-| --from | It is the sender. It must match the address specified in `[creator]` | alice |
+| --from | It is the sender. It must match the address specified in `[creator]` in saved sale | alice |
 
 
 ### Swap Non Fungible Token
+
+```sh
+tx swap send-nft [id] [receiver] [classId] [nftId] [amountToReceive] --from keyname
+# ex) tx swap send-nft 1 cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 class1 nft1 --from alice
+```
+
+| proeprty          | description                                                                                                                                                                                   | ex                                            |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------| 
+| [id]              | Any number of type uint64. It must be unique for `--from` user. If swap is completed by `cancel` or `receive`, it can be reused.. If swap is completed by cancel or receive, it can be reused | 1                                             |
+| [receiver]        | It is the recipient's address                                                                                                                                                                 | cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 |
+| [classId]         | It is the NFT's classId                                                                                                                                                                       | class1                                        |
+| [nftId]           | It is the NFT's nftId                                                                                                                                                                         | class1                                        |
+| [amountToReceive] | The amount of tokens required for the recipient to receive                                                                                                                                    | 20tokenB                                      |
+
+```sh
+query swap show-nft [sender] [id] 
+# ex) query swap show-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
+
+# Here is the result
+# swap:
+#  amountToReceive: 3token
+#  classId: class1
+#  creator: cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m
+#  id: "1"
+#  nftId: nft1
+#  receiver: cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4
+```
+
+```sh
+tx swap receive-nft [sender] [id] --from keyname
+# ex) tx swap receive-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
+```
+
+| proeprty          | description                                                                | ex                |
+|-------------------|----------------------------------------------------------------------------|-------------------| 
+| [id]              | It is the id specified when sending                                        | 1                 |
+| [sender]          | The address of the sender                                                  | cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 |
+| --from | It is the recipient. It must match the address specified in `[receiver]` in saved sale  | bob |
+
+```sh
+tx swap cancel-nft [id] --from keyname
+# ex) tx swap cancel-nft 1 --from alice
+```
+
+| proeprty          | description                                                          | ex                |
+|-------------------|----------------------------------------------------------------------|-------------------| 
+| [id]              | It is the id specified when sending                                  | 1                 |
+| --from | It is the sender. It must match the address specified in `[creator]` in saved sale | alice |
+
 ### Sell Fungible Token
+
+```sh
+tx sale sell [id] [amount] [amountToReceive] --from keyname
+# ex) tx sale sell 1 10coin 1stake --from alice
+```
+
+| proeprty   | description                                                                                                                                                                   | ex                |
+|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------| 
+| [id]       | Any number of type uint64. It must be unique for `--from` user. If swap is completed by `cancel` or `receive`, it can be reused.. If swap is completed by cancel or receive, it can be reused | 1                 |
+| [amount] | It is the token to transfer                                                                                                                                                   | 10tokenA          |
+| [amountToReceive] | The amount of tokens required for the recipient to receive                                                                                                                    | 20tokenB          |
+
+```sh
+query sale show [seller] [id] 
+# ex) query sale show cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
+
+# Here is the result
+# sell:
+#  creator: cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m
+#  id: "1"
+#  amount: 10tokenA
+#  amountToReceive: 20tokenB
+```
+
+```sh
+tx sale buy [seller] [id] --from keyname
+# ex) tx sale buy cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
+```
+
+| proeprty | description                                                         | ex                |
+|----------|---------------------------------------------------------------------|-------------------| 
+| [id]     | It is the id specified when sending                                 | 1                 |
+| [seller] | The address of the seller.                                      | cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 |
+| --from   | It is the recipient | bob |
+
+```sh
+tx sale cancel [id] --from keyname
+# ex) tx sale cancel 1 --from alice
+```
+
+| proeprty          | description                                                                        | ex                |
+|-------------------|------------------------------------------------------------------------------------|-------------------| 
+| [id]              | It is the id specified when sending                                                | 1                 |
+| --from | It is the seller. It must match the address specified in `[creator]` in saved sale | alice |
+
 ### Sell Non Fungible Token
+
+```sh
+tx sale sell-nft [id] [classId] [nftId] [amountToReceive] --from keyname
+# ex) tx sale sell-nft 1 class1 nft1 --from alice
+```
+
+| proeprty          | description                                                                                                                                                                               | ex                                            |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------| 
+| [id]              | Any number of type uint64. It must be unique for `--from` user. If swap is completed by `cancel` or `receive`, it can be reused.. If swap is completed by cancel or buy, it can be reused | 1                                             |
+| [classId]         | It is the NFT's classId                                                                                                                                                                   | class1                                        |
+| [nftId]           | It is the NFT's nftId                                                                                                                                                                     | class1                                        |
+| [amountToReceive] | The amount of tokens required for the recipient to receive                                                                                                                                | 20tokenB                                      |
+
+```sh
+query sale show-nft [sender] [id] 
+# ex) query sale show-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
+
+# Here is the result
+# sale:
+#  amountToReceive: 3token
+#  classId: class1
+#  creator: cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m
+#  id: "1"
+#  nftId: nft1
+```
+
+```sh
+tx sale buy-nft [seller] [id] --from keyname
+# ex) tx sale buy-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
+```
+
+| proeprty | description         | ex                |
+|----------|---------------------|-------------------| 
+| [id]     | It is the id specified when sending | 1                 |
+| [seller] | The address of the seller | cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 |
+| --from   | It is the recipient | bob |
+
+```sh
+tx swap cancel-nft [id] --from keyname
+# ex) tx swap cancel-nft 1 --from alice
+```
+
+| proeprty          | description                                                          | ex                |
+|-------------------|----------------------------------------------------------------------|-------------------| 
+| [id]              | It is the id specified when sending                                  | 1                 |
+| --from | It is the seller. It must match the address specified in `[creator]` in saved sale | alice |
 
 ## Installation
 
