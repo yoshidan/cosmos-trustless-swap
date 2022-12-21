@@ -278,6 +278,20 @@ func (suite *SwapTestSuite) TestReceiveError() {
 	suite.Require().ErrorIs(errors.ErrInsufficientFunds, err)
 }
 
+func (suite *SwapTestSuite) TestSendError() {
+	app, ctx := suite.app, suite.ctx
+
+	sender := sdk.AccAddress("send7_______________")
+	receiver := sdk.AccAddress("recv7_______________")
+
+	// Send
+	server := keeper.NewMsgServerImpl(app.SwapKeeper)
+	sendParam := suite.defaultSendParam(sender, receiver)
+	sendParam.Receiver = "invalid"
+	_, err := server.Send(ctx, sendParam)
+	suite.Require().Equal("decoding bech32 failed: invalid bech32 string length 7", err.Error())
+}
+
 func (suite *SwapTestSuite) TestSendNFTSuccess() {
 	app, ctx := suite.app, suite.ctx
 
@@ -499,4 +513,9 @@ func (suite *SwapTestSuite) TestSendNFTError() {
 	sellParam.NftId = "not"
 	_, err := server.SendNFT(ctx, sellParam)
 	suite.Require().ErrorIs(types.ErrInsufficientPermission, err)
+
+	sellParam.NftId = item.Id
+	sellParam.Receiver = "invalid"
+	_, err = server.SendNFT(ctx, sellParam)
+	suite.Require().Equal("decoding bech32 failed: invalid bech32 string length 7", err.Error())
 }
