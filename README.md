@@ -6,6 +6,17 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
 ## Features
 
 * Swap Fungible Token
+```mermaid
+  sequenceDiagram
+      participant Alice
+      participant Module
+      participant Bob
+      Alice ->>+ Module: send 10token (price 20stake)
+      Bob ->>+ Module: call
+      Module ->>+ Bob: send 10token 
+      Module ->>+ Alice: send 20stake from Bob
+```
+
 * Swap Non Fungible Token
 * Sell Fungible Token
 * Sell Non Fungible Token
