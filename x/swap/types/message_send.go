@@ -9,9 +9,10 @@ const TypeMsgSend = "send"
 
 var _ sdk.Msg = &MsgSend{}
 
-func NewMsgSend(creator string, receiver string, amount string, amountToReceive string) *MsgSend {
+func NewMsgSend(creator string, id uint64, receiver string, amount string, amountToReceive string) *MsgSend {
 	return &MsgSend{
 		Creator:         creator,
+		Id:              id,
 		Receiver:        receiver,
 		Amount:          amount,
 		AmountToReceive: amountToReceive,

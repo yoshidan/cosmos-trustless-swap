@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/spf13/cast"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -14,13 +15,17 @@ var _ = strconv.Itoa(0)
 
 func CmdSellNFT() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "sell-nft [class-id] [nft-id] [price]",
+		Use:   "sell-nft [id] [class-id] [nft-id] [price]",
 		Short: "Broadcast message SellNFT",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argClassId := args[0]
-			argNftId := args[1]
-			argPrice := args[2]
+			argId, err := cast.ToUint64E(args[0])
+			if err != nil {
+				return err
+			}
+			argClassId := args[1]
+			argNftId := args[2]
+			argPrice := args[3]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -29,6 +34,7 @@ func CmdSellNFT() *cobra.Command {
 
 			msg := types.NewMsgSellNFT(
 				clientCtx.GetFromAddress().String(),
+				argId,
 				argClassId,
 				argNftId,
 				argPrice,

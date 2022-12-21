@@ -9,9 +9,10 @@ const TypeMsgReceiveNFT = "receive_nft"
 
 var _ sdk.Msg = &MsgReceiveNFT{}
 
-func NewMsgReceiveNFT(creator string, id uint64) *MsgReceiveNFT {
+func NewMsgReceiveNFT(creator string, sender string, id uint64) *MsgReceiveNFT {
 	return &MsgReceiveNFT{
 		Creator: creator,
+		Sender:  sender,
 		Id:      id,
 	}
 }

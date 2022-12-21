@@ -17,11 +17,12 @@ var _ = strconv.Itoa(0)
 
 func CmdReceiveNFT() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "receive-nft [id]",
+		Use:   "receive-nft [sender] [id]",
 		Short: "Broadcast message ReceiveNFT",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argId, err := cast.ToUint64E(args[0])
+			argSender := args[0]
+			argId, err := cast.ToUint64E(args[1])
 			if err != nil {
 				return err
 			}
@@ -33,6 +34,7 @@ func CmdReceiveNFT() *cobra.Command {
 
 			msg := types.NewMsgReceiveNFT(
 				clientCtx.GetFromAddress().String(),
+				argSender,
 				argId,
 			)
 			if err := msg.ValidateBasic(); err != nil {

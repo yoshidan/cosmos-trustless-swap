@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/spf13/cast"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -14,13 +15,17 @@ var _ = strconv.Itoa(0)
 
 func CmdSend() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "send [receiver] [amount] [amount-to-receive]",
+		Use:   "send [id] [receiver] [amount] [amount-to-receive]",
 		Short: "Broadcast message send",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argReceiver := args[0]
-			argAmount := args[1]
-			argAmountToReceive := args[2]
+			argId, err := cast.ToUint64E(args[0])
+			if err != nil {
+				return err
+			}
+			argReceiver := args[1]
+			argAmount := args[2]
+			argAmountToReceive := args[3]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -29,6 +34,7 @@ func CmdSend() *cobra.Command {
 
 			msg := types.NewMsgSend(
 				clientCtx.GetFromAddress().String(),
+				argId,
 				argReceiver,
 				argAmount,
 				argAmountToReceive,

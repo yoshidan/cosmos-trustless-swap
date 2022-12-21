@@ -9,9 +9,10 @@ const TypeMsgSendNFT = "send_nft"
 
 var _ sdk.Msg = &MsgSendNFT{}
 
-func NewMsgSendNFT(creator string, receiver string, classId string, nftId string, amountToReceive string) *MsgSendNFT {
+func NewMsgSendNFT(creator string, id uint64, receiver string, classId string, nftId string, amountToReceive string) *MsgSendNFT {
 	return &MsgSendNFT{
 		Creator:         creator,
+		Id:              id,
 		Receiver:        receiver,
 		ClassId:         classId,
 		NftId:           nftId,

@@ -15,11 +15,12 @@ var _ = strconv.Itoa(0)
 
 func CmdShowNFT() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-nft [id]",
+		Use:   "show-nft [seller] [id]",
 		Short: "Query ShowNFT",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqId, err := cast.ToUint64E(args[0])
+			reqSeller := args[0]
+			reqId, err := cast.ToUint64E(args[1])
 			if err != nil {
 				return err
 			}
@@ -32,8 +33,8 @@ func CmdShowNFT() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryShowNFTRequest{
-
-				Id: reqId,
+				Seller: reqSeller,
+				Id:     reqId,
 			}
 
 			res, err := queryClient.ShowNFT(cmd.Context(), params)

@@ -16,11 +16,12 @@ var _ = strconv.Itoa(0)
 
 func CmdShow() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show [id]",
+		Use:   "show [seller] [id]",
 		Short: "Query show",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqId, err := cast.ToUint64E(args[0])
+			reqSeller := args[0]
+			reqId, err := cast.ToUint64E(args[1])
 			if err != nil {
 				return err
 			}
@@ -33,8 +34,8 @@ func CmdShow() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryShowRequest{
-
-				Id: reqId,
+				Seller: reqSeller,
+				Id:     reqId,
 			}
 
 			res, err := queryClient.Show(cmd.Context(), params)

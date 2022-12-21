@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/spf13/cast"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -14,12 +15,16 @@ var _ = strconv.Itoa(0)
 
 func CmdSell() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "sell [amount] [price]",
+		Use:   "sell [id] [amount] [price]",
 		Short: "Broadcast message sell",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argAmount := args[0]
-			argPrice := args[1]
+			argId, err := cast.ToUint64E(args[0])
+			if err != nil {
+				return err
+			}
+			argAmount := args[1]
+			argPrice := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -28,6 +33,7 @@ func CmdSell() *cobra.Command {
 
 			msg := types.NewMsgSell(
 				clientCtx.GetFromAddress().String(),
+				argId,
 				argAmount,
 				argPrice,
 			)

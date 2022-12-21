@@ -16,11 +16,12 @@ var _ = strconv.Itoa(0)
 
 func CmdReceive() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "receive [id]",
+		Use:   "receive [sender] [id]",
 		Short: "Broadcast message receive",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argId, err := cast.ToUint64E(args[0])
+			argSender := args[0]
+			argId, err := cast.ToUint64E(args[1])
 			if err != nil {
 				return err
 			}
@@ -32,6 +33,7 @@ func CmdReceive() *cobra.Command {
 
 			msg := types.NewMsgReceive(
 				clientCtx.GetFromAddress().String(),
+				argSender,
 				argId,
 			)
 			if err := msg.ValidateBasic(); err != nil {

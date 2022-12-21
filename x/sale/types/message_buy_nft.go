@@ -9,9 +9,10 @@ const TypeMsgBuyNFT = "buy_nft"
 
 var _ sdk.Msg = &MsgBuyNFT{}
 
-func NewMsgBuyNFT(creator string, id uint64) *MsgBuyNFT {
+func NewMsgBuyNFT(creator string, seller string, id uint64) *MsgBuyNFT {
 	return &MsgBuyNFT{
 		Creator: creator,
+		Seller:  seller,
 		Id:      id,
 	}
 }
