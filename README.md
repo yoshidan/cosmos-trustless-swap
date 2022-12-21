@@ -5,17 +5,62 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
 
 ## Features
 
-* Swap Funsible Token
-* Swap Non Funsible Token
-* Sell Funsible Token
-* Sell Non Funsible Token
+### Swap Fungible Token
+```sh
+tx swap send [id] [receiver] [amount] [amountToReceive] --from keyname
+# ex) tx swap send 1 cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 10coin 1stake --from alice
+```
 
-### Command List
+| proeprty   | description                                                                                                                                                                   | ex                |
+|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------| 
+| [id]       | Any number of type uint64. It must be unique for `--from` user. If swap is completed by `cancel` or `receive`, it can be reused.. If swap is completed by cancel or receive, it can be reused | 1                 |
+| [receiver] | It is the recipient's address                                                                                                                                                 | cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 |
+| [amount] | It is the token to transfer                                                                                                                                                   | 10tokenA          |
+| [amountToReceive] | The amount of tokens required for the recipient to receive                                                                                                                    | 20tokenB          |
+
+```sh
+query swap show [sender] [id] 
+# ex) query swap show cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
+
+# Here is the result
+# swap:
+#  creator: cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m
+#  id: "1"
+#  receiver: cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4
+#  amount: 10tokenA
+#  amountToReceive: 20tokenB
+```
+
+```sh
+tx swap receive [sender] [id] --from keyname
+# ex) tx swap receive cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
+```
+
+| proeprty          | description                                                              | ex                |
+|-------------------|--------------------------------------------------------------------------|-------------------| 
+| [id]              | It is the id specified when sending                                      | 1                 |
+| [sender]          | The address of the sender of send.                                       | cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 |
+| --from | It is the recipient. It must match the address specified in `[receiver]` | bob |
+
+```sh
+tx swap cancel [id] --from keyname
+# ex) tx swap cancel 1 --from alice
+```
+
+| proeprty          | description                                                          | ex                |
+|-------------------|----------------------------------------------------------------------|-------------------| 
+| [id]              | It is the id specified when sending                                  | 1                 |
+| --from | It is the sender. It must match the address specified in `[creator]` | alice |
+
+
+### Swap Non Fungible Token
+### Sell Fungible Token
+### Sell Non Fungible Token
 
 ## Installation
 
 ```
-go get github.com/yoshidan/cosmos-trustless-swap
+go get -u github.com/yoshidan/cosmos-trustless-swap
 ```
 
 Modify `app/app.go` included in the blockchain boilerplate output by [Ignite CLI](https://ignite.com/cli) as follows.  
@@ -61,10 +106,10 @@ var (
 * Add the `keepers` to `App` struct 
 ```go
 type App struct {
-	...
-	NFTKeeper  nftkeeper.Keeper
-	SwapKeeper swapmodulekeeper.Keeper
-	SaleKeeper salemodulekeeper.Keeper
+    ...
+    NFTKeeper  nftkeeper.Keeper
+    SwapKeeper swapmodulekeeper.Keeper
+    SaleKeeper salemodulekeeper.Keeper
 }
 ```
 
