@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/errors"
 	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -19,7 +20,7 @@ func (k Keeper) ShowNFT(goCtx context.Context, req *types.QueryShowNFTRequest) (
 
 	sale, found := k.GetNFTSale(ctx, req.Seller, req.Id)
 	if !found {
-		return nil, types.ErrSaleNotFound
+		return nil, errors.Wrapf(types.ErrSaleNotFound, "seller = %s, id = %d", req.Seller, req.Id)
 	}
 	return &types.QueryShowNFTResponse{
 		Sale: &sale,

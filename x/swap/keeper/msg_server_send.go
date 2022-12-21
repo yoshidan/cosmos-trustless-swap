@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/errors"
 	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -24,7 +25,7 @@ func (k msgServer) Send(goCtx context.Context, msg *types.MsgSend) (*types.MsgSe
 		return nil, err
 	}
 	if _, found := k.GetSwap(ctx, msg.Creator, msg.Id); found {
-		return nil, types.ErrSwapExists
+		return nil, errors.Wrapf(types.ErrSwapExists, "sender = %s, id = %d", msg.Creator, msg.Id)
 	}
 	if err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(amount)); err != nil {
 		return nil, err

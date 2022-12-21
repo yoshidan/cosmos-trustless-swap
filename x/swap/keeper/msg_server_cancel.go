@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/errors"
 	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,11 +14,11 @@ func (k msgServer) Cancel(goCtx context.Context, msg *types.MsgCancel) (*types.M
 
 	swap, found := k.GetSwap(ctx, msg.Creator, msg.Id)
 	if !found {
-		return nil, types.ErrSwapNotFound
+		return nil, errors.Wrapf(types.ErrSwapNotFound, "sender = %s, id = %d", msg.Creator, msg.Id)
 	}
 
 	if swap.Creator != msg.Creator {
-		return nil, types.ErrInvalidSwapData
+		return nil, errors.Wrapf(types.ErrInvalidSwapData, "sender = %s", swap.Creator)
 	}
 
 	sender, err := sdk.AccAddressFromBech32(swap.Creator)

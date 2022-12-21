@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/errors"
 	"github.com/yoshidan/cosmos-trustless-swap/x/sale/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,7 +14,7 @@ func (k msgServer) Buy(goCtx context.Context, msg *types.MsgBuy) (*types.MsgBuyR
 
 	sale, found := k.GetSale(ctx, msg.Seller, msg.Id)
 	if !found {
-		return nil, types.ErrSaleNotFound
+		return nil, errors.Wrapf(types.ErrSaleNotFound, "seller = %s, id = %d", msg.Seller, msg.Id)
 	}
 
 	seller, err := sdk.AccAddressFromBech32(sale.Creator)

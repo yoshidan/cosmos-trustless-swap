@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/errors"
 	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,16 +14,16 @@ func (k msgServer) ReceiveNFT(goCtx context.Context, msg *types.MsgReceiveNFT) (
 
 	swap, found := k.GetNFTSwap(ctx, msg.Sender, msg.Id)
 	if !found {
-		return nil, types.ErrSwapNotFound
+		return nil, errors.Wrapf(types.ErrSwapNotFound, "sender = %s, id = %d", msg.Sender, msg.Id)
 	}
 
 	if swap.Receiver != msg.Creator {
-		return nil, types.ErrInsufficientPermission
+		return nil, errors.Wrapf(types.ErrInsufficientPermission, "receiver = %s", swap.Receiver)
 	}
 
 	ownerAddress := k.nftKeeper.GetOwner(ctx, swap.ClassId, swap.NftId)
 	if k.accountKeeper.GetModuleAddress(types.ModuleName).String() != ownerAddress.String() {
-		return nil, types.ErrInvalidSwapData
+		return nil, errors.Wrapf(types.ErrInvalidSwapData, "classId = %s, nftId = %s", swap.Creator, swap.NftId)
 	}
 
 	sender, err := sdk.AccAddressFromBech32(swap.Creator)

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"cosmossdk.io/errors"
 
 	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
@@ -19,7 +20,7 @@ func (k Keeper) ShowNFT(goCtx context.Context, req *types.QueryShowNFTRequest) (
 
 	swap, found := k.GetNFTSwap(ctx, req.Sender, req.Id)
 	if !found {
-		return nil, types.ErrSwapNotFound
+		return nil, errors.Wrapf(types.ErrSwapNotFound, "sender = %s, id = %d", req.Sender, req.Id)
 	}
 	return &types.QueryShowNFTResponse{
 		Swap: &swap,

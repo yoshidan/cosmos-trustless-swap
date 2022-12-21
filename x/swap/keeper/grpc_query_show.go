@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/errors"
 	"github.com/yoshidan/cosmos-trustless-swap/x/swap/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -19,7 +20,7 @@ func (k Keeper) Show(goCtx context.Context, req *types.QueryShowRequest) (*types
 
 	swap, found := k.GetSwap(ctx, req.Sender, req.Id)
 	if !found {
-		return nil, types.ErrSwapNotFound
+		return nil, errors.Wrapf(types.ErrSwapNotFound, "sender = %s, id = %d", req.Sender, req.Id)
 	}
 	return &types.QueryShowResponse{
 		Swap: &swap,
