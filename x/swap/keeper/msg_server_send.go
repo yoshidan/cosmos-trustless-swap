@@ -19,6 +19,10 @@ func (k msgServer) Send(goCtx context.Context, msg *types.MsgSend) (*types.MsgSe
 	if err != nil {
 		return nil, err
 	}
+	_, err = sdk.AccAddressFromBech32(msg.Receiver)
+	if err != nil {
+		return nil, err
+	}
 
 	if err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(amount)); err != nil {
 		return nil, err

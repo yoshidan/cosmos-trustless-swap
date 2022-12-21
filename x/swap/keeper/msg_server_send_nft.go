@@ -17,6 +17,10 @@ func (k msgServer) SendNFT(goCtx context.Context, msg *types.MsgSendNFT) (*types
 	if err != nil {
 		return nil, err
 	}
+	_, err = sdk.AccAddressFromBech32(msg.Receiver)
+	if err != nil {
+		return nil, err
+	}
 
 	ownerAddress := k.nftKeeper.GetOwner(ctx, msg.ClassId, msg.NftId)
 	if sender.String() != ownerAddress.String() {
