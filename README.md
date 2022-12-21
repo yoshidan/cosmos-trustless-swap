@@ -5,7 +5,7 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
 
 ## Features
 
-* Swap Fungible Token
+* Swap or Sell Fungible Token
 ```mermaid
   sequenceDiagram
       actor Alice
@@ -20,7 +20,7 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
       Note over Bob: get 10token
 ```
 
-* Swap Non Fungible Token
+* Swap or Sell Non Fungible Token
 ```mermaid
   sequenceDiagram
       actor Alice
@@ -34,9 +34,6 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
       Note over Alice: get 20stake
       Note over Bob: get NFT
 ```
-
-* Sell Fungible Token
-* Sell Non Fungible Token
 
 ## Commands 
 
