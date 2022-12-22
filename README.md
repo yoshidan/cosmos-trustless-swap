@@ -7,7 +7,12 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
 
 ## Features
 
-* Swap or Sell Fungible Token
+* [Swap Fungible Token](#command1)
+* [Swap Non Fungible Token](#command2)
+* [Sell Fungible Token](#command3)
+* [Sell Non Fungible Token](#command4)
+
+### Swap or Sell Fungible Token
 ```mermaid
   sequenceDiagram
       actor Alice
@@ -22,7 +27,7 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
       Note over Bob: have 10token
 ```
 
-* Swap or Sell Non Fungible Token
+### Swap or Sell Non Fungible Token
 ```mermaid
   sequenceDiagram
       actor Alice
@@ -41,7 +46,7 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
 
 `simd` is your blockchain cli built by `ignite chain build`.
 
-### Swap Fungible Token
+### <a name="command1"></a>Swap Fungible Token
 ```sh
 $ simd tx swap send [id] [receiver] [amount] [amountToReceive] --from keyname
 # ex) simd tx swap send 1 cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 10coin 1stake --from alice
@@ -89,7 +94,7 @@ $ simd tx swap cancel [id] --from keyname
 | --from | It must match the address specified in `[creator]` in saved sale | alice |
 
 
-### Swap Non Fungible Token
+### <a name="command2"></a>Swap Non Fungible Token
 
 ```sh
 $ simd tx swap send-nft [id] [receiver] [classId] [nftId] [amountToReceive] --from keyname
@@ -140,7 +145,7 @@ $ simd tx swap cancel-nft [id] --from keyname
 | [id]              | The id specified when sending                                  | 1                 |
 | --from | It must match the address specified in `[creator]` in saved sale | alice |
 
-### Sell Fungible Token
+### <a name="command3"></a>Sell Fungible Token
 
 ```sh
 $ simd tx sale sell [id] [amount] [amountToReceive] --from keyname
@@ -186,7 +191,7 @@ $ simd tx sale cancel [id] --from keyname
 | [id]              | The id specified when selling                                                | 1                 |
 | --from | It must match the address specified in `[creator]` in saved sale | alice |
 
-### Sell Non Fungible Token
+### <a name="command4"></a>Sell Non Fungible Token
 
 ```sh
 $ simd tx sale sell-nft [id] [classId] [nftId] [amountToReceive] --from keyname
