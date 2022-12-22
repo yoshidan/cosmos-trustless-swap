@@ -368,5 +368,11 @@ func New(
     ...
     return app
 }
+```
 
+Then you can generate `openapi.yml` and TypeScript client.
+
+```sh
+ignite generate ts-client --clear-cache
+ignite generate openapi --clear-cache
 ```
