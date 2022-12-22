@@ -39,10 +39,12 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
 
 ## Commands 
 
+`simd` is your blockchain cli built by `ignite chain build`.
+
 ### Swap Fungible Token
 ```sh
-tx swap send [id] [receiver] [amount] [amountToReceive] --from keyname
-# ex) tx swap send 1 cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 10coin 1stake --from alice
+$ simd tx swap send [id] [receiver] [amount] [amountToReceive] --from keyname
+# ex) simd tx swap send 1 cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 10coin 1stake --from alice
 ```
 
 | proeprty   | description                                                                                                                                                                   | ex                |
@@ -53,8 +55,8 @@ tx swap send [id] [receiver] [amount] [amountToReceive] --from keyname
 | [amountToReceive] | The amount of tokens required for the recipient to receive                                                                                                                    | 20tokenB          |
 
 ```sh
-query swap show [sender] [id] 
-# ex) query swap show cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
+$ simd query swap show [sender] [id] 
+# ex) simd query swap show cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
 
 # Here is the result
 # swap:
@@ -66,8 +68,8 @@ query swap show [sender] [id]
 ```
 
 ```sh
-tx swap receive [sender] [id] --from keyname
-# ex) tx swap receive cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
+$ simd tx swap receive [sender] [id] --from keyname
+# ex) simd tx swap receive cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
 ```
 
 | proeprty          | description                                                                             | ex                |
@@ -77,8 +79,8 @@ tx swap receive [sender] [id] --from keyname
 | --from | The recipient. It must match the address specified in `[receiver]` in saved sale  | bob |
 
 ```sh
-tx swap cancel [id] --from keyname
-# ex) tx swap cancel 1 --from alice
+$ simd tx swap cancel [id] --from keyname
+# ex) simd tx swap cancel 1 --from alice
 ```
 
 | proeprty          | description                                                          | ex                |
@@ -90,8 +92,8 @@ tx swap cancel [id] --from keyname
 ### Swap Non Fungible Token
 
 ```sh
-tx swap send-nft [id] [receiver] [classId] [nftId] [amountToReceive] --from keyname
-# ex) tx swap send-nft 1 cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 class1 nft1 --from alice
+$ simd tx swap send-nft [id] [receiver] [classId] [nftId] [amountToReceive] --from keyname
+# ex) simd tx swap send-nft 1 cosmos1p496u9my9uv6s3klsxuhud5y7jxwmd4lal8ym4 class1 nft1 --from alice
 ```
 
 | proeprty          | description                                                                                                                                                                                   | ex                                            |
@@ -104,8 +106,8 @@ tx swap send-nft [id] [receiver] [classId] [nftId] [amountToReceive] --from keyn
 | --from | It must be the owner of the NFT  | alice |
 
 ```sh
-query swap show-nft [sender] [id] 
-# ex) query swap show-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
+$ simd query swap show-nft [sender] [id] 
+# ex) simd query swap show-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
 
 # Here is the result
 # swap:
@@ -118,8 +120,8 @@ query swap show-nft [sender] [id]
 ```
 
 ```sh
-tx swap receive-nft [sender] [id] --from keyname
-# ex) tx swap receive-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
+$ simd tx swap receive-nft [sender] [id] --from keyname
+# ex) simd tx swap receive-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
 ```
 
 | proeprty          | description                                                                | ex                |
@@ -129,8 +131,8 @@ tx swap receive-nft [sender] [id] --from keyname
 | --from | The recipient. It must match the address specified in `[receiver]` in saved sale  | bob |
 
 ```sh
-tx swap cancel-nft [id] --from keyname
-# ex) tx swap cancel-nft 1 --from alice
+$ simd tx swap cancel-nft [id] --from keyname
+# ex) simd tx swap cancel-nft 1 --from alice
 ```
 
 | proeprty          | description                                                          | ex                |
@@ -141,19 +143,19 @@ tx swap cancel-nft [id] --from keyname
 ### Sell Fungible Token
 
 ```sh
-tx sale sell [id] [amount] [amountToReceive] --from keyname
-# ex) tx sale sell 1 10coin 1stake --from alice
+$ simd tx sale sell [id] [amount] [amountToReceive] --from keyname
+# ex) simd tx sale sell 1 10coin 1stake --from alice
 ```
 
-| proeprty   | description                                                                                                                                                                   | ex                |
-|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------| 
-| [id]       | Any number of type uint64. It must be unique for `--from` user. If swap is completed by `cancel` or `receive`, it can be reused.. If swap is completed by cancel or receive, it can be reused | 1                 |
-| [amount] | The amount of token to transfer | 10tokenA          |
-| [amountToReceive] | The amount of tokens required for the recipient to receive  | 20tokenB          |
+| proeprty   | description                                                                                                                                                                                | ex                |
+|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------| 
+| [id]       | Any number of type uint64. It must be unique for the signer. If swap is completed by `cancel` or `receive`, it can be reused.. If swap is completed by cancel or receive, it can be reused | 1                 |
+| [amount] | The amount of token to transfer                                                                                                                                                            | 10tokenA          |
+| [amountToReceive] | The amount of tokens required for the recipient to receive                                                                                                                                 | 20tokenB          |
 
 ```sh
-query sale show [seller] [id] 
-# ex) query sale show cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
+$ simd query sale show [seller] [id] 
+# ex) simd query sale show cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
 
 # Here is the result
 # sell:
@@ -164,8 +166,8 @@ query sale show [seller] [id]
 ```
 
 ```sh
-tx sale buy [seller] [id] --from keyname
-# ex) tx sale buy cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
+$ simd tx sale buy [seller] [id] --from keyname
+# ex) simd tx sale buy cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
 ```
 
 | proeprty | description                                                         | ex                |
@@ -175,8 +177,8 @@ tx sale buy [seller] [id] --from keyname
 | --from   | The buyer | bob |
 
 ```sh
-tx sale cancel [id] --from keyname
-# ex) tx sale cancel 1 --from alice
+$ simd tx sale cancel [id] --from keyname
+# ex) simd tx sale cancel 1 --from alice
 ```
 
 | proeprty          | description                                                                        | ex                |
@@ -187,8 +189,8 @@ tx sale cancel [id] --from keyname
 ### Sell Non Fungible Token
 
 ```sh
-tx sale sell-nft [id] [classId] [nftId] [amountToReceive] --from keyname
-# ex) tx sale sell-nft 1 class1 nft1 --from alice
+$ simd tx sale sell-nft [id] [classId] [nftId] [amountToReceive] --from keyname
+# ex) simd tx sale sell-nft 1 class1 nft1 --from alice
 ```
 
 | proeprty          | description                                                                                                                                                                               | ex                                            |
@@ -200,8 +202,8 @@ tx sale sell-nft [id] [classId] [nftId] [amountToReceive] --from keyname
 | --from | It must be the owner of the NFT  | alice |
 
 ```sh
-query sale show-nft [sender] [id] 
-# ex) query sale show-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
+$ simd query sale show-nft [sender] [id] 
+# ex) simd query sale show-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 
 
 # Here is the result
 # sale:
@@ -213,8 +215,8 @@ query sale show-nft [sender] [id]
 ```
 
 ```sh
-tx sale buy-nft [seller] [id] --from keyname
-# ex) tx sale buy-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
+$ simd tx sale buy-nft [seller] [id] --from keyname
+# ex) simd tx sale buy-nft cosmos1s7p7h4k3v9qcqs7ku2tpq0cajydertggeg8z4m 1 --from bob
 ```
 
 | proeprty | description         | ex                |
@@ -224,8 +226,8 @@ tx sale buy-nft [seller] [id] --from keyname
 | --from   | The buyer | bob |
 
 ```sh
-tx swap cancel-nft [id] --from keyname
-# ex) tx swap cancel-nft 1 --from alice
+$ simd tx swap cancel-nft [id] --from keyname
+# ex) simd tx swap cancel-nft 1 --from alice
 ```
 
 | proeprty          | description                                                          | ex                |
