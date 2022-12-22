@@ -13,13 +13,13 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
       actor Alice
       participant Module
       actor Bob
-      Alice ->> Module: send 10token (price 20stake)
-      Note over Module: get 10token
-      Bob ->>+ Module: call receive
-      Module ->> Alice: send 20stake from Bob
-      Module ->>- Bob: send 10token 
-      Note over Alice: get 20stake
-      Note over Bob: get 10token
+      Alice ->> Module: transfer 10token (price 20stake)
+      Note over Module: have 10token
+      Bob ->>+ Module: request receive
+      Module ->> Alice: transfer 20stake from Bob<br/> (tx is signed by bob)
+      Module ->>- Bob: transfer 10token 
+      Note over Alice: have 20stake
+      Note over Bob: have 10token
 ```
 
 * Swap or Sell Non Fungible Token
@@ -28,13 +28,13 @@ It is implemented as [Cosmos module](https://github.com/cosmos/cosmos-sdk).
       actor Alice
       participant Module
       actor Bob
-      Alice ->> Module: send NFT (price 20stake)
-      Note over Module: get NFT
-      Bob ->>+ Module: call receive
-      Module ->> Alice: send 20stake from Bob
-      Module ->>- Bob: send NFT 
-      Note over Alice: get 20stake
-      Note over Bob: get NFT
+      Alice ->> Module: transfer NFT (price 20stake)
+      Note over Module: have NFT
+      Bob ->>+ Module: request receive
+      Module ->> Alice: transfer 20stake from Bob<br/> (tx is signed by bob)
+      Module ->>- Bob: transfer NFT 
+      Note over Alice: have 20stake
+      Note over Bob: have NFT
 ```
 
 ## Commands 
